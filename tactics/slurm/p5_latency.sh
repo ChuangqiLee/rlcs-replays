@@ -74,4 +74,4 @@ python -m tactics_code.rotation_latency \
     --compact "$P5_SCRATCH/compact" \
     --artifacts "$P5_ARTIFACTS" --scratch "$P5_SCRATCH" \
     --state-map "${P5_STATE_MAP:-$TACT/state_map_rlcs.json}" \
-    --out "${P5_OUT:-$P5_DEFAULT_OUT}" "${P5_ARGS[@]}"
+    --out "${P5_OUT:-$P5_DEFAULT_OUT}" ${P5_ARGS[@]+"${P5_ARGS[@]}"}
