@@ -98,7 +98,7 @@ def metadata_inventory(root):
                         continue
                     with archive.open(name) as stream:
                         version = np.lib.format.read_magic(stream)
-                        shape, order, dtype = np.lib.format._read_array_header(stream, version)
+                        shape, order, dtype = (np.lib.format.read_array_header_1_0(stream) if version == (1, 0) else np.lib.format.read_array_header_2_0(stream))
                     schema[name[:-4]] = {"shape": list(shape), "fortran": order, "dtype": str(dtype)}
             if not REQUIRED <= schema.keys():
                 raise ValueError(f"{shard}: missing {sorted(REQUIRED-schema.keys())}")
@@ -174,7 +174,7 @@ def read_slice(meta):
         for key in REQUIRED:
             with archive.open(key + ".npy") as stream:
                 version = np.lib.format.read_magic(stream)
-                shape, fortran, dtype = np.lib.format._read_array_header(stream, version)
+                shape, fortran, dtype = (np.lib.format.read_array_header_1_0(stream) if version == (1, 0) else np.lib.format.read_array_header_2_0(stream))
                 if fortran or dtype.hasobject:
                     raise ValueError(f"{key}: unsupported memory layout")
                 width = math.prod(shape[1:])
