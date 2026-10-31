@@ -10,6 +10,6 @@ cd "$SLURM_SUBMIT_DIR"
 set +u; unset PACK; source slurm/env.sh; set -u
 export PYTHONPATH="$PWD/src${PYTHONPATH:+:$PYTHONPATH}" OMP_NUM_THREADS=1
 A=$HOME/workspace/rlcs-replays
-KO=$(dirname "$(ls -d $A/analysis/*/artifacts/p6_kickoff/val/kickoff_units.parquet | grep 41105020 | head -1)")/..
+KO=$A/tactics/artifacts/p6-kickoff-medium/artifacts/p6_kickoff
 python -B -m tactics_code.posthoc_sens --p5-artifacts "$A/tactics/artifacts/p5-latency-41105041" \
   --kickoff-artifacts "$KO" --out "$A/analysis/posthoc-sens-$SLURM_JOB_ID/posthoc_sens.json"
