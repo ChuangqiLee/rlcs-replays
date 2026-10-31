@@ -60,3 +60,14 @@ val 2025, test 2026 (+event-wise), 3v3 primary; series-bootstrap, mixed effects,
 confirmatory tests; robustness: seeds, K, windows, fps, field mirror/team swap. Controls: handcrafted
 +k-means, PCA, GRU-AE, static GNN, TAGNet-style, GBDT value model. 11 verified refs
 (`docs/references.bib`, `refs/literature.jsonl`). Next: P3-A data/measurement audit (clock, touches, IDs).
+
+## P3 small-scale run 1–2 — 2026-10-31 16:25 CET
+Pipeline (Codex ultra; `tactics/src/tactics_code`: audit → stage → extract → tokens(RQ1) → pressure(RQ3) → style(RQ4) → viz)
+runs end-to-end on 1,500 3v3 replays (300/season, whole series) in ~8 min on 1 A100 (jobs 41104697, 41104704; 1 h limit).
+Audit: 49,393 index rows = 49,259 ok + 134 failed; the 94-game gap = odd-player games (5-player 87, 1/3-player 7 …) confirmed.
+Series coverage 100%, stable player IDs 100%; replay_meta has no timed goals.
+**Problem found:** `game state` codes are replay-specific object ids (e.g. {66,72,127}, {80,89,137}, a 5-code 2025 variant), so the
+global state map gave only 470k live frames of 11.9 M and 0 detected goals → RQ3/RQ4 gated (no score context), RQ1 ran on only
+5,268 windows (K=8, val recon 0.687; RQ1 p=0.023, Holm 0.069 — not trustworthy yet). Fix in progress: per-replay decoding
+(live = dominant code while ball-has-been-hit; goal = leaving live with |ball y|>5000, sign gives scorer; OT after 0-s regulation end),
+validated against summed player Goals. Infra fixes: env.sh nounset-safe, conda-forge matplotlib/statsmodels, no tee/`set -u` (bash 4.2).

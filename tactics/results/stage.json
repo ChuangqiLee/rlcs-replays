@@ -1,0 +1,26 @@
+{
+  "method": "Node-local shard staging",
+  "task": "stage",
+  "split": "all",
+  "is_baseline": false,
+  "metrics": {
+    "files": 447.0,
+    "bytes": 103645620689.0,
+    "selected_replays": 1500.0
+  },
+  "notes": "",
+  "updated": "2026-10-31T15:20:17+00:00",
+  "details": {
+    "source": "/home/c.li16@students.uu.nl/workspace/rlcs-replays/data",
+    "destination": "/local/p3-small-41104704-s42-w6-f10-ksweep/data",
+    "max_replays_per_season": 300,
+    "all_frames": false,
+    "selected_by_season": {
+      "rlcs-2024": 300,
+      "rlcs-2025": 300,
+      "rlcs-2026": 300,
+      "rlcs-21-22": 300,
+      "rlcs-22-23": 300
+    }
+  }
+}

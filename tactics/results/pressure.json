@@ -1,0 +1,32 @@
+{
+  "method": "Series-adjusted geometric cover",
+  "task": "pressure",
+  "split": "val",
+  "is_baseline": false,
+  "metrics": {
+    "context_rows": 1800.0,
+    "series": 46.0
+  },
+  "notes": "Primary response is uncovered fraction; depth, coverage count and spacing are exploratory. Known-score live regulation only.",
+  "updated": "2026-10-31T15:25:27+00:00",
+  "details": {
+    "status": "insufficient_data",
+    "reason": "no known-score regulation observations in the declared contrast",
+    "models": {},
+    "measurement_gate": {
+      "passed": true,
+      "state_sources": [
+        "explicit_state_map"
+      ],
+      "requirement": "Every evaluated replay uses an explicit audited state map; heuristic live play is exploratory"
+    },
+    "confirmatory": {
+      "rq": "RQ3",
+      "split": "val",
+      "p_value": null
+    }
+  },
+  "lower_is_better": [
+    "p_value"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "method": "Context-standardized independent-series fingerprints",
+  "task": "style",
+  "split": "val",
+  "is_baseline": false,
+  "metrics": {
+    "fingerprints": 62.0,
+    "player_fingerprints": 62.0,
+    "season_fingerprints": 0.0
+  },
+  "notes": "Positive persistence effect means different-roster distance exceeds within-roster distance. Roster permutation matches region, event exposure, series-count band and context support.",
+  "updated": "2026-10-31T15:25:37+00:00",
+  "details": {
+    "status": "insufficient_data",
+    "reason": "need >=2 eligible rosters matched on region/event exposure/series-count band, >=2 series per half, and common context support",
+    "eligible_rosters": 0,
+    "thresholds": {
+      "series": 20,
+      "events": 3
+    },
+    "measurement_gate": {
+      "passed": true,
+      "state_sources": [
+        "explicit_state_map"
+      ],
+      "explicit_state_map": true,
+      "stable_vocabulary": true
+    },
+    "confirmatory": {
+      "rq": "RQ4",
+      "split": "val",
+      "p_value": null
+    },
+    "season_drift": {
+      "status": "descriptive",
+      "common_context_standardized": true,
+      "roster_event_composition_adjusted": false,
+      "note": "Calendar drift is not a patch effect; token mixture and within-token geometry saved separately. No out-of-support claim without calibrated vocabulary support."
+    },
+    "identity_policy": "Exact stable-player roster IDs; organization identities remain distinct and unavailable organization is not inferred from roster. Player profiles use individual roles and geometry.",
+    "training_reference_contexts": 69
+  },
+  "lower_is_better": [
+    "p_value"
+  ]
+}

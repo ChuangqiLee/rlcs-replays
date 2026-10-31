@@ -1,0 +1,79 @@
+[
+  {
+    "method": "Predeclared three-test Holm family",
+    "task": "confirmation",
+    "split": "val",
+    "is_baseline": false,
+    "metrics": {
+      "RQ1_p_holm": 0.069,
+      "family_size": 3
+    },
+    "lower_is_better": [
+      "RQ1_p_holm"
+    ],
+    "notes": "RQ1 grammar, RQ3 late-by-score coverage, RQ4 persistence. Missing tests retain family slots.",
+    "details": {
+      "tests": [
+        {
+          "rq": "RQ1",
+          "p_value": 0.023,
+          "status": "estimated",
+          "p_holm": 0.069,
+          "reject_005": false
+        },
+        {
+          "rq": "RQ3",
+          "p_value": null,
+          "status": "missing_or_conflicting",
+          "p_holm": null,
+          "reject_005": false
+        },
+        {
+          "rq": "RQ4",
+          "p_value": null,
+          "status": "missing_or_conflicting",
+          "p_holm": null,
+          "reject_005": false
+        }
+      ]
+    },
+    "updated": "2026-10-31T15:25:39.870428+00:00"
+  },
+  {
+    "method": "Predeclared three-test Holm family",
+    "task": "confirmation",
+    "split": "test",
+    "is_baseline": false,
+    "metrics": {
+      "family_size": 3
+    },
+    "lower_is_better": [],
+    "notes": "RQ1 grammar, RQ3 late-by-score coverage, RQ4 persistence. Missing tests retain family slots.",
+    "details": {
+      "tests": [
+        {
+          "rq": "RQ1",
+          "p_value": null,
+          "status": "missing_or_conflicting",
+          "p_holm": null,
+          "reject_005": false
+        },
+        {
+          "rq": "RQ3",
+          "p_value": null,
+          "status": "missing_or_conflicting",
+          "p_holm": null,
+          "reject_005": false
+        },
+        {
+          "rq": "RQ4",
+          "p_value": null,
+          "status": "missing_or_conflicting",
+          "p_holm": null,
+          "reject_005": false
+        }
+      ]
+    },
+    "updated": "2026-10-31T15:25:39.870477+00:00"
+  }
+]

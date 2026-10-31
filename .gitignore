@@ -17,3 +17,6 @@ tactics/runs/
 *.npy
 *.npz
 tactics/envs/
+tactics/artifacts/
+tactics/status/*.lock
+tactics/refs/*.pdf

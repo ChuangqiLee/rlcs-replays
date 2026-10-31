@@ -1,0 +1,19 @@
+{
+  "method": "P3 descriptive research figures",
+  "task": "viz",
+  "split": "val",
+  "is_baseline": false,
+  "metrics": {
+    "figures": 4.0
+  },
+  "notes": "Descriptive figures. Empty panels explicitly show unavailable or insufficient artifacts.",
+  "updated": "2026-10-31T15:25:39+00:00",
+  "details": {
+    "paths": [
+      "figures/fingerprint_heatmap.png",
+      "figures/pressure_curves.png",
+      "figures/token_medoids.png",
+      "figures/transition_graph.png"
+    ]
+  }
+}
