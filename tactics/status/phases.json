@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-31 15:45 CET",
+ "updated": "2026-10-31 15:30 CET",
  "phases": [
   {
    "id": "P0",
@@ -20,18 +20,18 @@
   {
    "id": "P2",
    "name": "文献与创新",
-   "status": "in_progress",
+   "status": "done",
    "started": "2026-10-31 14:55",
-   "finished": "",
+   "finished": "2026-10-31 15:25",
    "conclusion": "设计完成：7 个研究问题（轮转语法/压力下补位/风格指纹为主），8 篇白名单文献+3 个数据来源已核实；待开始 P3"
   },
   {
    "id": "P3",
    "name": "实验",
-   "status": "not_started",
-   "started": "",
+   "status": "in_progress",
+   "started": "2026-10-31 15:30",
    "finished": "",
-   "conclusion": ""
+   "conclusion": "小规模管线编写中（RQ1→RQ3→RQ4）"
   },
   {
    "id": "P4",
