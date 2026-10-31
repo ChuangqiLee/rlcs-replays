@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from tactics_code.data import (frame_goals, goal_agreement, goal_totals, group_metadata,
+from tactics_code.data import (decode_replay_states, frame_goals, goal_agreement, goal_totals, group_metadata,
                                load_state_map, parsed_json, roster_key, stable_player_id, timed_goals)
 from tactics_code.extract import (candidate_touches, extract_replay, live_and_context,
                                   role_ranks, segment_ids, select_replays)
@@ -241,12 +241,13 @@ def test_decoded_demolition_excludes_stale_finite_position_from_roles():
     assert (outputs[1][1]['players'][demolished, 3, 7] == 1).all()
 
 
-def test_rlcs_frame_goals_and_running_score_from_each_perspective():
-    df, row, item = make_rlcs_replay()
+@pytest.mark.parametrize('seed', [1, 42, 2025, 997])
+@pytest.mark.parametrize('five_codes', [False, True])
+def test_rlcs_frame_goals_and_running_score_from_each_perspective(seed, five_codes):
+    df, row, item = make_rlcs_replay(seed=seed, five_codes=five_codes)
     config = load_state_map()
-    assert config['live_states'] == [78]
-    assert config['kickoff_states'] == [73]
-    assert config['goal_replay_states'] == [96]
+    assert config['state_decoding'] == 'per_replay_decoded'
+    assert 'live_states' not in config
     meta = json.loads(row['replay_meta'])
     assert timed_goals(meta)[0] is None
     goals, diagnostics = frame_goals(df, config)
@@ -259,6 +260,8 @@ def test_rlcs_frame_goals_and_running_score_from_each_perspective():
     blue, orange = extract_replay(df, row, {item['id']: item}, {}, config)
     for metadata, arrays in (blue, orange):
         assert metadata['state_source'] == 'explicit_state_map'
+        assert metadata['state_decoding'] == 'per_replay_decoded'
+        assert json.loads(metadata['state_decoding_details'])['live_code'] == df.loc[90, 'game state']
         assert metadata['score_source'] == 'frame_state_transitions'
         assert np.isfinite(arrays['score_diff']).all()
         assert arrays['live'].sum() > 3000
@@ -267,7 +270,13 @@ def test_rlcs_frame_goals_and_running_score_from_each_perspective():
     for frame, expected in [(987, 0), (990, 0), (993, 1), (2070, 1), (2073, 0),
                             (11460, 0), (11463, 1)]:
         assert b['score_diff'][b['frame'] == frame].item() == expected
-    assert not b['live'][np.isin(b['game_state'], [73, 96])].any()
+    assert not b['live'][b['game_state'] != df.loc[90, 'game state']].any()
+    decoded = decode_replay_states(df)
+    assert (decoded['phase'][990:1080] == 'post_goal').all()
+    assert (decoded['phase'][1080:1170] == 'kickoff').all()
+    assert (decoded['phase'][11460:] == 'post_goal').all()
+    assert len(decoded['diagnostics']['post_goal_codes']) == (2 if five_codes else 1)
+    assert decoded['diagnostics']['end_of_regulation_frames'] == [9480.]
 
 
 def test_rlcs_overtime_uses_transition_not_reused_code_or_positive_clock():
@@ -290,7 +299,7 @@ def test_rlcs_overtime_uses_transition_not_reused_code_or_positive_clock():
 
 def test_rlcs_goal_at_zero_does_not_start_overtime():
     df, row, _ = make_rlcs_replay()
-    df.loc[9480:9569, 'game state'] = 96
+    # A goal can enter the same code that previously meant countdown.
     df.loc[9479, 'Ball - position y'] = 5150
     _, overtime, _, _, _, _ = live_and_context(df, json.loads(row['replay_meta']), load_state_map())
     assert (overtime[9570:11460] == 0).all()
@@ -315,19 +324,19 @@ def test_rlcs_no_goal_replay_has_known_zero_score():
 
 
 @pytest.mark.parametrize('ball_y', [5000., -5000., 0., np.nan])
-def test_rlcs_ambiguous_goal_does_not_fabricate_scoring_team(ball_y):
+def test_rlcs_non_goal_exit_does_not_fabricate_goal(ball_y):
     df, row, _ = make_rlcs_replay()
     df.loc[989, 'Ball - position y'] = ball_y
     meta = json.loads(row['replay_meta'])
     goals, diagnostics = frame_goals(df, load_state_map())
-    assert goals[0] == (990., None, 'frame')
-    assert diagnostics['ambiguous_goals'] == 1
+    assert goals == [(2070., 1, 'frame'), (11460., 0, 'frame')]
+    assert diagnostics['ambiguous_goals'] == 0
     assert goal_agreement(goals, meta) is False
     live, _, score, _, source, boundaries = live_and_context(df, meta, load_state_map())
     assert source == 'frame_state_transitions'
     assert (score[:991] == 0).all()
-    assert np.isnan(score[991:]).all()
-    assert boundaries[990]
+    assert (score[991:2071] == 0).all()
+    assert not boundaries[990]
     assert not live[990]
 
 
@@ -354,3 +363,49 @@ def test_rlcs_explicit_metadata_timeline_takes_precedence():
     assert score[2001] == 0
     assert score[11001] == 1
     assert np.flatnonzero(boundaries).tolist() == [900, 2000, 11000]
+
+
+@pytest.mark.parametrize('failure', ['no_hits', 'tied_hits', 'low_share'])
+def test_per_replay_decoding_failures_admit_no_live_frames(failure):
+    df, row, _ = make_rlcs_replay()
+    df = df.iloc[:100].copy()
+    df['game state'] = 12
+    df['ball has been hit'] = 0
+    if failure == 'tied_hits':
+        df.loc[:49, 'game state'] = 99
+        df['ball has been hit'] = 1
+    elif failure == 'low_share':
+        df.loc[:48, 'game state'] = 99
+        df.loc[:48, 'ball has been hit'] = 1
+    decoded = decode_replay_states(df)
+    reason = 'live_share_below_50_percent' if failure == 'low_share' else 'no_dominant_live_code'
+    assert decoded['diagnostics']['failures'] == [reason]
+    assert not decoded['live'].any()
+    assert decoded['goals'] is None
+    assert np.isnan(decoded['overtime']).all()
+    live, _, score, _, _, _ = live_and_context(df, json.loads(row['replay_meta']), load_state_map())
+    assert not live.any()
+    assert np.isnan(score).all()
+
+
+def test_five_code_sequence_with_eighty_percent_live_and_latched_post_goal():
+    # Initialization -> countdown -> live -> two post-goal codes -> countdown.
+    codes = np.random.default_rng(2025).choice(200, 5, replace=False)
+    initial, kickoff, live, post1, post2 = codes
+    state = [initial] + [kickoff] * 9 + [live] * 80 + [post1] * 5 + [post2] * 2 + [kickoff] * 3
+    df = pd.DataFrame({'game state': state, 'frame': np.arange(100),
+                       'ball has been hit': [0] * 10 + [1] * 87 + [0] * 3,
+                       'seconds remaining': [1] * 90 + [0] * 10,
+                       'Ball - position y': np.zeros(100)})
+    df.loc[89, 'Ball - position y'] = -5130
+    # Include the next kickoff -> live transition to establish countdown.
+    df.loc[99, 'game state'] = live
+    df.loc[99, 'ball has been hit'] = 1
+    decoded = decode_replay_states(df)
+    assert decoded['diagnostics']['live_code'] == live
+    assert decoded['diagnostics']['live_share'] == .81
+    assert decoded['diagnostics']['failures'] == []
+    assert decoded['goals'] == [(90., 1, 'frame')]
+    assert (decoded['phase'][90:97] == 'post_goal').all()
+    assert (decoded['phase'][97:99] == 'kickoff').all()
+    assert decoded['overtime'][99] == 0  # Goal at zero is not regulation end.
