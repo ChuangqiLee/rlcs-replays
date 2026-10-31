@@ -31,3 +31,20 @@ script; consider a cached env tarball to unpack into $TMPDIR; then P1 dashboard 
 - Mac 转发：ssh -N -L 18765:127.0.0.1:18765 cheaha-tunnel → http://127.0.0.1:18765/ ，已 curl 验证。
 - 数据约定见 tactics/dashboard/README.md（status/phases.json、runs/*/metrics.jsonl、logs/*.log、results/*.json）。
 - 下一步：各阶段完成时更新 status/phases.json 和本文件。
+
+## P0b DL environment — 2026-10-31
+`tactics/slurm/env.sh` (source inside a job): `module reset; module load Miniforge3/24.3.0-0`; unpacks
+`tactics/envs/dlenv.tar.gz` (conda-pack, 3.16 GB, git-ignored) into `$TMPDIR/dlenv` in **49 s**
+(fresh build with `REBUILD=1`, repack with `PACK=1`: 277 s). Versions: Python 3.11, torch 2.5.1+cu121,
+numpy 2.4.6, pandas 3.1.0, pyarrow 25.0.0 (conda-forge), torch_geometric 2.8.1 + torch_scatter OK;
+pyg-lib disabled (needs glibc 2.27). Check jobs 41104648 (build+pack) / 41104652 (unpack): read
+rlcs-2024 shard (199 row groups, 127 cols; replay 0 = 13,587 frames × 125 float cols) and moved it to A100.
+
+## Direction change — 2026-10-31 (创奇)
+Goal is no longer to beat baselines/SOTA but to produce a fun, interesting study. Reference: TAGNet
+(IEEE ToG 2026, DOI 10.1109/TG.2026.3745970; label-free self-supervised graph learning finds
+interpretable CS2 defensive patterns, links them to context statistically, team fingerprints).
+P2 output = interesting research questions/hypotheses + methods + statistical/robustness plan +
+expected visual cases; baselines only as controls. **New P4 criterion:** converge once findings are
+interesting, credible, interpretable and pass statistical and robustness tests. Splits, citation
+verification and cluster rules unchanged. P2 design running (Codex, ultra).

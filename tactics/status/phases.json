@@ -1,9 +1,53 @@
-{"updated": "2026-10-31 15:00 CET",
+{
+ "updated": "2026-10-31 15:15 CET",
  "phases": [
-  {"id":"P0","name":"环境","status":"in_progress","started":"2026-10-31 08:50","finished":"","conclusion":"读 README、建 tactics/ 分支、GPU 探测进行中"},
-  {"id":"P1","name":"进度大屏","status":"in_progress","started":"2026-10-31 14:55","finished":"","conclusion":"dashboard 部署中"},
-  {"id":"P2","name":"文献与创新","status":"not_started","started":"","finished":"","conclusion":""},
-  {"id":"P3","name":"实验","status":"not_started","started":"","finished":"","conclusion":""},
-  {"id":"P4","name":"达标即停","status":"not_started","started":"","finished":"","conclusion":""},
-  {"id":"P5","name":"论文","status":"not_started","started":"","finished":"","conclusion":""}
- ]}
+  {
+   "id": "P0",
+   "name": "环境",
+   "status": "done",
+   "started": "2026-10-31 08:50",
+   "finished": "2026-10-31 15:10",
+   "conclusion": "A100 80GB; torch 2.5.1+cu121 + PyG 2.8.1，打包环境 49 秒就绪；已读 README"
+  },
+  {
+   "id": "P1",
+   "name": "进度大屏",
+   "status": "in_progress",
+   "started": "2026-10-31 14:55",
+   "finished": "",
+   "conclusion": "dashboard 部署中"
+  },
+  {
+   "id": "P2",
+   "name": "文献与创新",
+   "status": "in_progress",
+   "started": "2026-10-31 14:55",
+   "finished": "",
+   "conclusion": "方向调整：有趣的研究问题与可检验发现（Codex ultra 设计中）"
+  },
+  {
+   "id": "P3",
+   "name": "实验",
+   "status": "not_started",
+   "started": "",
+   "finished": "",
+   "conclusion": ""
+  },
+  {
+   "id": "P4",
+   "name": "发现收敛",
+   "status": "not_started",
+   "started": "",
+   "finished": "",
+   "conclusion": "标准：得到有趣、可信、可解释、经得起统计与鲁棒性检验的发现即收敛"
+  },
+  {
+   "id": "P5",
+   "name": "论文",
+   "status": "not_started",
+   "started": "",
+   "finished": "",
+   "conclusion": ""
+  }
+ ]
+}
