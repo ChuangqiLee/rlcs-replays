@@ -88,11 +88,20 @@ def cover_arrays(arrays, field_half_length=5120.0, field_width=8192.0):
 
 MEASURES = ["third_depth", "coverage", "uncovered", "spacing", "ball_x", "ball_y",
             "ball_z", "ball_speed", "mean_boost"]
+# Additive outputs: historical measures/models and their multiplicity family
+# retain their definitions. Corrected responses form a separate exploratory pair.
+CORRECTED_MEASURES = ["last_man_y_own", "last_man_behind_ball"]
+
+
+def available_measures(frame):
+    """Old saved summaries remain usable without invented corrected metrics."""
+    return MEASURES + [name for name in CORRECTED_MEASURES if name in frame]
 
 
 def summarize_replay(meta, arrays, late_threshold=60):
     """Each replay contributes sufficient sums to series/context summaries."""
     measures = cover_arrays(arrays)
+    measures.update(last_man_arrays(arrays))
     live = np.asarray(arrays["live"], bool)
     if not live.any():
         return []
@@ -119,7 +128,7 @@ def summarize_replay(meta, arrays, late_threshold=60):
                    time_bin=int(t), ball_zone=int(z), late=int(is_late),
                    frame_weight=len(take), remaining=float(np.nanmean(remaining[take])),
                    zero_second=bool(is_zero))
-        for key in MEASURES:
+        for key in MEASURES + CORRECTED_MEASURES:
             vals = measures[key][take]
             finite = np.isfinite(vals)
             row[key] = float(vals[finite].mean()) if finite.any() else np.nan
@@ -135,12 +144,13 @@ def series_context_summary(observations):
             "score_diff", "overtime", "time_bin", "ball_zone", "late", "zero_second"]
     work = observations.copy()
     work["remaining_sum"] = work.remaining * work.frame_weight
-    for name in MEASURES:
+    measures = available_measures(work)
+    for name in measures:
         work[name + "_sum"] = work[name].fillna(0) * work[name + "_n"]
-    sums = ["frame_weight", "remaining_sum"] + [x + suffix for x in MEASURES for suffix in ("_sum", "_n")]
+    sums = ["frame_weight", "remaining_sum"] + [x + suffix for x in measures for suffix in ("_sum", "_n")]
     out = work.groupby(keys, dropna=False, observed=True)[sums].sum().reset_index()
     out["remaining"] = out.pop("remaining_sum") / out.frame_weight
-    for name in MEASURES:
+    for name in measures:
         out[name] = out.pop(name + "_sum") / out[name + "_n"].replace(0, np.nan)
     return out
 
@@ -229,14 +239,23 @@ def fit_pressure(summary, split="val", n_bootstrap=2000, seed=42, regression="au
                            & (summary.overtime == 0) & summary.score_diff.isin([-score_margin, score_margin])
                            & (summary.remaining > 0) & (summary.remaining <= 180)].copy()
     if selected.empty:
-        return {"status": "insufficient_data", "reason": "no known-score regulation observations in the declared contrast", "models": {}}
+        return {"status": "insufficient_data", "reason": "no known-score regulation observations in the declared contrast", "models": {},
+                "corrected_models": {name: {"status": "insufficient_data", "reason": "no observations in declared contrast"}
+                                     for name in CORRECTED_MEASURES}}
     # Equal team-series-context rows. Both focal teams stay in the same cluster.
     cells = selected.groupby(["late", "score_diff"]).series_id.nunique()
     support = {f"late={int(a)},score={int(b)}": int(n) for (a, b), n in cells.items()}
     if len(cells) != 4 or min(cells) < 3:
-        return {"status": "insufficient_data", "reason": "need >=3 independent series in all four contrast cells", "cell_series": support, "models": {}}
-    models = {}
-    for response in ("uncovered", "third_depth", "coverage", "spacing"):
+        return {"status": "insufficient_data", "reason": "need >=3 independent series in all four contrast cells", "cell_series": support, "models": {},
+                "corrected_models": {name: {"status": "insufficient_data", "reason": "four-cell series support gate failed"}
+                                     for name in CORRECTED_MEASURES}}
+    models, corrected_models = {}, {}
+    for response in ("uncovered", "third_depth", "coverage", "spacing", *CORRECTED_MEASURES):
+        target = corrected_models if response in CORRECTED_MEASURES else models
+        if response not in selected:
+            target[response] = {"status": "unavailable",
+                                "reason": "corrected response absent from saved summary; rerun compact summarization"}
+            continue
         data = selected.loc[np.isfinite(selected[response])].copy()
         try:
             data, x, names, omitted = regression_design(data)
@@ -260,11 +279,18 @@ def fit_pressure(summary, split="val", n_bootstrap=2000, seed=42, regression="au
                              "ols_sensitivity": model}
                 else:
                     model["mixed_effects"] = mixed
-            models[response] = model
+            target[response] = model
         except (ValueError, np.linalg.LinAlgError) as exc:
-            models[response] = {"status": "insufficient_data", "reason": str(exc)}
+            target[response] = {"status": "insufficient_data", "reason": str(exc)}
     return {"status": "fit" if models.get("uncovered", {}).get("status") == "fit" else "insufficient_data",
             "cell_series": support, "models": models,
+            "corrected_models": corrected_models,
+            "corrected_response_definition": {
+                "status": "exploratory observational association",
+                "last_man_y_own": "minimum own-player y + 5120 uu; positive interaction is a line farther forward",
+                "last_man_behind_ball": "ball y minus minimum own-player y; positive interaction is farther behind ball",
+                "identity": "deepest own player at each frame; identity may change, so neither response is fixed-player displacement",
+                "multiplicity": "separate exploratory pair; raw p-values and CIs, excluded from historical confirmatory and pooled exploratory families"},
             "estimand": f"[late-earlier, trailing by {score_margin}]-[late-earlier, leading by {score_margin}]",
             "primary_uncertainty": "Converged crossed MixedLM with Wald uncertainty when available; otherwise series-clustered OLS and whole-series bootstrap. OLS bootstrap accompanying MixedLM is a separately labelled sensitivity.",
             "limitations": ["observational association, not causal or psychological pressure",
@@ -310,7 +336,7 @@ def _run(args, run):
     if observations.empty:
         observations = pd.DataFrame(columns=["split", "season", "series_id", "roster_id", "team_id", "event", "region",
                                              "score_diff", "overtime", "time_bin", "ball_zone", "late", "zero_second",
-                                             "remaining", "frame_weight", *MEASURES])
+                                             "remaining", "frame_weight", *MEASURES, *CORRECTED_MEASURES])
     summary = series_context_summary(observations)
     summary.to_parquet(folder / "observations.parquet", index=False)
     details = fit_pressure(summary, args.split, args.bootstrap, args.seed, args.regression, args.score_margin)
@@ -328,9 +354,9 @@ def _run(args, run):
     # Descriptive pressure curves keep OT and zero-second play in separate rows.
     if not summary.empty:
         curve_keys = ["split", "time_bin", "score_diff", "overtime", "zero_second"]
-        curves = summary.groupby(curve_keys, dropna=False, observed=True)[MEASURES].mean().reset_index()
+        curves = summary.groupby(curve_keys, dropna=False, observed=True)[available_measures(summary)].mean().reset_index()
     else:
-        curves = pd.DataFrame(columns=["split", "time_bin", "score_diff", "overtime", "zero_second", *MEASURES])
+        curves = pd.DataFrame(columns=["split", "time_bin", "score_diff", "overtime", "zero_second", *MEASURES, *CORRECTED_MEASURES])
     curves.to_parquet(folder / "curves.parquet", index=False)
     run.metric(split=args.split, **metrics)
     run.result("pressure", metrics, split=args.split, details=details,
