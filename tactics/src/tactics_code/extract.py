@@ -13,7 +13,7 @@ import numpy as np
 import pandas as pd
 
 from .common import Run, add_common_args, atomic_json, split_for_season
-from .data import (BALL_COLUMNS, DEFAULT_DATA_ROOT, FLAG_COLUMNS, PLAYER_COLUMNS, frame_goals,
+from .data import (BALL_COLUMNS, DEFAULT_DATA_ROOT, FLAG_COLUMNS, PLAYER_COLUMNS, decode_replay_states, frame_goals,
                    frame_overtime, group_metadata, iter_frame_replays, load_manifest, load_state_map,
                    parsed_json, raw_path_lookup, read_index, roster_key, stable_player_id, timed_goals)
 
@@ -83,13 +83,17 @@ def candidate_touches(ball, players, time, hit, live, radius=250., impulse=150.,
     return out
 
 
-def live_and_context(df, meta, config, heuristic=False):
+def live_and_context(df, meta, config, heuristic=False, decoded=None):
     time = df['current time'].to_numpy(dtype=float)
     frame = df['frame'].to_numpy(dtype=float)
     remaining = df['seconds remaining'].to_numpy(dtype=float)
     state = df['game state'].to_numpy(dtype=float)
     hit = df['ball has been hit'].to_numpy(dtype=float)
-    if config.get('live_states') is not None:
+    if config.get('state_decoding') == 'per_replay_decoded':
+        decoded = decode_replay_states(df) if decoded is None else decoded
+        live = decoded['live'].copy()
+        provenance = 'explicit_state_map'
+    elif config.get('live_states') is not None:
         live = np.isin(state, config['live_states'])
         provenance = 'explicit_state_map'
     elif heuristic:
@@ -101,7 +105,8 @@ def live_and_context(df, meta, config, heuristic=False):
     else:
         raise ValueError('Supply --state-map/--live-states or explicitly opt into --allow-heuristic-live')
     exclude = config.get('kickoff_states', []) + config.get('goal_replay_states', [])
-    live &= ~np.isin(state, exclude)
+    if decoded is None:
+        live &= ~np.isin(state, exclude)
     live &= np.isfinite(time) & np.isfinite(frame)
     live &= np.isfinite(df[BALL_COLUMNS[:3]].to_numpy()).all(axis=1)
     overtime = np.full(len(df), np.nan, np.float32)
@@ -110,14 +115,14 @@ def live_and_context(df, meta, config, heuristic=False):
     if 'overtime_states' in config:
         overtime[np.isin(state, config['overtime_states'])] = 1
     if config.get('overtime_detection') == 'frame_state_transitions':
-        overtime = frame_overtime(df, config)
+        overtime = frame_overtime(df, config, decoded)
     elif heuristic and provenance != 'explicit_state_map' and 'regulation_states' not in config:
         # Positive *decreasing* clocks are the only provisionally identified regulation subset.
         overtime[live] = 0
     score = np.full(len(df), np.nan, np.float32)
     goals, goal_status = timed_goals(meta, config)
     if goals is None:
-        goals, _ = frame_goals(df, config)
+        goals, _ = frame_goals(df, config, decoded)
         if goals is not None:
             goal_status = 'frame_state_transitions'
     boundaries = np.zeros(len(df), bool)
@@ -175,7 +180,8 @@ def extract_replay(df, row, manifest, raw_paths, config, fps=10., margin=100., h
     ball = df[BALL_COLUMNS].to_numpy(dtype=np.float32)
     players = np.stack([df[cols].to_numpy(dtype=np.float32) for cols in PLAYER_COLUMNS], axis=1)
     flags = np.stack([df[cols].to_numpy(dtype=np.float32) for cols in FLAG_COLUMNS], axis=1)
-    live, overtime, score, state_source, goal_source, _ = live_and_context(df, meta, config, heuristic)
+    decoded = decode_replay_states(df) if config.get('state_decoding') == 'per_replay_decoded' else None
+    live, overtime, score, state_source, goal_source, _ = live_and_context(df, meta, config, heuristic, decoded)
     native_segments = segment_ids(live, time, frame, native_fps)
     touches = candidate_touches(ball, players, time, df['ball has been hit'].to_numpy(float), live,
                                 radius=touch_radius, impulse=touch_impulse)
@@ -240,6 +246,9 @@ def extract_replay(df, row, manifest, raw_paths, config, fps=10., margin=100., h
                       team_id=None, opponent_roster_id=roster_key(ids[3:]), fps=fps, native_fps=native_fps,
                       state_source=state_source, score_source=goal_source, demolition_source=demo_source,
                       **groups)
+        if decoded is not None:
+            record.update(state_decoding='per_replay_decoded',
+                          state_decoding_details=json.dumps(decoded['diagnostics']))
         results.append((record, arrays))
     return results
 
@@ -331,8 +340,10 @@ def main(argv=None):
         config = (load_state_map(args.state_map) if args.state_map or not (args.live_states or args.allow_heuristic_live)
                   else {})
         if args.live_states:
+            config.pop('state_decoding', None)
             config['live_states'] = [float(x) for x in args.live_states.split(',')]
-        if config.get('live_states') is None and not args.allow_heuristic_live:
+        if (config.get('live_states') is None and config.get('state_decoding') != 'per_replay_decoded'
+                and not args.allow_heuristic_live):
             raise ValueError('Unknown game-state codes: pass audited --state-map/--live-states, or exploratory --allow-heuristic-live')
         if args.workers < 1 or args.shard_replays < 1 or args.rank_margin < 0 or args.rank_hold < 0:
             raise ValueError('workers/shard-replays must be positive; hysteresis thresholds nonnegative')

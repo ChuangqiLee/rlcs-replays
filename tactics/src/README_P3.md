@@ -49,23 +49,26 @@ Default data root: `/home/c.li16@students.uu.nl/workspace/rlcs-replays/data`.
 
 The audit separates the supplied reconciliation, **49,259 − 49,165 = 94 odd-player-count games**, from observed index counts. It reports status/player-count tables, duplicates, manifest conflicts, clock/state/boost/demolition ranges, state code and transition counts, goal-field shapes and timeline coverage, per-team goal agreement with header player totals, stable IDs, and grouping sources. The 134 failures and 26 deleted downloads are not subtracted from parsed-game totals.
 
-Audit and extraction default to `./state_map_rlcs.json` (falling back to the repository copy when run elsewhere). The map records the supplied empirical decoding from rlcs-2024 replay 0 at 30 fps: 73 is kickoff countdown, 78 is live play, and 96 is goal/post-goal. It carries `explicit_state_map` provenance for measurement gates. Override it with `--state-map PATH`; explicit `--live-states` and the exploratory `--allow-heuristic-live` remain available. The state-map keys are:
+Audit and extraction default to `./state_map_rlcs.json` (falling back to the repository copy when run elsewhere). Game-state codes are replay-specific object IDs. The default `state_decoding: "per_replay_decoded"` selects the unique most frequent code among frames where `ball has been hit == 1`, independently for each replay. That live code must cover at least 50% of all replay frames. Decoding failures (no unique dominant code, including no hit-latched evidence, or live share below 50%) admit no live frames and are recorded by replay ID in `audit.json`. The audit records live codes, shares, phase counts and failure reasons, and summarizes failure counts in Markdown and stdout.
+
+Extraction retains `state_source: "explicit_state_map"` for measurement gates and records `state_decoding: "per_replay_decoded"` plus replay-specific diagnostics in compact metadata. Override the default configuration with `--state-map PATH`; explicit `--live-states` and the exploratory `--allow-heuristic-live` remain available. Numeric code lists are only appropriate for sources with an independently verified fixed mapping.
 
 | Key | Meaning |
 |---|---|
-| `live_states` | Audited codes admitting live play, including OT when appropriate |
-| `kickoff_states`, `goal_replay_states` | Codes always excluded |
-| `regulation_states`, `overtime_states` | Codes giving known OT false/true; otherwise OT is unknown |
-| `goal_detection` | `frame_state_transitions` enables live → goal/post-goal goal detection when timed metadata is unavailable |
-| `overtime_detection` | `frame_state_transitions` derives OT from the zero-clock live → kickoff transition, because live codes are shared by regulation and OT |
+| `state_decoding` | `per_replay_decoded` enables independent decoding of each replay's object IDs |
+| `live_states` | Optional explicit fixed codes when per-replay decoding is disabled |
+| `kickoff_states`, `goal_replay_states` | Optional explicit fixed codes always excluded in fixed-map mode |
+| `regulation_states`, `overtime_states` | Optional fixed codes giving known OT false/true |
+| `goal_detection` | `frame_state_transitions` enables frame-derived goals when timed metadata is unavailable |
+| `overtime_detection` | `frame_state_transitions` derives OT from regulation-end transitions |
 | `demolition_absent_values` | Optional audited no-demolition sentinels; indicator duration still needs validation |
 | `goals_key`, `goal_time_key`, `goal_time_unit`, `goal_team_key` | Optional alternate goal layout; time unit is `frame` or `time` in the native current-time domain |
 
-Timed metadata decoding accepts `goals: [{"frame": ..., "team": 0/1}]` or `{"time": ..., "team": 0/1}` and checks available header totals. When this timeline is unavailable, the default map derives goals from 78 → 96 transitions with `frame_state_transitions` provenance. The immediately preceding ball y must satisfy `|y| > 5000`: positive y credits team 0 (blue), negative y credits team 1 (orange). Otherwise the scorer is ambiguous, and scores after that goal remain unknown. The audit compares derived per-team goal counts with summed player `Goals` in `replay_meta` and reports agreement. Header totals alone never locate goals. Only goals **strictly before** a frame affect its score.
+Timed metadata decoding accepts `goals: [{"frame": ..., "team": 0/1}]` or `{"time": ..., "team": 0/1}` and checks available header totals. When this timeline is unavailable, the default decoder derives a goal at the first frame leaving live if the immediately preceding ball position satisfies `|y| > 5000`. Positive y credits team 0 (blue); negative y credits team 1 (orange). Goals retain `frame_state_transitions` provenance. Non-live intervals before a return to live are kickoff/countdown; after a goal, entered codes remain post-goal until the next kickoff. This includes replays with two consecutive post-goal codes and an initialization code. The audit compares both derived team totals with summed player `Goals` in `replay_meta`, prints the agreement rate and denominator, and records disagreements. Header totals alone never locate goals. Only goals **strictly before** a frame affect its score.
 
-The default map marks regulation until a 78 → 73 transition at zero seconds remaining without a goal. Subsequent live frames are overtime, including its count-up clock, until the next goal ends golden-goal play. Zero-second live regulation remains distinct from OT; OT is not inferred from a negative timer. Unknown context stays NaN internally and becomes JSON `null`.
+A live exit at zero seconds remaining with last-live `|y| <= 5000` marks regulation end. Subsequent live frames are overtime until a goal ends golden-goal play. Zero-second live regulation remains distinct from OT, and a goal at zero seconds does not start OT. Unknown context stays NaN internally and becomes JSON `null`.
 
-The exploratory heuristic accepts positive, decreasing clocks with the hit latch set; it may produce no windows for coarse/integer clocks. It does not validate parser states or support confirmatory interpretation. The default RLCS map handles integer clocks directly through states. Review the reported transitions and goal agreement when applying it to other data; do not copy the synthetic mapping onto real data. Demolition duration semantics remain unverified.
+The exploratory heuristic accepts positive, decreasing clocks with the hit latch set; it may produce no windows for coarse/integer clocks. It does not validate parser states or support confirmatory interpretation. Per-replay decoding handles integer clocks through state transitions. Review decoding failures and goal agreement on actual data. Demolition duration semantics remain unverified.
 
 ## Compact data and bounded I/O
 

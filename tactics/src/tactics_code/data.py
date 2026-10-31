@@ -196,7 +196,79 @@ def goal_agreement(events, meta: dict) -> bool | None:
             and totals == [sum(team == i for _, team, _ in events) for i in (0, 1)])
 
 
-def frame_goals(df: pd.DataFrame, config: dict) -> tuple[list | None, dict]:
+def decode_replay_states(df: pd.DataFrame) -> dict:
+    """Decode replay-local object IDs on ordered native frames, never globally.
+
+    A unique modal code among hit==1 frames nominates live play; it must
+    occupy at least half of all frames. Failed decodes admit no live frames.
+    Kickoff codes are the non-live predecessors of returns to live. Following
+    a goal, all intervening codes remain post-goal until the next kickoff.
+    """
+    state = df['game state'].to_numpy(float)
+    hit = df['ball has been hit'].to_numpy(float)
+    codes, counts = np.unique(state[(hit == 1) & np.isfinite(state)], return_counts=True)
+    diagnostics = dict(method='per_replay_decoded', live_code=None, live_share=0.,
+                       hit_code_counts={f'{code:g}': int(count) for code, count in zip(codes, counts)},
+                       failures=[])
+    live = np.zeros(len(df), bool)
+    if not len(counts) or np.count_nonzero(counts == counts.max()) != 1:
+        diagnostics['failures'].append('no_dominant_live_code')
+    else:
+        code = float(codes[counts.argmax()])
+        live = state == code
+        diagnostics.update(live_code=code, live_share=float(live.mean()))
+        if diagnostics['live_share'] < .5:
+            diagnostics['failures'].append('live_share_below_50_percent')
+    phases = np.full(len(df), 'unknown', dtype='<U9')
+    overtime = np.full(len(df), np.nan, np.float32)
+    result = dict(diagnostics=diagnostics, live=live, phase=phases,
+                  overtime=overtime, goals=None)
+    if diagnostics['failures']:
+        live[:] = False
+        return result
+
+    frame = df['frame'].to_numpy(float)
+    remaining = df['seconds remaining'].to_numpy(float)
+    ball_y = (df['Ball - position y'].to_numpy(float) if 'Ball - position y' in df
+              else np.full(len(df), np.nan))
+    exits = np.flatnonzero(live[:-1] & ~live[1:] & np.isfinite(state[1:])) + 1
+    goal_indices = exits[np.isfinite(ball_y[exits - 1]) & (np.abs(ball_y[exits - 1]) > 5000)]
+    end_indices = exits[(remaining[exits] == 0) & (np.abs(ball_y[exits - 1]) <= 5000)]
+    result['goals'] = [(float(frame[i]), int(ball_y[i - 1] < 0), 'frame') for i in goal_indices]
+    returns = np.flatnonzero(~live[:-1] & live[1:]) + 1
+    kickoff_codes = np.unique(state[returns - 1])
+    kickoff_codes = kickoff_codes[np.isfinite(kickoff_codes)]
+    # Non-live intervals before a return are countdown unless a goal marks
+    # their initial portion as post-goal. This also handles initialization IDs.
+    if len(returns):
+        phases[:returns[-1]][~live[:returns[-1]]] = 'kickoff'
+    phases[live] = 'live'
+    is_kickoff = np.isin(state, kickoff_codes)
+    goal_set, end_set = set(goal_indices), set(end_indices)
+    post_goal, pending, active = False, False, False
+    for i in range(len(df)):
+        if i in goal_set:
+            post_goal, pending, active = True, False, False
+        elif i in end_set:
+            pending = True
+        if post_goal:
+            if live[i] or (is_kickoff[i] and i not in goal_set):
+                post_goal = False
+            else:
+                phases[i] = 'post_goal'
+        if pending and live[i]:
+            pending, active = False, True
+        if phases[i] != 'unknown':
+            overtime[i] = float(active and live[i])
+    diagnostics.update(kickoff_codes=kickoff_codes.tolist(),
+                       post_goal_codes=np.unique(state[phases == 'post_goal']).tolist(),
+                       end_of_regulation_frames=frame[end_indices].tolist(),
+                       phase_counts={phase: int(np.count_nonzero(phases == phase))
+                                     for phase in ('live', 'kickoff', 'post_goal', 'unknown')})
+    return result
+
+
+def frame_goals(df: pd.DataFrame, config: dict, decoded=None) -> tuple[list | None, dict]:
     """Native-frame live -> post-goal events, before subsampling or rotation.
 
     The event is the first post-goal frame. Its team uses only the preceding
@@ -207,6 +279,14 @@ def frame_goals(df: pd.DataFrame, config: dict) -> tuple[list | None, dict]:
                        goal_events=0, ambiguous_goals=0, team_counts=[0, 0])
     if not diagnostics['enabled']:
         return None, diagnostics
+    if config.get('state_decoding') == 'per_replay_decoded':
+        decoded = decode_replay_states(df) if decoded is None else decoded
+        events = decoded['goals']
+        diagnostics['state_decoding'] = decoded['diagnostics']
+        if events is not None:
+            diagnostics.update(goal_events=len(events),
+                               team_counts=[sum(team == t for _, team, _ in events) for t in (0, 1)])
+        return events, diagnostics
     state = df['game state'].to_numpy(dtype=float)
     live = np.isin(state, config.get('live_states', []))
     post_goal = np.isin(state, config.get('goal_replay_states', []))
@@ -229,8 +309,10 @@ def frame_goals(df: pd.DataFrame, config: dict) -> tuple[list | None, dict]:
     return events, diagnostics
 
 
-def frame_overtime(df: pd.DataFrame, config: dict) -> np.ndarray:
+def frame_overtime(df: pd.DataFrame, config: dict, decoded=None) -> np.ndarray:
     """Track overtime across reused state codes using the regulation-end reset."""
+    if config.get('state_decoding') == 'per_replay_decoded':
+        return (decode_replay_states(df) if decoded is None else decoded)['overtime']
     state = df['game state'].to_numpy(dtype=float)
     remaining = df['seconds remaining'].to_numpy(dtype=float)
     live = np.isin(state, config.get('live_states', []))
