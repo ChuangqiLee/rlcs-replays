@@ -48,3 +48,15 @@ P2 output = interesting research questions/hypotheses + methods + statistical/ro
 expected visual cases; baselines only as controls. **New P4 criterion:** converge once findings are
 interesting, credible, interpretable and pass statistical and robustness tests. Splits, citation
 verification and cluster rules unchanged. P2 design running (Codex, ultra).
+
+## P2 design — 2026-10-31
+TAGNet PDF read in full (Codex ultra). Design `docs/P2_design.md` "The Grammar of Rotation":
+7 RQs — RQ1 reusable temporal grammar of 3-man rotation; RQ2 handoff gaps vs conceding risk;
+RQ3 pressure (late/trailing/OT) redistributes cover; RQ4 player vs roster vs org style fingerprints
+and 2021→2026 meta evolution; RQ5 measurable pre-goal 势 (history beyond current state) +
+model-based counterfactual scenarios; RQ6 compensation for low boost/demolition; RQ7 tactical
+"conversation" within a series. Headline order: RQ1 > RQ3 > RQ4. Split train 21-22/22-23/2024,
+val 2025, test 2026 (+event-wise), 3v3 primary; series-bootstrap, mixed effects, Holm over 3
+confirmatory tests; robustness: seeds, K, windows, fps, field mirror/team swap. Controls: handcrafted
++k-means, PCA, GRU-AE, static GNN, TAGNet-style, GBDT value model. 11 verified refs
+(`docs/references.bib`, `refs/literature.jsonl`). Next: P3-A data/measurement audit (clock, touches, IDs).
