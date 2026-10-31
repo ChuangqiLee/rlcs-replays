@@ -201,6 +201,25 @@ def progress():
         return ""
 
 
+def literature():
+    rows = []
+    try:
+        with open(data_path("refs/literature.jsonl"), "r", encoding="utf-8", errors="replace") as source:
+            for line in source:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    item = json.loads(line)
+                except ValueError:
+                    continue
+                if isinstance(item, dict):
+                    rows.append(item)
+    except (OSError, ValueError):
+        pass
+    return {"items": rows}
+
+
 def command(args):
     try:
         env = dict(os.environ)
@@ -295,6 +314,7 @@ API = {
     "/api/runs": runs,
     "/api/logs": logs,
     "/api/progress": progress,
+    "/api/literature": literature,
     "/api/slurm": slurm,
     "/api/squeue": slurm,
 }

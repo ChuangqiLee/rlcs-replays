@@ -304,3 +304,11 @@ node tests/test_frontend.js
 验证均离线执行，不访问网络。SLURM 测试使用模拟命令响应，未连接真实调度器；实际集群的权限、命令可用性和返回内容仍需部署后检查。
 
 部署后检查健康端点、九个侧栏页面与数据缺失时的空态，并确认页头主机名、更新时间及页脚时区。若表格没有数据，首先检查数据是否放在 `tactics/` 下的约定路径。
+
+
+## 参考文献 `refs/literature.jsonl`（/api/literature，页面 #/literature）
+每行一个 JSON 对象，文件不存在或为空时显示空表；无法解析的行跳过：
+```json
+{"title":"...","authors":["A","B"],"venue":"IEEE Transactions on Games","year":2026,"category":"ToG","tier":"best_paper|oral|spotlight|accepted","doi_or_url":"10.1109/... 或 https://...","takeaway":"一句话借鉴点","verified_count":3,"added":"2026-10-31 15:30 CET"}
+```
+页面只显示三列：标题（有 `doi_or_url` 时可点击，`10.` 开头自动链接 https://doi.org/）、期刊/会议（venue）、年份；其余字段供记录用。
