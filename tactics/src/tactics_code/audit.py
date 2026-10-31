@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 
 from .common import Run, add_common_args
-from .data import (BALL_COLUMNS, DEFAULT_DATA_ROOT, frame_goals, goal_agreement, goal_totals,
+from .data import (BALL_COLUMNS, DEFAULT_DATA_ROOT, decode_replay_states, frame_goals, goal_agreement, goal_totals,
                    group_metadata, iter_frame_replays, load_manifest, load_state_map, parsed_json,
                    raw_path_lookup, read_index, stable_player_id, timed_goals)
 
@@ -106,6 +106,7 @@ def audit(root: Path, run=None, max_replays=None, seed=42, state_map=None):
                 'goal_disagreement_replays'):
         goal_checks[key] = 0
     goal_examples = []
+    decoding_replays, decoding_failures = [], Counter()
     replay_metadata = {str(row['replay_id']): parsed_json(row.get('replay_meta'), {})
                        for row in selected.to_dict('records')}
     frame_checks, absent_shards = Counter(), []
@@ -167,7 +168,12 @@ def audit(root: Path, run=None, max_replays=None, seed=42, state_map=None):
             if seen[rid] == 1:
                 meta = replay_metadata.get(rid)
                 meta = meta if isinstance(meta, dict) else {}
-                frame_timeline, evidence = frame_goals(ordered, state_map)
+                decoded = None
+                if state_map.get('state_decoding') == 'per_replay_decoded':
+                    decoded = decode_replay_states(ordered)
+                    decoding_replays.append(dict(replay_id=rid, **decoded['diagnostics']))
+                    decoding_failures.update(decoded['diagnostics']['failures'])
+                frame_timeline, evidence = frame_goals(ordered, state_map, decoded)
                 meta_timeline, meta_reason = timed_goals(meta, state_map)
                 goal_checks['replays_scanned'] += 1
                 frame_complete = frame_timeline is not None and not evidence['ambiguous_goals']
@@ -221,6 +227,9 @@ def audit(root: Path, run=None, max_replays=None, seed=42, state_map=None):
         game_state_transitions=dict(state_transitions),
         game_state_evidence={k: dict(v) for k, v in state_evidence.items()},
         state_map=state_map,
+        state_decoding=dict(method=state_map.get('state_decoding', 'explicit_codes'),
+                            replays=decoding_replays, failure_counts=dict(decoding_failures),
+                            failed_replays=sum(bool(d['failures']) for d in decoding_replays)),
         goals=dict(goal_checks, timeline_sources=dict(goal_sources), disagreement_examples=goal_examples,
                    coverage_scope='unique_scanned_replays',
                    agreement_scope='scanned frame timelines with complete per-team header Goals totals',
@@ -229,7 +238,9 @@ def audit(root: Path, run=None, max_replays=None, seed=42, state_map=None):
         duplicate_frame_row_groups={k: v for k, v in seen.items() if v > 1},
         frame_scan_max_replays_per_season=max_replays,
         frame_scan_scope='eligible_3v3_complete_known_series_sample' if max_replays is not None else 'all_ok_replays',
-        semantics={'game_state_codes': 'explicit_state_map' if state_map.get('live_states') is not None else 'unverified',
+        semantics={'game_state_codes': 'explicit_state_map' if (state_map.get('live_states') is not None
+                       or state_map.get('state_decoding') == 'per_replay_decoded') else 'unverified',
+                   'state_decoding': state_map.get('state_decoding', 'explicit_codes'),
                    'ball_has_been_hit': 'candidate kickoff latch; edges and prevalence reported, not per-touch pulses',
                    'boost_units': 'raw replay units; range is evidence, no assumed 0..100 scale',
                    'demolished_by': 'actor/event/state/sentinel semantics unverified',
@@ -238,6 +249,7 @@ def audit(root: Path, run=None, max_replays=None, seed=42, state_map=None):
     )
     metrics = dict(index_games=len(index), ok_games=len(ok), failed_games=int((index['status'] == 'failed').sum()),
                    odd_player_games=odd, scanned_frames=frame_checks['frames_scanned'],
+                   state_decoding_failures=sum(bool(d['failures']) for d in decoding_replays),
                    series_coverage=(len(index) - grouping.get('missing', 0) - grouping.get('manifest_conflict', 0)) / max(len(index), 1),
                    timed_goal_coverage=goal_checks['timed_goals_available'] / max(goal_checks['replays_scanned'], 1),
                    metadata_timed_goal_coverage=meta_counts['timed_goals_available'] / max(len(index), 1),
@@ -261,11 +273,15 @@ def markdown(metrics, details):
               f"Metadata-only timed-goal coverage across index rows: {metrics['metadata_timed_goal_coverage']:.1%}; complete frame-derived timelines among scanned replays: {metrics['frame_derived_timed_goal_coverage']:.1%}.",
               f"Frame scan: {metrics['scanned_frames']:,} frames; {details['selected_replays_missing_frames']} selected replays missing locally.",
               '', 'Header goal totals cross-check frame-derived events; they do not establish event times.',
-              'The default state_map_rlcs.json supplies the empirically decoded RLCS states; --state-map overrides it.',
-              'Goals use live-to-goal-state transitions and the preceding ball y coordinate, with ambiguous scoring teams reported.',
-              'With the default map, a live-to-kickoff transition at zero seconds starts overtime; its live state code is unchanged.',
+              'The default state_map_rlcs.json decodes replay-specific object IDs independently (per_replay_decoded; explicit_state_map provenance).',
+              'Live is the unique most frequent code among hit==1 frames and must cover at least 50% of all replay frames.',
+              'Goals are exits from live with preceding |ball y| > 5000; positive y credits team 0.',
+              'A non-goal exit at zero seconds and |ball y| <= 5000 marks regulation end; subsequent live frames are overtime.',
               'The explicit exploratory clock/hit heuristic does not validate these semantics.',
               'Raw demolition and boost ranges are reported without assuming a unit or duration convention.',
+              '', '## Per-replay state decoding', '',
+              f"Decoding failures: {metrics['state_decoding_failures']}; reasons: {details['state_decoding']['failure_counts']}.",
+              'Every scanned replay has its decoded live code, live share and failures recorded in audit.json.',
               '', '## Goal agreement', '']
     goals = details['goals']
     agreement = metrics['goal_agreement_rate']
@@ -300,6 +316,11 @@ def main(argv=None):
         run.idea('p3-data-audit', 'Data and parser semantics audit', 'running', motivation='Check source eligibility, identity and clock semantics')
         config = load_state_map(args.state_map)
         metrics, details = audit(args.data_root, run, args.max_replays, args.seed, config)
+        rate = metrics['goal_agreement_rate']
+        rate_text = f'{rate:.1%}' if rate is not None else 'unavailable'
+        print(f"Goal agreement: {rate_text} ({details['goals']['goal_agreement_replays']}/"
+              f"{details['goals']['goal_agreement_comparable_replays']} comparable replays)")
+        print(f"Per-replay state decoding failures: {metrics['state_decoding_failures']}")
         run.result('audit', metrics, notes='Source reference counts are not treated as measured fixture/cluster counts.', details=details)
         (args.output / 'results' / 'audit.md').write_text(markdown(metrics, details), encoding='utf-8')
         bad = bool(details['manifest_conflicts'] or details['duplicate_index_replay_ids'])
