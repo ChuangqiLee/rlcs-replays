@@ -84,12 +84,14 @@ def make_replay(season='rlcs-2024', series=0, game=0, seconds=40, seed=42):
     return pd.DataFrame(data), index, manifest
 
 
-def make_rlcs_replay():
+def make_rlcs_replay(seed=42, five_codes=False):
     """A complete 300-second regulation, 63-second OT and 2–1 blue win.
 
     Each post-goal and kickoff interval lasts 90 native frames. Regulation
     includes a full second of zero-clock live play before its OT kickoff.
-    Header Goals are deliberately the only goal metadata.
+    Header Goals are deliberately the only goal metadata. Object IDs are
+    randomized independently per replay; five_codes adds initialization and
+    a second post-goal state, as observed in the 2025 parser output.
     """
     frame, row, manifest = make_replay(seconds=385)
     state = np.full(len(frame), 73, np.float32)
@@ -110,6 +112,13 @@ def make_rlcs_replay():
     frame['ball has been hit'] = (state != 73).astype(np.float32)
     frame.loc[state == 73, ['Ball - position x', 'Ball - position y']] = 0
     frame.loc[[989, 2069, 11459], 'Ball - position y'] = [5150, -5215, 5200]
+    if five_codes:
+        state[0] = 26
+        for start in (990, 2070, 11460):
+            state[start + 60:start + 90] = 37
+    labels = np.unique(state)
+    codes = np.random.default_rng(seed).choice(np.arange(10, 250), len(labels), replace=False)
+    frame['game state'] = np.select([state == label for label in labels], codes).astype(np.float32)
     meta = json.loads(row['replay_meta'])
     del meta['goals']
     for team, totals in [('team_zero', [1, 1, 0]), ('team_one', [0, 0, 1])]:

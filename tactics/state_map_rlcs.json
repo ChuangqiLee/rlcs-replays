@@ -1,7 +1,5 @@
 {
-  "live_states": [78],
-  "kickoff_states": [73],
-  "goal_replay_states": [96],
+  "state_decoding": "per_replay_decoded",
   "goal_detection": "frame_state_transitions",
   "overtime_detection": "frame_state_transitions"
 }

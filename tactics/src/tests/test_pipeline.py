@@ -63,15 +63,15 @@ def test_default_rlcs_map_extraction_and_audit(tmp_path):
     frame, row, _ = make_rlcs_replay()
     rows = []
     with pq.ParquetWriter(shard, pa.Table.from_pandas(frame, preserve_index=False).schema) as writer:
-        for variant in ('agree', 'mismatch', 'ambiguous'):
-            current = frame.copy()
-            record = dict(row, replay_id=f'rlcs-{variant}')
+        for seed, variant in enumerate(('agree', 'mismatch', 'non_goal')):
+            current, replay_row, _ = make_rlcs_replay(seed=seed, five_codes=seed == 0)
+            record = dict(replay_row, replay_id=f'rlcs-{variant}')
             current['replay_id'] = record['replay_id']
             if variant == 'mismatch':
                 meta = json.loads(record['replay_meta'])
                 meta['team_zero'][0]['stats']['Goals'] += 1
                 record['replay_meta'] = json.dumps(meta)
-            elif variant == 'ambiguous':
+            elif variant == 'non_goal':
                 current.loc[989, 'Ball - position y'] = 0
             writer.write_table(pa.Table.from_pandas(current, preserve_index=False), row_group_size=len(current))
             rows.append(record)
@@ -83,15 +83,19 @@ def test_default_rlcs_map_extraction_and_audit(tmp_path):
                                  '--output', str(output), '--run', 'rlcs-default', *extra],
                                 capture_output=True, text=True, timeout=180)
         assert result.returncode == 0, f'{module}:\n{result.stdout}\n{result.stderr}'
+        if module == 'audit':
+            assert 'Goal agreement: 33.3% (1/3 comparable replays)' in result.stdout
     audited = json.loads((output / 'results' / 'audit.json').read_text())
     assert audited['metrics']['metadata_timed_goal_coverage'] == 0
-    assert audited['metrics']['timed_goal_coverage'] == pytest.approx(2 / 3)
+    assert audited['metrics']['timed_goal_coverage'] == 1
     assert audited['metrics']['goal_agreement_rate'] == pytest.approx(1 / 3)
     details = audited['details']
-    assert details['game_state_counts'] == {'73': 1080, '78': 32760, '96': 810}
-    assert details['game_state_transitions']['78->96'] == 9
-    assert details['game_state_transitions']['78->73'] == 3
-    assert details['goals']['ambiguous_goal_events'] == 1
+    assert len(details['state_decoding']['replays']) == 3
+    assert len({d['live_code'] for d in details['state_decoding']['replays']}) == 3
+    assert details['state_decoding']['failed_replays'] == 0
+    assert details['semantics']['state_decoding'] == 'per_replay_decoded'
+    assert details['game_state_transitions']
+    assert details['goals']['ambiguous_goal_events'] == 0
     assert details['goals']['goal_disagreement_replays'] == 2
     compact = list(iter_compact(output / 'compact'))
     assert len(compact) == 6
@@ -100,10 +104,8 @@ def test_default_rlcs_map_extraction_and_audit(tmp_path):
         assert meta['score_source'] == 'frame_state_transitions'
         assert arrays['live'].any()
         assert (arrays['overtime'] == 1).any()
-        if meta['replay_id'] == 'rlcs-ambiguous':
-            assert np.isnan(arrays['score_diff'][arrays['frame'] > 990]).all()
-        else:
-            assert np.isfinite(arrays['score_diff']).all()
+        assert meta['state_decoding'] == 'per_replay_decoded'
+        assert np.isfinite(arrays['score_diff']).all()
 
 
 def test_rlcs_audit_state_and_goal_report_without_arrow(tmp_path, monkeypatch):
@@ -115,16 +117,23 @@ def test_rlcs_audit_state_and_goal_report_without_arrow(tmp_path, monkeypatch):
     shard = tmp_path / 'part-0.parquet'
     shard.touch()
     frames, rows = {}, []
-    for variant in ('agree', 'mismatch', 'ambiguous'):
-        current = frame.copy()
-        record = dict(row, replay_id=variant, _frame_path=str(shard))
+    for seed, variant in enumerate(('agree', 'mismatch', 'non_goal', 'no_hits', 'low_share')):
+        current, replay_row, _ = make_rlcs_replay(seed=seed, five_codes=seed == 0)
+        record = dict(replay_row, replay_id=variant, _frame_path=str(shard))
         current['replay_id'] = variant
         if variant == 'mismatch':
             meta = json.loads(record['replay_meta'])
             meta['team_zero'][0]['stats']['Goals'] += 1
             record['replay_meta'] = json.dumps(meta)
-        elif variant == 'ambiguous':
+        elif variant == 'non_goal':
             current.loc[989, 'Ball - position y'] = 0
+        elif variant == 'no_hits':
+            current['ball has been hit'] = 0
+        elif variant == 'low_share':
+            current['game state'] = 999
+            current['ball has been hit'] = 0
+            current.loc[:99, 'game state'] = 998
+            current.loc[:99, 'ball has been hit'] = 1
         frames[variant] = current
         rows.append(record)
     arrow = ModuleType('pyarrow')
@@ -140,15 +149,23 @@ def test_rlcs_audit_state_and_goal_report_without_arrow(tmp_path, monkeypatch):
                         lambda path, selected, columns: ((rid, frames[rid][columns]) for rid in sorted(selected)))
     metrics, details = audit_module.audit(tmp_path)
     assert metrics['metadata_timed_goal_coverage'] == 0
-    assert metrics['timed_goal_coverage'] == pytest.approx(2 / 3)
+    assert metrics['timed_goal_coverage'] == pytest.approx(3 / 5)
     assert metrics['goal_agreement_rate'] == pytest.approx(1 / 3)
-    assert details['game_state_counts'] == {'73': 1080, '78': 32760, '96': 810}
-    assert details['game_state_transitions'] == {'73->78': 12, '78->96': 9, '96->73': 6, '78->73': 3}
-    assert details['goals']['frame_goal_events'] == 9
-    assert details['goals']['ambiguous_goal_events'] == 1
+    assert len(details['state_decoding']['replays']) == 5
+    assert len({d['live_code'] for d in details['state_decoding']['replays'] if not d['failures']}) == 3
+    assert details['state_decoding']['failed_replays'] == 2
+    assert metrics['state_decoding_failures'] == 2
+    assert details['state_decoding']['failure_counts'] == {
+        'no_dominant_live_code': 1, 'live_share_below_50_percent': 1}
+    failures = {d['replay_id'] for d in details['state_decoding']['replays'] if d['failures']}
+    assert failures == {'no_hits', 'low_share'}
+    assert details['semantics']['state_decoding'] == 'per_replay_decoded'
+    assert details['game_state_transitions']
+    assert details['goals']['frame_goal_events'] == 8
+    assert details['goals']['ambiguous_goal_events'] == 0
     assert details['goals']['goal_agreement_comparable_replays'] == 3
     assert details['goals']['goal_agreement_replays'] == 1
     assert details['goals']['goal_disagreement_replays'] == 2
     rendered = audit_module.markdown(metrics, details)
-    assert '78->96' in rendered
+    assert 'per_replay_decoded' in rendered
     assert '33.3%' in rendered
