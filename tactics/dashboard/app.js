@@ -22,6 +22,7 @@
     slurm:['SLURM','计算资源 / SLURM','当前作业队列与最近两天的执行记录。'],
     session:['会话日志','运行记录 / SESSION LOGS','最近 30 份日志，每份保留末尾 20 KB。'],
     paper:['论文','研究产出 / PAPER','章节进度、图表准备与引用核验。'],
+    literature:['参考文献','文献调研 / LITERATURE','白名单来源文献、借鉴点与核实次数。'],
     progress:['PROGRESS.md','研究记录 / PROGRESS','项目进度文档，与研究现场保持同步。']
   };
   const statusNames = {not_started:'未开始',in_progress:'进行中',running:'进行中',done:'已完成',blocked:'已阻塞',proposed:'已提出',promising:'有潜力',pruned:'已剪枝',selected:'已选定',pending:'等待中',draft:'草稿',review:'审核中',ready:'已就绪',unknown:'待更新',RUNNING:'运行中',PENDING:'排队中',COMPLETED:'已完成',FAILED:'失败',CANCELLED:'已取消',TIMEOUT:'超时',COMPLETING:'结束中',SUSPENDED:'已挂起',NODE_FAIL:'节点故障',OUT_OF_MEMORY:'内存不足'};
@@ -306,6 +307,12 @@
     }
     flush();closeList();if(inCode)out+='<pre><code>'+esc(code.join('\n'))+'</code></pre>';return out;
   }
+  function literatureView() {
+    const items=objectRows(obj(state.data.literature).items);
+    const href=v=>{v=String(v||'').trim();return /^10\./.test(v)?'https://doi.org/'+v:safeHref(v);};
+    const rows=items.map(i=>{const u=href(i.doi_or_url);return `<tr><td>${u?`<a href="${esc(u)}" target="_blank" rel="noopener noreferrer">${esc(i.title||'')}</a>`:esc(i.title||'')}</td><td>${esc(i.venue||'')}</td><td class="mono">${esc(i.year||'')}</td></tr>`;});
+    return card('参考文献',table(['标题','期刊/会议','年份'],rows)+(items.length?'':empty('暂无文献','tactics/refs/literature.jsonl 为空或不存在。','▤')),`<span class="meta">${items.length} 篇</span>`);
+  }
   function progressView() {
     const source=typeof state.data.progress==='string'?state.data.progress:'';
     if(!source.trim())return card('PROGRESS.md',notice(apiError('progress'))+empty('进度文档尚未建立','项目的阶段结论、实验记录与下一步计划将在这里呈现。','↳'));
@@ -364,7 +371,7 @@
     series.forEach(s=>{svg+=`<polyline points="${s.data.map(p=>x(p[0])+','+y(p[1])).join(' ')}" fill="none" stroke="${s.color}" stroke-width="2"><title>${esc(s.name)}</title></polyline>`;const stride=Math.max(1,Math.ceil(s.data.length/150));s.data.filter((p,index)=>index%stride===0||index===s.data.length-1).forEach(p=>{svg+=`<circle cx="${x(p[0])}" cy="${y(p[1])}" r="2.5" fill="${s.color}"><title>${esc(s.name)} · ${esc(axis==='time'?formatTime(p[0]):number(p[0]))} · ${number(p[1])}</title></circle>`;});});
     element.innerHTML=svg+'</svg>';
   }
-  const renderers={overview,dataset:datasetView,ideas:ideasView,results:resultsView,training:trainingView,slurm:slurmView,session:logsView,paper:paperView,progress:progressView};
+  const renderers={overview,dataset:datasetView,ideas:ideasView,results:resultsView,training:trainingView,slurm:slurmView,session:logsView,paper:paperView,literature:literatureView,progress:progressView};
   function render() {
     const active=document.activeElement,focus=active&&active.id,start=active&&active.selectionStart;
     const logScroll=$('log-output')?$('log-output').scrollTop:null;
@@ -398,7 +405,7 @@
   async function refresh() {
     if(state.busy)return;state.busy=true;$('refresh').disabled=true;
     const slurm=fetchData('slurm').then(()=>{if(['overview','slurm'].includes(state.view))render();});
-    await Promise.all(['host','phases','dataset','ideas','paper','results','runs','logs','progress'].map(fetchData));
+    await Promise.all(['host','phases','dataset','ideas','paper','results','runs','logs','progress','literature'].map(fetchData));
     if(!state.errors.host)state.lastUpdate=obj(state.data.host).time;
     updateHeader();render();await slurm;updateHeader();state.busy=false;$('refresh').disabled=false;
   }
