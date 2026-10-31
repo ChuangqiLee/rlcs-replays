@@ -1,0 +1,37 @@
+{
+  "as_of": "2026-10-30",
+  "fps": 30,
+  "totals": {
+    "seasons": 5,
+    "games": 49259,
+    "frames": 591200000,
+    "modes": {"1v1": 1586, "2v2": 786, "3v3": 46793},
+    "failed": 134,
+    "failed_rate_percent": 0.3,
+    "deleted": 26
+  },
+  "seasons": [
+    {"name": "RLCS 2021-22", "games": 11699, "frames": 139900000, "modes": {"1v1": 0, "2v2": 1, "3v3": 11671}},
+    {"name": "RLCS 22-23", "games": 15410, "frames": 184300000, "modes": {"1v1": 1, "2v2": 2, "3v3": 15397}},
+    {"name": "RLCS 2024", "games": 7307, "frames": 87500000, "modes": {"1v1": 0, "2v2": 0, "3v3": 7301}},
+    {"name": "RLCS 2025", "games": 7081, "frames": 85100000, "modes": {"1v1": 715, "2v2": 3, "3v3": 6320}},
+    {"name": "RLCS 2026", "games": 7762, "frames": 94300000, "modes": {"1v1": 870, "2v2": 780, "3v3": 6104}}
+  ],
+  "storage": [
+    {"name": "帧数据 · 30 fps", "path": "data/frames/fps30", "gb": 128},
+    {"name": "原始回放 · Kaggle（已解压）", "path": null, "gb": 56},
+    {"name": "原始回放 · ballchasing（tar 分片）", "path": null, "gb": 25}
+  ],
+  "split_protocol": {
+    "unit": ["series", "event", "season"],
+    "rule": "按 series / event / season 分组划分训练、验证与测试集。",
+    "notes": "同一分组不得跨集合；不按帧随机切分。具体集合清单与比例待实验协议确定。"
+  },
+  "notes": [
+    "五个赛季均已下载并完成解析，无需重新下载。调整帧率或增加特征时，使用 scripts/parse_replays.py 重新解析原始回放。",
+    "帧数按原始摘要的百万帧精度保留：总计 591.2 M，分赛季显示值之和为 591.1 M；未用分项之和改写总计。",
+    "1v1 / 2v2 / 3v3 之外的 94 场为玩家缺失或断线造成的奇数玩家对局。",
+    "134 个回放解析失败（原摘要标注 0.3%），错误已记录在索引中，主要因中途加入或离开、或头部记录超过六名玩家。",
+    "官方分组中 26 个回放在下载前已被 ballchasing 删除。"
+  ]
+}

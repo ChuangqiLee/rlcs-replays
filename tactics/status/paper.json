@@ -1,0 +1,15 @@
+{
+  "updated": null,
+  "target": "IEEE Transactions on Games",
+  "sections": [
+    {"name": "Introduction", "status": "not_started", "progress": 0},
+    {"name": "Related Work", "status": "not_started", "progress": 0},
+    {"name": "Dataset", "status": "not_started", "progress": 0},
+    {"name": "Method", "status": "not_started", "progress": 0},
+    {"name": "Experiments", "status": "not_started", "progress": 0},
+    {"name": "Conclusion", "status": "not_started", "progress": 0},
+    {"name": "Appendix", "status": "not_started", "progress": 0}
+  ],
+  "figures": [],
+  "citations": {"verified": 0, "total": 0}
+}
