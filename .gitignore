@@ -5,3 +5,14 @@ __pycache__/
 *.replay
 .venv.trash/
 logs/
+# tactics research
+tactics/logs/
+tactics/checkpoints/
+tactics/data/
+tactics/runs/
+*.ckpt
+*.pt
+*.pth
+*.parquet
+*.npy
+*.npz
