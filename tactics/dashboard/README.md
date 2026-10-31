@@ -1,8 +1,10 @@
 # RLCS 战术研究进度大屏
 
-中文只读大屏，包含总览、数据集、创新点、实验对比、训练曲线、SLURM、会话日志、论文与 PROGRESS.md 九个页面。采用深色卡片与侧栏导航，页面每 30 秒刷新，可手动刷新。后端仅依赖 Python 3.6 标准库，绑定 `127.0.0.1`。
+> 当前双语离线版本、`/api/jobs`、数据模式、测试和 Python 3.6.8 兼容性说明见 [CHANGES_dash.md](CHANGES_dash.md)。本地开发使用 `DASH_OFFLINE=1 python3 dashboard/server.py`（从项目根目录执行），禁止触发 Slurm 查询。下文保留历史部署与数据格式说明；本次未操作集群。
 
-前端立即加载本地应用代码，异步尝试使用 cdnjs 的 ECharts 5.5.0 与 marked 12.0.2；这些可选资源不会阻塞页面。离线或 CDN 加载失败时，使用本地 SVG 图表和安全的基础 Markdown 渲染。HTML 清理会移除外部图片、脚本和不安全链接。
+中英双语只读大屏，包含总览、数据集、创新点、实验对比、训练曲线、SLURM、会话日志、论文与 PROGRESS.md 九个页面。采用深色卡片与侧栏导航，页面每 30 秒刷新，可手动刷新。后端仅依赖 Python 3.6+ 标准库（兼容 3.6.8），绑定 `127.0.0.1`。
+
+前端只加载本地 JS/CSS，全部图表使用原生 SVG，没有 CDN 或外部字体依赖。PROGRESS.md 显示转义原文，不执行 HTML 或加载远程图片。
 
 ## 部署位置与启动
 
@@ -276,6 +278,8 @@ sacct -u "$USER" -S now-2days --format=JobID,JobName%30,State,Elapsed,End -P -n
 | `/api/phases` | `status/phases.json` 对象 |
 | `/api/dataset` | `status/dataset.json` 对象 |
 | `/api/ideas` | `status/ideas.json` 对象 |
+| `/api/jobs` | 近三天 sacct / 本地缓存作业与资源统计，详见 CHANGES_dash.md |
+| `/api/highlights` | `status/highlights.json` 对象 |
 | `/api/paper` | `status/paper.json` 对象 |
 | `/api/results` | `{ "文件名不含.json": 结果对象或数组 }` |
 | `/api/runs` | `{ "run目录名": { "meta": {}, "rows": [] } }`，可能附带读取提示 |
@@ -297,8 +301,8 @@ python3 -c "import ast; ast.parse(open('server.py', encoding='utf-8').read()); p
 在交付目录运行自动验证：
 
 ```bash
-python3 tests/test_server.py
-node tests/test_frontend.js
+python3 -m unittest dashboard.test_server -v
+node dashboard/test_app.js
 ```
 
 验证均离线执行，不访问网络。SLURM 测试使用模拟命令响应，未连接真实调度器；实际集群的权限、命令可用性和返回内容仍需部署后检查。

@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 """Read-only research dashboard; Python 3.6+, standard library only."""
+import csv
 import datetime
+import io
 import json
 import math
 import os
+import re
 import subprocess
 import sys
 import threading
@@ -22,6 +25,245 @@ MAX_POINTS_PER_SPLIT = 2000
 SLURM_CACHE_SECONDS = 25
 _SLURM_LOCK = threading.Lock()
 _SLURM_CACHE = {"at": 0, "data": None}
+JOBS_CACHE_SECONDS = 60
+_JOBS_LOCK = threading.Lock()
+_JOBS_CACHE = {"at": 0, "data": None}
+UTC = datetime.timezone.utc
+JOB_FIELDS = "JobID,JobName,Partition,State,Elapsed,Timelimit,AllocCPUS,ReqMem,MaxRSS,AllocTRES,NodeList,Start,End"
+# Explicit model-name mappings only. Ampere/Pascal are families, not models.
+GPU_PARTITION_MODELS = {"a100": "A100", "h100": "H100", "h200": "H200", "a40": "A40", "v100": "V100"}
+FAILED_JOB_STATES = {"FAILED", "CANCELLED", "TIMEOUT", "NODE_FAIL", "OUT_OF_MEMORY", "BOOT_FAIL", "DEADLINE", "PREEMPTED", "REVOKED"}
+
+
+def known(value):
+    value = str(value).strip() if value is not None else ""
+    return None if value.lower() in ("", "unknown", "none", "n/a", "(null)", "null", "notset") else value
+
+
+def nonnegative_int(value):
+    value = known(value)
+    return int(value) if value and re.fullmatch(r"\d+", value) else None
+
+
+def elapsed_seconds(value):
+    """Slurm [days-]hours:minutes:seconds or minutes:seconds, never a guessed duration."""
+    value = known(value)
+    if not value:
+        return None
+    match = re.fullmatch(r"(?:(\d+)-)?(?:(\d+):)?(\d{2}):(\d{2})", value)
+    if not match:
+        return None
+    days, hours, minutes, seconds = (int(x or 0) for x in match.groups())
+    if minutes >= 60 or seconds >= 60 or (match[1] and not match[2]):
+        return None
+    return days * 86400 + hours * 3600 + minutes * 60 + seconds
+
+
+def parse_iso(value):
+    """Parse YYYY-MM-DD[T or space]HH:MM:SS[.ffffff][Z or +/-HH:MM].
+
+    Also accept compact +/-HHMM offsets. Reject incomplete/invalid timestamps;
+    datetime validates calendar and clock fields without a newer ISO parser.
+    """
+    match = re.fullmatch(
+        r"([0-9]{4})-([0-9]{2})-([0-9]{2})[T ]([0-9]{2}):([0-9]{2}):([0-9]{2})"
+        r"(?:\.([0-9]{1,6}))?(Z|[+-][0-9]{2}:?[0-9]{2})?", value)
+    if not match:
+        raise ValueError("invalid ISO timestamp")
+    parts = match.groups()
+    parsed = datetime.datetime(*[int(part) for part in parts[:6]],
+                               microsecond=int((parts[6] or "0").ljust(6, "0")))
+    offset = parts[7]
+    if offset:
+        minutes = 0
+        if offset != "Z":
+            digits = offset[1:].replace(":", "")
+            hours, minutes = int(digits[:2]), int(digits[2:])
+            if hours > 23 or minutes > 59:
+                raise ValueError("invalid ISO offset")
+            minutes = (hours * 60 + minutes) * (-1 if offset[0] == "-" else 1)
+        parsed = parsed.replace(tzinfo=datetime.timezone(datetime.timedelta(minutes=minutes)))
+    return parsed
+
+
+def sunday(year, month, day):
+    """Sunday on or after the given day (used for current EU/US DST rules)."""
+    date = datetime.datetime(year, month, day)
+    return date + datetime.timedelta(days=(6 - date.weekday()) % 7)
+
+
+def chicago_to_utc(local):
+    """Current US rules: second March Sunday / first November Sunday, 02:00.
+
+    These fixed rules intentionally do not implement historical IANA changes.
+    """
+    start = sunday(local.year, 3, 8).replace(hour=2)
+    end = sunday(local.year, 11, 1).replace(hour=2)
+    hour = datetime.timedelta(hours=1)
+    if start <= local < start + hour or end - hour <= local < end:
+        raise ValueError("nonexistent or ambiguous Chicago time")
+    offset = -5 if start <= local < end else -6
+    return (local - datetime.timedelta(hours=offset)).replace(tzinfo=UTC)
+
+
+def amsterdam_time(utc):
+    """EU DST: last March Sunday 01:00 UTC through last October Sunday 01:00."""
+    start = sunday(utc.year, 3, 25).replace(hour=1, tzinfo=UTC)
+    end = sunday(utc.year, 10, 25).replace(hour=1, tzinfo=UTC)
+    offset = 2 if start <= utc < end else 1
+    return utc.astimezone(datetime.timezone(datetime.timedelta(hours=offset)))
+
+
+def job_time(value, source_timezone="America/Chicago"):
+    """UTC sacct or Chicago fallback -> Amsterdam ISO using explicit DST rules.
+
+    Ambiguous/nonexistent Chicago wall times have no unique instant: return null.
+    Explicit offsets can disambiguate repeated hours.
+    """
+    value = known(value)
+    if not value:
+        return None
+    try:
+        parsed = parse_iso(value)
+        if parsed.tzinfo is None:
+            if source_timezone == "UTC":
+                parsed = parsed.replace(tzinfo=UTC)
+            elif source_timezone == "America/Chicago":
+                parsed = chicago_to_utc(parsed)
+            else:
+                return None
+        return amsterdam_time(parsed.astimezone(UTC)).isoformat()
+    except (ValueError, OverflowError):
+        return None
+
+
+def gpu_allocation(tres, partition):
+    """The aggregate gres/gpu count takes precedence; never double count typed TRES."""
+    tres = known(tres)
+    if tres is None:
+        return None, None, None
+    values = dict(part.split("=", 1) for part in tres.split(",") if "=" in part)
+    gpu = {k.strip(): nonnegative_int(v) for k, v in values.items() if k.strip() == "gres/gpu" or k.strip().startswith("gres/gpu:")}
+    if not gpu:
+        # Valid CPU allocations establish CPU-only; arbitrary/invalid TRES do not.
+        return (0, None, None) if nonnegative_int(values.get("cpu")) is not None else (None, None, None)
+    typed = {k[len("gres/gpu:"):]: v for k, v in gpu.items() if k.startswith("gres/gpu:")}
+    count = gpu.get("gres/gpu") if "gres/gpu" in gpu else (sum(typed.values()) if all(v is not None for v in typed.values()) else None)
+    models = [name for name, n in typed.items() if n and known(name)]
+    model = ", ".join(models) or None
+    source = "AllocTRES" if model else None
+    # A partial set of typed counts does not establish the model of every GPU.
+    if model and "gres/gpu" in gpu and (any(v is None for v in typed.values()) or sum(typed.values()) != count):
+        model = source = None
+    if not model and count:
+        matches = [model for token, model in GPU_PARTITION_MODELS.items() if token in (partition or "").lower()]
+        if len(matches) == 1:
+            model, source = matches[0], "partition"
+    return count, model, source
+
+
+def node_gpu_evidence():
+    """Per-node GPU model verified by nvidia-smi in earlier probe jobs (status/gpu_models.json)."""
+    try:
+        with open(os.path.join(ROOT, "status", "gpu_models.json"), encoding="utf-8") as handle:
+            data = json.load(handle)
+        return data.get("nodes", {}) if isinstance(data, dict) else {}
+    except (OSError, ValueError):
+        return {}
+
+
+def parse_jobs(raw, source_timezone="America/Chicago"):
+    lines = [line for line in raw.splitlines() if line.strip()]
+    if not lines:
+        return []
+    reader = csv.DictReader(io.StringIO("\n".join(lines)), delimiter="|")
+    if not reader.fieldnames or "JobID" not in reader.fieldnames:
+        raise ValueError("sacct header must include JobID")
+    output = {}
+    for row in reader:
+        jobid = known(row.get("JobID"))
+        if not jobid or "." in jobid:  # Ignore .batch/.extern/steps in fallback exports.
+            continue
+        item = {key: known(row.get(field)) for key, field in {
+            "jobid": "JobID", "name": "JobName", "partition": "Partition", "state": "State",
+            "elapsed": "Elapsed", "timelimit": "Timelimit", "req_mem": "ReqMem", "max_rss": "MaxRSS",
+            "alloc_tres": "AllocTRES", "nodes": "NodeList"}.items()}
+        gpu_count, model, model_source = gpu_allocation(item["alloc_tres"], item["partition"])
+        if gpu_count and not model and item.get("nodes"):
+            evidence = node_gpu_evidence().get(item["nodes"])
+            if evidence and evidence.get("model"):
+                model, model_source = evidence["model"], "node probe: " + str(evidence.get("source", "unknown"))
+        cpus = nonnegative_int(row.get("AllocCPUS"))
+        item.update(alloc_cpus=cpus, gpu_count=gpu_count, gpu_model=model, gpu_model_source=model_source,
+                    resource_type="GPU" if gpu_count and gpu_count > 0 else "CPU" if gpu_count == 0 else None,
+                    elapsed_seconds=elapsed_seconds(item["elapsed"]),
+                    start=job_time(row.get("Start"), source_timezone), end=job_time(row.get("End"), source_timezone))
+        item["state_code"] = item["state"].split()[0].rstrip("+").upper() if item["state"] else None
+        output[jobid] = item
+    return list(output.values())
+
+
+def job_summary(rows, available=True):
+    counts = {key: 0 if available else None for key in ("running", "completed", "failed", "other")}
+    cpu_hours, gpu_hours, cpu_missing, gpu_missing = 0, 0, 0, 0
+    for row in rows:
+        state = row["state_code"]
+        key = "running" if state in ("RUNNING", "COMPLETING") else "completed" if state == "COMPLETED" else "failed" if state in FAILED_JOB_STATES else "other"
+        counts[key] += 1
+        elapsed = row["elapsed_seconds"]
+        for resource in ("cpu", "gpu"):
+            count = row["alloc_cpus" if resource == "cpu" else "gpu_count"]
+            if count == 0:
+                continue
+            if elapsed is None or count is None:
+                if resource == "cpu": cpu_missing += 1
+                else: gpu_missing += 1
+            elif resource == "cpu": cpu_hours += elapsed * count / 3600
+            else: gpu_hours += elapsed * count / 3600
+    return dict(counts, cpu_hours=cpu_hours if available and (not rows or cpu_missing < len(rows)) else None,
+                gpu_hours=gpu_hours if available and (not rows or gpu_missing < len(rows)) else None,
+                cpu_missing_jobs=cpu_missing if available else None,
+                gpu_missing_jobs=gpu_missing if available else None, total=len(rows) if available else None)
+
+
+def jobs():
+    with _JOBS_LOCK:
+        if _JOBS_CACHE["data"] is not None and time.monotonic() - _JOBS_CACHE["at"] < JOBS_CACHE_SECONDS:
+            return _JOBS_CACHE["data"]
+        user = os.environ.get("USER", "").strip()
+        since = (datetime.datetime.now(UTC) - datetime.timedelta(days=3)).strftime("%Y-%m-%dT%H:%M:%S")
+        error = error_en = None
+        rows, source, cache_file_updated = [], None, None
+        source_timezone = None
+        try:
+            if os.environ.get("DASH_OFFLINE") == "1":
+                raise OSError("DASH_OFFLINE=1")
+            if not user:
+                raise OSError("USER is not set")
+            env = dict(os.environ, TZ="UTC", SLURM_TIME_FORMAT="standard")
+            raw = subprocess.check_output(["sacct", "-u", user, "-S", since, "-X", "-P", "-o", JOB_FIELDS],
+                                          stderr=subprocess.PIPE, timeout=10, env=env)
+            rows, source = parse_jobs(raw.decode("utf-8", "replace"), "UTC"), "sacct"
+            source_timezone = "UTC"
+        except (OSError, subprocess.SubprocessError, ValueError) as exc:
+            detail = "timeout (10s)" if isinstance(exc, subprocess.TimeoutExpired) else str(exc)[:300]
+            error, error_en = "sacct 暂不可用：" + detail, "sacct unavailable: " + detail
+            try:
+                path = data_path("status", "jobs_cache.psv")
+                with open(path, encoding="utf-8") as handle:
+                    rows = parse_jobs(handle.read(), "America/Chicago")
+                    cache_file_updated = timestamp(os.fstat(handle.fileno()).st_mtime)
+                source = "status/jobs_cache.psv"
+                source_timezone = "America/Chicago"
+            except (OSError, ValueError, UnicodeError) as fallback:
+                error += "；本地作业缓存不可用"
+                error_en += "; local job cache unavailable: " + str(fallback)[:200]
+        data = {"jobs": rows, "summary": job_summary(rows, source is not None), "source": source,
+                "error": error, "error_zh": error, "error_en": error_en, "updated": timestamp(),
+                "since": since, "source_timezone": source_timezone, "timezone": "Europe/Amsterdam",
+                "cache_seconds": JOBS_CACHE_SECONDS, "cache_file_updated": cache_file_updated}
+        _JOBS_CACHE.update(at=time.monotonic(), data=data)
+        return data
 
 
 def timestamp(epoch=None):
@@ -66,6 +308,8 @@ def status_file(name, default):
     except (OSError, ValueError, UnicodeError) as exc:
         result = dict(default)
         result["error"] = "status/{}.json 暂不可用：{}".format(name, exc)
+        result["error_zh"] = result["error"]
+        result["error_en"] = "status/{}.json unavailable; check file existence and JSON format".format(name)
         return result
 
 
@@ -221,6 +465,8 @@ def literature():
 
 
 def command(args):
+    if os.environ.get("DASH_OFFLINE") == "1":
+        return "", "DASH_OFFLINE=1: Slurm disabled / 已禁用 Slurm"
     try:
         env = dict(os.environ)
         env["TZ"] = "UTC"
@@ -253,8 +499,10 @@ def slurm_end(value):
         return value
     try:
         # The subprocess uses TZ=UTC and the standard SLURM time format.
-        parsed = datetime.datetime.strptime(value, "%Y-%m-%dT%H:%M:%S")
-        return parsed.replace(tzinfo=datetime.timezone.utc).isoformat()
+        parsed = parse_iso(value)
+        if parsed.tzinfo is None:
+            parsed = parsed.replace(tzinfo=UTC)
+        return parsed.astimezone(UTC).isoformat()
     except (ValueError, OverflowError):
         return value
 
@@ -285,7 +533,7 @@ def slurm():
         queue_error = history_error = "USER 环境变量未设置" if not user else None
         if user:
             queue_args = ["squeue", "-u", user, "-h", "-o", "%i|%P|%j|%T|%M|%l|%D|%R"]
-            history_args = ["sacct", "-u", user, "-S", (datetime.datetime.now() - datetime.timedelta(days=2)).strftime("%Y-%m-%dT%H:%M:%S"),
+            history_args = ["sacct", "-u", user, "-S", (datetime.datetime.now(UTC) - datetime.timedelta(days=2)).strftime("%Y-%m-%dT%H:%M:%S"),
                             "--format=JobID,JobName%30,State,Elapsed,End", "-P", "-n"]
             with ThreadPoolExecutor(max_workers=2) as executor:
                 queue_future = executor.submit(command, queue_args)
@@ -309,6 +557,8 @@ API = {
     "/api/phases": lambda: status_file("phases", {"updated": None, "phases": []}),
     "/api/dataset": lambda: status_file("dataset", {}),
     "/api/ideas": lambda: status_file("ideas", {"updated": None, "ideas": []}),
+    "/api/jobs": jobs,
+    "/api/highlights": lambda: status_file("highlights", {"cards": []}),
     "/api/paper": lambda: status_file("paper", {"updated": None, "sections": [], "figures": []}),
     "/api/results": results,
     "/api/runs": runs,

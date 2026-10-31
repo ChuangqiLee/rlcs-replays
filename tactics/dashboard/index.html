@@ -3,40 +3,29 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="RLCS 战术研究进度：数据、创新、实验与论文。">
-  <title>研究进度 · RLCS 战术研究</title>
+  <meta name="description" content="RLCS research dashboard / RLCS 研究仪表盘">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; object-src 'none'; base-uri 'none'">
+  <title>RLCS · 研究仪表盘 / Research dashboard</title>
   <link rel="stylesheet" href="style.css">
   <script defer src="app.js"></script>
 </head>
 <body>
-  <a class="skip" href="#main">跳转到内容</a>
-  <aside class="sidebar" aria-label="研究导航">
-    <div class="brand"><span class="eyebrow">RESEARCH WORKSPACE</span><div class="brand-name">RLCS <span>战术研究</span></div><p>从比赛数据到协同决策</p></div>
-    <div class="nav-label">研究工作台</div>
-    <nav id="navigation">
-      <a href="#/overview" data-view="overview"><span class="nav-icon" aria-hidden="true">▦</span>总览<span class="nav-number">01</span></a>
-      <a href="#/dataset" data-view="dataset"><span class="nav-icon" aria-hidden="true">▤</span>数据集<span class="nav-number">02</span></a>
-      <a href="#/ideas" data-view="ideas"><span class="nav-icon" aria-hidden="true">◇</span>创新点<span class="nav-number">03</span></a>
-      <a href="#/results" data-view="results"><span class="nav-icon" aria-hidden="true">▥</span>实验对比<span class="nav-number">04</span></a>
-      <a href="#/training" data-view="training"><span class="nav-icon" aria-hidden="true">⌁</span>训练曲线<span class="nav-number">05</span></a>
-      <div class="nav-label secondary">运行与产出</div>
-      <a href="#/slurm" data-view="slurm"><span class="nav-icon" aria-hidden="true">▣</span>SLURM<span class="nav-number">06</span></a>
-      <a href="#/session" data-view="session"><span class="nav-icon" aria-hidden="true">≡</span>会话日志<span class="nav-number">07</span></a>
-      <a href="#/paper" data-view="paper"><span class="nav-icon" aria-hidden="true">▧</span>论文<span class="nav-number">08</span></a>
-      <a href="#/literature" data-view="literature"><span class="nav-icon" aria-hidden="true">▤</span>参考文献<span class="nav-number">09</span></a>
-      <a href="#/progress" data-view="progress"><span class="nav-icon" aria-hidden="true">↳</span>PROGRESS.md<span class="nav-number">10</span></a>
-    </nav>
-    <div class="sidebar-bottom"><span class="dot cyan"></span> 只读研究监控<div class="small muted">30 秒自动刷新 · CET 时间</div></div>
+  <a class="skip" href="#main" id="skip">跳转到内容 / Skip to content</a>
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-mark">R</div><strong>RLCS</strong><p id="brand-sub"></p></div>
+    <nav id="navigation" aria-label="导航 / Navigation"></nav>
+    <p class="sidebar-note" id="sidebar-note"></p>
   </aside>
   <div class="workspace">
-    <header class="topbar"><div class="breadcrumb">工作台 <span>/</span> <strong id="breadcrumb">总览</strong></div><div class="header-status"><span class="pill"><span class="dot" id="connection-dot"></span><span id="connection" role="status">连接中</span></span><span id="clock" class="mono">— CET</span><span id="countdown" class="fresh">30 秒后刷新</span><button id="refresh" class="btn" type="button"><span aria-hidden="true">↻</span> 刷新</button></div></header>
+    <header class="topbar"><span id="connection" role="status"></span><div class="actions"><span id="clock"></span><button id="refresh" type="button"></button><button id="language" type="button"></button></div></header>
     <main id="main" tabindex="-1">
-      <div class="page-heading"><div><div class="eyebrow" id="page-kicker">研究进度 / OVERVIEW</div><h1 id="page-title">总览</h1><p id="page-description">研究全貌、关键指标与最新进展。</p></div><div class="heading-meta"><span class="muted small">主机</span><span id="host" class="mono">—</span><span class="muted small">最近同步 <span id="last-update">—</span></span></div></div>
+      <div class="page-heading"><div><p class="eyebrow" id="eyebrow"></p><h1 id="page-title"></h1><p id="page-description"></p></div><p class="sync" id="sync"></p></div>
       <div id="api-notice" class="notice" role="status" hidden></div>
-      <div id="view" aria-live="polite"><div class="card empty"><span class="empty-symbol">↻</span><h3>正在读取研究状态</h3><p>数据就绪后将在这里显示。</p></div></div>
-      <noscript><div class="notice">请启用 JavaScript 以查看研究进度。</div></noscript>
+      <div id="view"><p>正在读取研究状态 / Loading research status…</p></div>
+      <noscript>请启用 JavaScript / Please enable JavaScript.</noscript>
     </main>
-    <footer><span><span class="dot cyan"></span> RLCS 战术研究 · 只读工作台</span><span id="chart-mode">离线图表已就绪</span><span>每 30 秒刷新（页面隐藏时暂停） <span class="divider">/</span> Europe/Amsterdam · CET</span></footer>
+    <footer id="footer"></footer>
   </div>
+  <div id="tooltip" class="tooltip" role="tooltip" hidden></div>
 </body>
 </html>
