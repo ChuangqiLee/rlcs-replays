@@ -16,3 +16,4 @@ tactics/runs/
 *.parquet
 *.npy
 *.npz
+tactics/envs/
