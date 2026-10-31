@@ -611,3 +611,7 @@ footer {
     max-width:100%
   }
 }
+
+.runjob{padding:10px 0;border-bottom:1px solid rgba(127,127,127,.3);font-size:16px}
+.runbar{height:14px;background:rgba(127,127,127,.25);border-radius:7px;overflow:hidden;margin:6px 0}
+.runbar span{display:block;height:100%;background:#2b7bd6}
