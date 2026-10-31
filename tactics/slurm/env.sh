@@ -2,7 +2,7 @@
 # Uses packed tarball tactics/envs/dlenv.tar.gz if present, else builds it (and packs with PACK=1).
 module reset >/dev/null 2>&1; module load Miniforge3/24.3.0-0
 TACT=${TACT:-$HOME/workspace/rlcs-replays/tactics}
-D=${TMPDIR:-/local/$USER/${SLURM_JOB_ID:-x}}/dlenv; mkdir -p $D
+D=${TMPDIR:-/local/$USER}/dlenv-${SLURM_JOB_ID:-x}; mkdir -p $D  # job-unique: shared /scratch/local races
 export PIP_CACHE_DIR=$D/pipcache CONDA_PKGS_DIRS=$D/pkgs
 TAR=$TACT/envs/dlenv.tar.gz
 if [ -f "$TAR" ] && [ -z "${REBUILD:-}" ]; then
