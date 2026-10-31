@@ -7,7 +7,7 @@ called null. No relaxed surrogate is promoted to a primary result.
 
 This module intentionally does not use iter_compact(root): that loader opens
 test metadata before split filtering. Only explicitly allowlisted shard paths
-are opened. --smoke reads slices for at most six unique replays, one worker.
+are opened. --smoke reads slices for at most six unique replays (up to four inference workers).
 """
 from __future__ import annotations
 
@@ -17,6 +17,7 @@ from concurrent.futures import ProcessPoolExecutor
 import hashlib
 import json
 import math
+import multiprocessing
 import os
 from pathlib import Path
 import re
@@ -24,6 +25,11 @@ import shutil
 import tempfile
 import time
 import zipfile
+
+# Set before NumPy/SciPy imports, including direct CLI invocation outside Slurm.
+for _thread_variable in ("OMP_NUM_THREADS", "MKL_NUM_THREADS", "OPENBLAS_NUM_THREADS",
+                         "BLIS_NUM_THREADS", "VECLIB_MAXIMUM_THREADS", "NUMEXPR_NUM_THREADS"):
+    os.environ[_thread_variable] = "1"
 
 import numpy as np
 import pandas as pd
@@ -40,6 +46,67 @@ PRIMARY_ROWS = MATCHED | {"B01", "B04", "B05", "B06", "B08", "B14", "B15"}
 DEFAULT_INPUT = Path("artifacts/p3-small-41104720-s42-w6-f10-ksweep/compact")
 REQUIRED = {"ball", "players", "time", "frame", "live", "segment",
             "score_diff", "remaining", "overtime"}
+
+
+
+# Fork inherits the read-only closure/data once per pool; only replicate indices
+# cross the task queue. Never invoke concurrently or recursively in one process.
+_REPLICATE_TASK = None
+_REPLICATE_TIMINGS = []
+
+
+def replicate_rng(seed, idea, index, stream):
+    """Stable independent streams, unrelated to process count or scheduling."""
+    digest = hashlib.sha256(f"{seed}:{idea}:{index}:{stream}".encode()).digest()
+    return np.random.default_rng(int.from_bytes(digest[:16], "little"))
+
+
+def _run_replicate(index):
+    function, seed, idea, stream = _REPLICATE_TASK
+    started = time.perf_counter()
+    value = function(replicate_rng(seed, idea, index, stream))
+    return value, time.perf_counter() - started, os.getpid()
+
+
+def replicate_map(function, reps, seed, idea, stream, workers=1, progress=None):
+    """Ordered reduction, fork/COW data, one BLAS thread even for imported use."""
+    from threadpoolctl import threadpool_limits
+    global _REPLICATE_TASK
+    if _REPLICATE_TASK is not None:
+        raise RuntimeError("Nested/concurrent replicate pools are forbidden")
+    _REPLICATE_TASK = (function, seed, idea, stream)
+    started = time.perf_counter()
+    values, seconds, pids = [], [], set()
+    try:
+        with threadpool_limits(limits=1):
+            if workers > 1:
+                with ProcessPoolExecutor(max_workers=workers,
+                        mp_context=multiprocessing.get_context("fork")) as pool:
+                    samples = pool.map(_run_replicate, range(reps), chunksize=1)
+                    for value, duration, pid in samples:
+                        values.append(value)
+                        seconds.append(duration)
+                        pids.add(pid)
+                        if progress and len(values) % 25 == 0:
+                            progress(idea=idea, stream=stream, replicates_completed=len(values),
+                                     replicates_total=reps)
+            else:
+                for index in range(reps):
+                    value, duration, pid = _run_replicate(index)
+                    values.append(value)
+                    seconds.append(duration)
+                    pids.add(pid)
+                    if progress and len(values) % 25 == 0:
+                        progress(idea=idea, stream=stream, replicates_completed=len(values),
+                                 replicates_total=reps)
+    finally:
+        _REPLICATE_TASK = None
+    _REPLICATE_TIMINGS.append(dict(idea=idea, stream=stream, replicates=reps,
+        workers=workers, worker_processes=len(pids),
+        wall_seconds=time.perf_counter()-started,
+        mean_replicate_seconds=float(np.mean(seconds)),
+        total_replicate_seconds=float(np.sum(seconds))))
+    return values
 
 
 def guard_path(path):
@@ -1073,7 +1140,7 @@ def _scri_interval(effect, draws):
             "valid_replicates": int(len(draws))}
 
 
-def series_inference(series_rows, seed=42, reps=2000):
+def series_inference(series_rows, seed=42, reps=2000, idea="series", workers=1):
     """Equal-series estimator with whole-series and crossed-roster resampling.
 
     Each input row aggregates both perspectives and all games. Shared-roster
@@ -1091,12 +1158,10 @@ def series_inference(series_rows, seed=42, reps=2000):
     if n < 2:
         return _scri_empty("Fewer than two independent matched series",
                           sum(r.get("n_events", 0) for r in good), n)
-    rng = np.random.default_rng(seed)
     effect = float(values.mean())
-    draws = np.empty(reps)
-    for start in range(0, reps, 256):
-        count = min(256, reps - start)
-        draws[start:start + count] = values[rng.integers(0, n, (count, n))].mean(axis=1)
+    def series_draw(rng):
+        return float(values[rng.integers(0, n, n)].mean())
+    draws = replicate_map(series_draw, reps, seed, idea, "series", workers)
     result = dict(effect=effect, **_scri_interval(effect, draws),
                   n_series=n, n_events=int(sum(r.get("n_events", 0) for r in good)))
     events = {}
@@ -1106,10 +1171,11 @@ def series_inference(series_rows, seed=42, reps=2000):
     event_draws = []
     if len(events) >= 2 and sum(map(len, events.values())) == n:
         blocks = list(events.values())
-        for _ in range(reps):
+        def event_draw(rng):
             picked = rng.integers(0, len(blocks), len(blocks))
             ix = np.concatenate([blocks[j] for j in picked])
-            event_draws.append(float(values[ix].mean()))
+            return float(values[ix].mean())
+        event_draws = replicate_map(event_draw, reps, seed, idea, "event", workers)
     event_result = _scri_interval(effect, event_draws)
     event_result.update(n_clusters=len(events), interpretation="Full group_path diagnostic; hierarchy unverified",
                         certified_event_resampling=False)
@@ -1120,12 +1186,12 @@ def series_inference(series_rows, seed=42, reps=2000):
                      if str(rid) in lookup] for row in good]
     crossed = []
     if len(rosters) >= 2 and all(participants):
-        for _ in range(reps):
+        def crossed_draw(rng):
             sw = rng.multinomial(n, np.full(n, 1 / n)).astype(float)
             rw = rng.multinomial(len(rosters), np.full(len(rosters), 1 / len(rosters)))
             weights = sw * np.asarray([np.prod(rw[ix]) for ix in participants])
-            if weights.sum() > 0:
-                crossed.append(float(np.dot(weights, values) / weights.sum()))
+            return float(np.dot(weights, values) / weights.sum()) if weights.sum() > 0 else np.nan
+        crossed = replicate_map(crossed_draw, reps, seed, idea, "crossed", workers)
     crossed_result = _scri_interval(effect, crossed)
     crossed_result.update(n_rosters=len(rosters),
                          method="Crossed series x shared-participant-roster pigeonhole bootstrap",
@@ -1264,7 +1330,7 @@ def _scri_series_from_pairs(pairs, idea, value_key="y"):
     return out
 
 
-def matched_screen(train, val, idea, seed=42, reps=2000):
+def matched_screen(train, val, idea, seed=42, reps=2000, workers=1):
     """Exact matched contrast for B02/B07/B10/B11/B16, followed by series inference.
 
     Fixed model-free matching has no fitted nuisance. Val evaluates a frozen
@@ -1278,7 +1344,7 @@ def matched_screen(train, val, idea, seed=42, reps=2000):
     if any(r.get("split") != "val" or r.get("season") != "rlcs-2025" for r in val):
         raise ValueError("Only 2025 val rows may enter test statistics")
     pairs, diagnostics = _scri_match_rows(val, idea)
-    result = series_inference(_scri_series_from_pairs(pairs, idea), seed, reps)
+    result = series_inference(_scri_series_from_pairs(pairs, idea), seed, reps, idea, workers)
     result.setdefault("details", {}).update(diagnostics)
     result["details"].update(
         estimand=("Within-series ambiguity-by-separation probability interaction"
@@ -1308,14 +1374,14 @@ def matched_screen(train, val, idea, seed=42, reps=2000):
                                        for k, v in cells.items()}
     for key in ("pretrend", "frozen_lane", "reverse_y", "prealigned"):
         if any(key in p["positive"] and key in p["negative"] for p in pairs):
-            control = series_inference(_scri_series_from_pairs(pairs, idea, key), seed + 19, reps)
+            control = series_inference(_scri_series_from_pairs(pairs, idea, key), seed + 19, reps, idea, workers)
             for name in ("p", "valid_replicates", "details"):
                 control.pop(name, None)
             result["details"][key + "_contrast"] = control
     return result
 
 
-def calibration_sanity(rows_by_idea, seed=42, repeats=96):
+def calibration_sanity(rows_by_idea, seed=42, repeats=96, workers=1):
     """Whole-series label-shuffle rank unit check on smoke B02/B10 outcomes.
 
     Conservative p-values are discrete with <=6 replays. Randomized-tie rank
@@ -1323,7 +1389,7 @@ def calibration_sanity(rows_by_idea, seed=42, repeats=96):
     calibration evidence for the observational screens or nuisance models.
     """
     import itertools
-    rng, output = np.random.default_rng(seed), {}
+    output = {}
     for idea in ("B02", "B10"):
         blocks = {}
         for row in rows_by_idea.get(idea, []):
@@ -1345,16 +1411,16 @@ def calibration_sanity(rows_by_idea, seed=42, repeats=96):
             raise ValueError("Smoke sanity check is bounded to <=12 series")
         signs = np.asarray(list(itertools.product((-1., 1.), repeat=n)))
         null = np.abs(signs @ values / n)
-        conservative, randomized = [], []
-        for _ in range(repeats):
+        def rank_trial(rng):
             # Artificial +/- labels are independent of outcomes and shared by
             # every event, game and team in the same series.
             observed = abs(float(np.dot(rng.choice((-1., 1.), n), values) / n))
             tied_mask = np.isclose(null, observed, rtol=1e-10, atol=1e-12)
             larger = int(np.count_nonzero((null > observed) & ~tied_mask))
             tied = int(np.count_nonzero(tied_mask))
-            conservative.append((larger + tied) / len(null))
-            randomized.append((larger + rng.random() * tied) / len(null))
+            return (larger + tied) / len(null), (larger + rng.random() * tied) / len(null)
+        ranks = replicate_map(rank_trial, repeats, seed, idea, "sanity_rank", workers)
+        conservative, randomized = map(list, zip(*ranks))
         mean = float(np.mean(randomized))
         rank_ok = .3 <= mean <= .7 and all(0 <= p <= 1 for p in randomized)
         # Separate synthetic unit test of the actual centered-bootstrap kernel.
@@ -1363,13 +1429,14 @@ def calibration_sanity(rows_by_idea, seed=42, repeats=96):
         simulated_p = []
         artificial_clusters, artificial_reps = 32, 399
         if np.any(np.abs(values) > 1e-12):
-            for _ in range(repeats):
+            def synthetic_trial(rng):
                 synthetic = rng.choice(values, artificial_clusters) * rng.choice(
                     (-1., 1.), artificial_clusters)
                 estimate = float(synthetic.mean())
                 draws = synthetic[rng.integers(
                     0, artificial_clusters, (artificial_reps, artificial_clusters))].mean(axis=1)
-                simulated_p.append(_scri_interval(estimate, draws)["p"])
+                return _scri_interval(estimate, draws)["p"]
+            simulated_p = replicate_map(synthetic_trial, repeats, seed, idea, "sanity_synthetic", workers)
             finite_p = np.asarray([p for p in simulated_p if p is not None], float)
             sim_mean = float(finite_p.mean()) if len(finite_p) else None
             sim_reject = float(np.mean(finite_p < .05)) if len(finite_p) else None
@@ -1594,7 +1661,7 @@ def _sg_gain(rows, residual, pairs, swap=None, series_weights=None, sign=1.):
     return float(np.dot(weights, [r["effect"] for r in summaries])/weights.sum()), summaries
 
 
-def gain_screen(train, val, idea, seed=42, reps=2000):
+def gain_screen(train, val, idea, seed=42, reps=2000, workers=1):
     """B01/B14 observed-minus-repaired gain with conditional block randomization.
 
     Each permutation swaps all complete receiver blocks of an entire matched
@@ -1634,35 +1701,33 @@ def gain_screen(train, val, idea, seed=42, reps=2000):
     control, _ = _sg_gain(val, residual, pairs, np.ones(len(pairs), bool), sign=sign)
     if observed is None or control is None or len(summaries) < 2:
         return _sg_empty("Fewer than two supported series with nondegenerate source slopes", val, detail)
-    effect, rng = observed-control, np.random.default_rng(seed)
+    effect = observed-control
     series_pairs = [tuple(sorted((val[a]["series_id"], val[b]["series_id"]))) for a,b in pairs]
     series_pair_ids = sorted(set(series_pairs))
     series_pair_index = {key:i for i,key in enumerate(series_pair_ids)}
     permutation_groups = np.asarray([series_pair_index[key] for key in series_pairs])
     detail["n_exchangeable_series_pairs"] = len(series_pair_ids)
-    permutations = []
-    for _ in range(reps):
+    def permutation(rng):
         swap = rng.integers(0, 2, len(series_pair_ids)).astype(bool)[permutation_groups]
         positive, _ = _sg_gain(val, residual, pairs, swap, sign=sign)
         negative, _ = _sg_gain(val, residual, pairs, ~swap, sign=sign)
-        if positive is not None and negative is not None:
-            permutations.append(positive-negative)
-    draws = []
+        return positive-negative if positive is not None and negative is not None else None
+    permutations = [v for v in replicate_map(permutation, reps, seed, idea, "permutation", workers) if v is not None]
     val_ids, val_ix = _sg_clusters(val)
-    for _ in range(reps):
+    def bootstrap(rng):
         fitted = _sg_boot_fit(cache, rng)
         counts = rng.multinomial(len(val_ids), np.full(len(val_ids), 1/len(val_ids)))
         selected = np.repeat(np.arange(len(val)), counts[val_ix])
         if len(selected) < 4:
-            continue
+            return None
         boot_rows = [val[i] for i in selected]
         boot_pairs = _sg_pair_blocks(boot_rows)
         boot_residual = np.asarray([[r["x"], r["y"]] for r in boot_rows], float)-V[selected] @ fitted
         weights = dict(zip(val_ids, counts))
         own, _ = _sg_gain(boot_rows, boot_residual, boot_pairs, series_weights=weights, sign=sign)
         other, _ = _sg_gain(boot_rows, boot_residual, boot_pairs, np.ones(len(boot_pairs), bool), weights, sign)
-        if own is not None and other is not None:
-            draws.append(own-other)
+        return own-other if own is not None and other is not None else None
+    draws = [v for v in replicate_map(bootstrap, reps, seed, idea, "bootstrap", workers) if v is not None]
     p = ((1 + np.count_nonzero(np.abs(permutations) >= abs(effect)-1e-12))/(1+len(permutations))
          if permutations else None)
     ci = np.quantile(draws, [.025, .975]).tolist() if draws else [None, None]
@@ -1702,7 +1767,7 @@ def _sg_rho(records, residual, half, roster_subset=None, label_override=None, we
     return float(spearmanr(values[:, 0], values[:, 1]).statistic)
 
 
-def chirality_screen(train, val, idea="B06", seed=42, reps=2000):
+def chirality_screen(train, val, idea="B06", seed=42, reps=2000, workers=1):
     """Roster split-half Spearman; restricted whole roster-series label null.
 
     No focal-roster/player identity enters the nuisance residualizer. Labels in
@@ -1758,26 +1823,24 @@ def chirality_screen(train, val, idea="B06", seed=42, reps=2000):
                 if len({records[i]["roster_id"] for i in indices}) >= 2]
     moving = {records[i]["roster_id"] for indices in exchange for i in indices}
     detail.update(n_exchangeable_strata=len(exchange), n_exchangeable_rosters=len(moving))
-    rng = np.random.default_rng(seed)
-    permutations, draws = [], []
+    permutations = []
     labels = np.asarray([r["roster_id"] for r in records], object)
     # All evaluated rosters must participate in a genuine restricted label move.
     if exchange and eligible <= moving:
-        for _ in range(reps):
+        def permutation(rng):
             shuffled = labels.copy()
             for indices in exchange:
                 shuffled[indices] = rng.permutation(shuffled[indices])
-            value = _sg_rho(records, summary, half, eligible, shuffled)
-            if value is not None:
-                permutations.append(value)
-    for _ in range(reps):
+            return _sg_rho(records, summary, half, eligible, shuffled)
+        permutations = [v for v in replicate_map(permutation, reps, seed, idea, "permutation", workers) if v is not None]
+    def bootstrap(rng):
         fitted = _sg_boot_fit(cache, rng)
         boot_residual = np.asarray([r["y"] for r in val])-(V @ fitted).ravel()
         boot_summary = np.asarray([boot_residual[ix].mean() for ix in locations])
         sw = rng.multinomial(len(series_ids), np.full(len(series_ids), 1/len(series_ids)))
         value = _sg_rho(records, boot_summary, half, eligible, weights=dict(zip(series_ids, sw)))
-        if value is not None:
-            draws.append(value)
+        return value
+    draws = [v for v in replicate_map(bootstrap, reps, seed, idea, "bootstrap", workers) if v is not None]
     ci = np.quantile(draws, [.025,.975]).tolist() if draws else [None,None]
     p = ((1+np.count_nonzero(np.abs(permutations)>=abs(observed)-1e-12))/(1+len(permutations))
          if permutations and len(draws)>=.9*reps else None)
@@ -2218,6 +2281,51 @@ def _model_matched_shuffle(train, tx, weights, seed):
         "control_only": True, "no_additional_significance_claim": True}
 
 
+def _prediction_bootstrap(train, val, idea, tids, ti, tw, vids, fold, boost_scale,
+                          tx, vx, fitted, reps, seed, workers, progress=None):
+    """Shared production/diagnostic kernel; diagnostics never bypass inference gates."""
+    # Whole-series metadata for the two dependence sensitivities.
+    event_groups, rosters_by_series = {}, []
+    roster_names = sorted({str(r[k]) for r in val for k in ("roster_id", "opponent_roster_id")})
+    roster_lookup = {name: j for j, name in enumerate(roster_names)}
+    for j, sid in enumerate(vids):
+        members = [r for r in val if str(r["series_id"]) == sid]
+        events = {str(r.get("event")) for r in members}
+        if len(events) == 1:
+            event_groups.setdefault(next(iter(events)), []).append(j)
+        rosters_by_series.append([roster_lookup[x] for x in sorted(
+            {str(r[k]) for r in members for k in ("roster_id", "opponent_roster_id")})])
+    event_blocks = list(event_groups.values())
+    def replicate(rng):
+        multiplicities = rng.multinomial(len(tids), np.full(len(tids), 1 / len(tids)))
+        weights = tw * multiplicities[ti]
+        # Range certification is a nuisance as well: refit if sampled maxima differ.
+        scale, _ = _model_boost_scale(train, weights, require_saturation=idea == "B08")
+        if scale is None:
+            return (np.nan, np.nan, np.nan, "bootstrap boost scale unavailable")
+        if np.isclose(scale, boost_scale):
+            bx, bv = tx, vx
+        else:
+            bx, bv, _ = _model_prepare(train, val, idea, scale)
+        mask = _model_support(train, val, bx, bv, weights, idea)
+        values, _, error = _model_components(bx, bv, weights, idea, fold, initial=fitted)
+        if error:
+            return (np.nan, np.nan, np.nan, error)
+        summary = _model_aggregate(val, values, mask, vids)
+        sw = rng.multinomial(len(vids), np.full(len(vids), 1 / len(vids)))
+        primary = _model_statistic(summary, sw, idea)
+        ew = np.zeros(len(vids))
+        if len(event_blocks) >= 2:
+            for j in rng.integers(0, len(event_blocks), len(event_blocks)):
+                ew[event_blocks[j]] += 1
+        event = _model_statistic(summary, ew, idea)
+        rw = rng.multinomial(len(roster_names), np.full(len(roster_names), 1 / len(roster_names)))
+        crossed = sw * np.asarray([np.prod(rw[ix]) for ix in rosters_by_series])
+        multiway = _model_statistic(summary, crossed, idea)
+        return primary, event, multiway, None
+    return replicate_map(replicate, reps, seed, idea, "bootstrap", workers, progress)
+
+
 def prediction_screen(train, val, idea, seed=42, reps=2000, workers=1, progress=None):
     """B04 held-out bits/action or B08 log pair-shortage ratio; train refit bootstrap.
 
@@ -2226,9 +2334,6 @@ def prediction_screen(train, val, idea, seed=42, reps=2000, workers=1, progress=
     effects have ridge shrinkage; unseen levels receive the fitted global
     hierarchical mean, with coverage reported rather than silently excluded.
     """
-    import time
-    from concurrent.futures import ThreadPoolExecutor
-    started = time.perf_counter()
     if idea not in ("B04", "B08"):
         raise ValueError("prediction_screen supports B04 and B08")
     if any(r.get("split") != "train" for r in train):
@@ -2256,7 +2361,7 @@ def prediction_screen(train, val, idea, seed=42, reps=2000, workers=1, progress=
         proximity_lost_train = before - len(train)
     audit = {"method": "Fixed-penalty regularized multinomial likelihood",
              "penalty": .1, "max_iterations_per_fit": 75,
-             "hyperparameter_candidates": 1, "workers": workers,
+             "hyperparameter_candidates": 1,
              "n_train_rows": len(train), "n_val_rows": len(val),
              "excluded_invalid_train_rows": original_train - len(train),
              "excluded_invalid_val_rows": original_val - len(val),
@@ -2297,13 +2402,11 @@ def prediction_screen(train, val, idea, seed=42, reps=2000, workers=1, progress=
         for kind in ("base", "own", "opponent"):
             oof, _, error = _model_crossfit(tx[kind], tx["y"], tw, fold, 3)
             if error:
-                audit["time_fit_seconds"] = time.perf_counter() - started
                 return _model_missing(error, audit)
             loss = -np.log(np.clip(oof[np.arange(len(train)), tx["y"]], 1e-12, 1))
             oof_loss[kind] = float(np.average(loss, weights=tw))
         audit["training_oof_logloss"] = oof_loss
     components, fitted, error = _model_components(tx, vx, tw, idea, fold)
-    audit["time_fit_seconds"] = time.perf_counter() - started
     if error:
         return _model_missing(error, audit)
     aggregate = _model_aggregate(val, components, support, vids)
@@ -2348,66 +2451,16 @@ def prediction_screen(train, val, idea, seed=42, reps=2000, workers=1, progress=
             baseline_p = _model_probability(vx["base"], baseline_coef)
             baseline_loss = -np.log(np.clip(baseline_p[np.arange(len(val)), vx["y"]], 1e-12, 1))
             audit["heldout_baseline_logloss"] = float(np.average(baseline_loss[support], weights=vw[support]))
-    # Whole-series metadata for the two dependence sensitivities.
-    event_groups, rosters_by_series = {}, []
-    roster_names = sorted({str(r[k]) for r in val for k in ("roster_id", "opponent_roster_id")})
-    roster_lookup = {name: j for j, name in enumerate(roster_names)}
-    for j, sid in enumerate(vids):
-        members = [r for r in val if str(r["series_id"]) == sid]
-        events = {str(r.get("event")) for r in members}
-        if len(events) == 1:
-            event_groups.setdefault(next(iter(events)), []).append(j)
-        rosters_by_series.append([roster_lookup[x] for x in sorted(
-            {str(r[k]) for r in members for k in ("roster_id", "opponent_roster_id")})])
-    event_blocks = list(event_groups.values())
-    def replicate(rep):
-        rng = np.random.default_rng(np.random.SeedSequence([seed, rep, 804]))
-        multiplicities = rng.multinomial(len(tids), np.full(len(tids), 1 / len(tids)))
-        weights = tw * multiplicities[ti]
-        # Range certification is a nuisance as well: refit if sampled maxima differ.
-        scale, _ = _model_boost_scale(train, weights, require_saturation=idea == "B08")
-        if scale is None:
-            return (np.nan, np.nan, np.nan, "bootstrap boost scale unavailable")
-        if np.isclose(scale, boost_scale):
-            bx, bv = tx, vx
-        else:
-            bx, bv, _ = _model_prepare(train, val, idea, scale)
-        mask = _model_support(train, val, bx, bv, weights, idea)
-        values, _, error = _model_components(bx, bv, weights, idea, fold, initial=fitted)
-        if error:
-            return (np.nan, np.nan, np.nan, error)
-        summary = _model_aggregate(val, values, mask, vids)
-        sw = rng.multinomial(len(vids), np.full(len(vids), 1 / len(vids)))
-        primary = _model_statistic(summary, sw, idea)
-        ew = np.zeros(len(vids))
-        if len(event_blocks) >= 2:
-            for j in rng.integers(0, len(event_blocks), len(event_blocks)):
-                ew[event_blocks[j]] += 1
-        event = _model_statistic(summary, ew, idea)
-        rw = rng.multinomial(len(roster_names), np.full(len(roster_names), 1 / len(roster_names)))
-        crossed = sw * np.asarray([np.prod(rw[ix]) for ix in rosters_by_series])
-        multiway = _model_statistic(summary, crossed, idea)
-        return primary, event, multiway, None
-    boot_start = time.perf_counter()
     samples, failures = [], {}
-    executor = ThreadPoolExecutor(max_workers=max(1, workers)) if workers > 1 else None
-    iterator = executor.map(replicate, range(reps)) if executor else map(replicate, range(reps))
-    try:
-        for j, sample in enumerate(iterator):
-            samples.append(sample[:3])
-            if sample[3]:
-                failures[sample[3]] = failures.get(sample[3], 0) + 1
-            if progress is not None and (j + 1) % 25 == 0:
-                progress(idea=idea, bootstrap_completed=j + 1, bootstrap_total=reps)
-    finally:
-        if executor:
-            executor.shutdown()
+    for sample in _prediction_bootstrap(train, val, idea, tids, ti, tw, vids, fold,
+            boost_scale, tx, vx, fitted, reps, seed, workers, progress):
+        samples.append(sample[:3])
+        if sample[3]:
+            failures[sample[3]] = failures.get(sample[3], 0) + 1
     draws = np.asarray(samples, float)
-    audit.update(time_bootstrap_seconds=time.perf_counter() - boot_start,
-                 bootstrap_failure_reasons=failures, bootstrap_replicates=reps,
+    audit.update(bootstrap_failure_reasons=failures, bootstrap_replicates=reps,
                  bootstrap_refits_train_nuisance=True,
-                 bootstrap_duplicates_remain_in_original_series_fold=True,
-                 full_time_seconds=time.perf_counter() - started)
+                 bootstrap_duplicates_remain_in_original_series_fold=True)
     primary = _scri_interval(effect, draws[:, 0])
     if primary["valid_replicates"] < .95 * reps:
         audit["bootstrap_valid_replicates"] = primary["valid_replicates"]
@@ -2740,7 +2793,7 @@ def _nm_approach_pool(rows):
         [np.r_[r['controls'],np.asarray(r['initial_distances'],float)/1500] for r in b['rows']]))
 
 
-def approach_screen(train, val, seed=42, reps=2000, progress=None):
+def approach_screen(train, val, seed=42, reps=2000, progress=None, workers=1):
     """B05: calibrated independent margins, real conditional pseudo-pairs, series CI."""
     train, val = _nm_partition(train, 'train'), _nm_partition(val, 'val')
     def valid(r):
@@ -2782,27 +2835,25 @@ def approach_screen(train, val, seed=42, reps=2000, progress=None):
     observed = (yval[:,0] != yval[:,1]).astype(float)
     individual = observed-expected
     effect = _nm_mean(val, individual)
-    result = series_inference(_nm_series_rows(val,individual),seed,reps)
-    rng = np.random.default_rng(seed)
-    null, boot, assignments = [], [], set()
-    from hashlib import sha256
-    for iteration in range(reps):
-        if progress is not None and iteration%25==0:
-            progress(idea='B05',bootstrap_completed=iteration,bootstrap_total=reps)
+    result = series_inference(_nm_series_rows(val,individual),seed,reps,"B05",workers)
+    def replicate(rng):
         permutation = _nm_permute(pools,len(val),rng)
-        assignments.add(sha256(permutation.tobytes()).hexdigest())
+        assignment = hashlib.sha256(permutation.tobytes()).hexdigest()
         pseudo = (yval[:,0] != yval[permutation,1]).astype(float)
-        null.append(_nm_mean(val,pseudo-expected))
+        null_value = _nm_mean(val,pseudo-expected)
         train_multiplicity, val_multiplicity = _nm_draw_series(train,rng), _nm_draw_series(val,rng)
         try:
             fitted = [_nm_calibrated_fit(xtrain,ytrain[:,j],train,train_multiplicity) for j in (0,1)]
             p = np.column_stack([_nm_predict(m,xval) for m in fitted])
             independent = p[:,0]*(1-p[:,1])+p[:,1]*(1-p[:,0])
-            boot.append(_nm_mean(val,observed-independent,val_multiplicity))
+            boot_value = _nm_mean(val,observed-independent,val_multiplicity)
         except ValueError:
-            continue
-    if progress is not None:
-        progress(idea='B05',bootstrap_completed=reps,bootstrap_total=reps)
+            boot_value = None
+        return null_value, boot_value, assignment
+    samples = replicate_map(replicate, reps, seed, "B05", "null_bootstrap", workers, progress)
+    null = [v[0] for v in samples]
+    boot = [v[1] for v in samples if v[1] is not None]
+    assignments = {v[2] for v in samples}
     interval = _scri_interval(effect, boot)
     result.update(effect=effect,ci95=interval['ci95'],p=_nm_randomization_p(effect,null))
     if len(assignments)<2 or result['p'] is None:
@@ -2914,7 +2965,7 @@ def _nm_phase_coverage(rows):
                 rule='8 fixed equal phase bins; each >=20 hazard observations and >=3 series')
 
 
-def phase_screen(train, val, seed=42, reps=2000, progress=None):
+def phase_screen(train, val, seed=42, reps=2000, progress=None, workers=1):
     """B15: complete history-block null, joint held-val phase test and DeltaD.
     Eight prespecified independent null fits estimate the modulation bias correction;
     all reps randomizations test the joint phase increment. Bootstrap repeats that
@@ -2959,47 +3010,41 @@ def phase_screen(train, val, seed=42, reps=2000, progress=None):
     loss0=_nm_loss(yv,_nm_predict(baseline,xv))
     observed_stat=_nm_mean(val,loss0-_nm_loss(yv,_nm_predict(full,fv)))
     observed_mod=_nm_modulation(full,fv)
-    rng=np.random.default_rng(seed)
-    null_stats,null_mods,assignments=[],[],set()
-    from hashlib import sha256
-    for iteration in range(reps):
-        if progress is not None and iteration%25==0:
-            progress(idea='B15',randomization_completed=iteration,randomization_total=reps)
+    def randomization(rng):
         tmap,vmap=_nm_permute(train_pools,len(train),rng),_nm_permute(val_pools,len(val),rng)
-        assignments.add(sha256(tmap.tobytes()+vmap.tobytes()).hexdigest())
+        assignment=hashlib.sha256(tmap.tobytes()+vmap.tobytes()).hexdigest()
         nt,nv=_nm_phase_matrix(xt,train,tmap),_nm_phase_matrix(xv,val,vmap)
         try:
             fitted=_nm_calibrated_fit(nt,yt,train)
-            null_stats.append(_nm_mean(val,loss0-_nm_loss(yv,_nm_predict(fitted,nv))))
-            null_mods.append(_nm_modulation(fitted,nv))
+            statistic=_nm_mean(val,loss0-_nm_loss(yv,_nm_predict(fitted,nv)))
         except ValueError:
-            continue
-    if progress is not None:
-        progress(idea='B15',randomization_completed=reps,randomization_total=reps)
+            statistic=None
+        return statistic, assignment
+    samples=replicate_map(randomization,reps,seed,"B15","randomization",workers,progress)
+    null_stats=[v[0] for v in samples if v[0] is not None]
+    assignments={v[1] for v in samples}
     correction_fits=min(8,reps)
     if len(null_stats)<max(2,int(.9*reps)):
         return _nm_missing('Insufficient converged complete-procedure history randomizations',train,val,
                            valid_null_replicates=len(null_stats))
-    bias_mods=[]
-    for _ in range(correction_fits):
+    def bias_fit(rng):
         tmap=_nm_permute(train_pools,len(train),rng,cross_series_only=True)
         vmap=_nm_permute(val_pools,len(val),rng,cross_series_only=True)
         nt,nv=_nm_phase_matrix(xt,train,tmap),_nm_phase_matrix(xv,val,vmap)
         try:
             fitted=_nm_calibrated_fit(nt,yt,train)
-            bias_mods.append(_nm_modulation(fitted,nv))
+            return _nm_modulation(fitted,nv)
         except ValueError:
-            continue
+            return None
+    bias_mods=[v for v in replicate_map(bias_fit,correction_fits,seed,"B15","bias",workers,progress)
+               if v is not None]
     if len(bias_mods)!=correction_fits:
         return _nm_missing('Prespecified cross-series-only null-bias fits did not all converge',train,val)
     null_bias=np.mean(bias_mods,axis=0)
     contribution=observed_mod-null_bias
     effect=_nm_mean(val,contribution)
-    result=series_inference(_nm_series_rows(val,contribution),seed,reps)
-    boot=[]
-    for iteration in range(reps):
-        if progress is not None and iteration%25==0:
-            progress(idea='B15',bootstrap_completed=iteration,bootstrap_total=reps)
+    result=series_inference(_nm_series_rows(val,contribution),seed,reps,"B15",workers)
+    def bootstrap(rng):
         # Rebuild actual reference pools after whole-series target/reference
         # resampling. Duplicate copies of one original series share a fit fold
         # and can never donate to one another as allegedly independent series.
@@ -3008,7 +3053,7 @@ def phase_screen(train, val, seed=42, reps=2000, progress=None):
         bvp,_=_nm_phase_pool(bv)
         bi,bj=_nm_retained(btp),_nm_retained(bvp)
         if len({bt[i]['_nm_original_series_id'] for i in bi})<3 or len({bv[j]['_nm_original_series_id'] for j in bj})<2:
-            continue
+            return None
         btp,bvp=_nm_reindex_pools(btp,bi),_nm_reindex_pools(bvp,bj)
         bt,bv=[bt[i] for i in bi],[bv[j] for j in bj]
         it=np.asarray([r['_nm_original_index'] for r in bt],int)
@@ -3025,11 +3070,11 @@ def phase_screen(train, val, seed=42, reps=2000, progress=None):
                 nt,nv=_nm_phase_matrix(bxt,bt,tmap),_nm_phase_matrix(bxv,bv,vmap)
                 null_fit=_nm_calibrated_fit(nt,byt,bt)
                 correction.append(_nm_modulation(null_fit,nv))
-            boot.append(_nm_mean(bv,observed_draw-np.mean(correction,axis=0)))
+            return _nm_mean(bv,observed_draw-np.mean(correction,axis=0))
         except ValueError:
-            continue
-    if progress is not None:
-        progress(idea='B15',bootstrap_completed=reps,bootstrap_total=reps)
+            return None
+    boot=[v for v in replicate_map(bootstrap,reps,seed,"B15","bootstrap",workers,progress)
+          if v is not None]
     interval=_scri_interval(effect,boot)
     result.update(effect=effect,ci95=interval['ci95'],p=_nm_randomization_p(observed_stat,null_stats))
     if len(assignments)<2 or result['p'] is None:
@@ -3081,22 +3126,22 @@ def infer_idea(idea, summary, audit, args, progress=None):
         train = [r for r in summary["rows"] if r["split"] == "train"]
         val = [r for r in summary["rows"] if r["split"] == "val"]
         if idea in {"B01", "B14"}:
-            result = gain_screen(train, val, idea, args.seed, args.bootstrap_reps)
+            result = gain_screen(train, val, idea, args.seed, args.bootstrap_reps, workers=args.workers)
         elif idea == "B06":
-            result = chirality_screen(train, val, idea, args.seed, args.bootstrap_reps)
+            result = chirality_screen(train, val, idea, args.seed, args.bootstrap_reps, workers=args.workers)
         elif idea in {"B04", "B08"}:
             result = prediction_screen(train, val, idea, args.seed, args.bootstrap_reps,
                                        workers=args.workers, progress=progress)
         elif idea == "B05":
-            result = approach_screen(train, val, args.seed, args.bootstrap_reps, progress=progress)
+            result = approach_screen(train, val, args.seed, args.bootstrap_reps, progress=progress, workers=args.workers)
         else:
-            result = phase_screen(train, val, args.seed, args.bootstrap_reps, progress=progress)
+            result = phase_screen(train, val, args.seed, args.bootstrap_reps, progress=progress, workers=args.workers)
 
     else:
         rows = summary["rows"]
         train = [r for r in rows if r["split"] == "train"]
         val = [r for r in rows if r["split"] == "val"]
-        result = matched_screen(train, val, idea, args.seed, args.bootstrap_reps)
+        result = matched_screen(train, val, idea, args.seed, args.bootstrap_reps, workers=args.workers)
         if result["p"] is None:
             result.update(status="not_computable", verdict="not_computable")
             result.setdefault("reason", "Insufficient nondegenerate independent matched series")
@@ -3114,11 +3159,11 @@ def infer_idea(idea, summary, audit, args, progress=None):
                             output.append(dict(row, x=1 if d > 0 else -1))
                     return output
                 sensitivity[history + "s"] = matched_screen(
-                    relabel(train), relabel(val), idea, args.seed+20, args.bootstrap_reps)
+                    relabel(train), relabel(val), idea, args.seed+20, args.bootstrap_reps, workers=args.workers)
             def earlier(group):
                 return [dict(r, controls=np.r_[r["controls"], r["earlier_width"]/4096]) for r in group]
             sensitivity["earlier_width"] = matched_screen(
-                earlier(train), earlier(val), idea, args.seed+21, args.bootstrap_reps)
+                earlier(train), earlier(val), idea, args.seed+21, args.bootstrap_reps, workers=args.workers)
             detail["sensitivity"] = sensitivity
             detail["sensitivity_scope"] = "All eligible turning-state anchors; history labels recomputed independently"
         elif idea == "B07":
@@ -3126,7 +3171,7 @@ def infer_idea(idea, summary, audit, args, progress=None):
                 return [dict(r, controls=np.r_[r["controls"],
                               np.asarray(r["realized_ball_acceleration"])/4600]) for r in group]
             detail["realized_ball_control"] = matched_screen(
-                realized(train), realized(val), idea, args.seed+22, args.bootstrap_reps)
+                realized(train), realized(val), idea, args.seed+22, args.bootstrap_reps, workers=args.workers)
         elif idea == "B16":
             detail["raw_30hz_validation"] = "Unavailable: compact-only input"
     detail = result.setdefault("details", {})
@@ -3248,38 +3293,98 @@ def apply_verdicts(results, specs):
         result["verdict_meaning"] = (
             "Weak includes insufficient support/replication; null means no evidence at this precision, not proof of zero")
 
-def smoke_model_benchmark(totals, seed):
-    """One nuisance refit on the SAME six smoke replays; no extra data reads."""
+def smoke_model_benchmark(totals, seed, reps, workers, selected):
+    """Execution-only refits on the SAME six replays, never primary inference.
+
+    Sparse smoke support often prevents infer_idea from entering its loop. B04/
+    B08 therefore exercise the actual production bootstrap kernel here, retaining
+    failures and samples for worker-count equality checks without claiming a CI/p.
+    Other nuisance fits are timed in isolation when smoke rows permit them.
+    """
     output = {}
-    for idea in ("B04", "B08"):
+    for idea in selected:
         rows = totals[idea]["rows"]
-        train = [r for r in rows if r["split"] == "train" and r.get("region")]
-        val = [r for r in rows if r["split"] == "val" and r.get("region")]
-        if idea == "B04":
-            def close(r):
-                return (np.max(np.abs(np.sort(r["teammate_distances"])-np.sort(r["opponent_distances"]))) <= 500
-                        and np.max(np.abs(np.sort(r["teammate_speeds"])-np.sort(r["opponent_speeds"]))) <= 400)
-            train, val = list(filter(close, train)), list(filter(close, val))
-        if not train or not val:
-            output[idea] = {"status":"not_computable", "reason":"No smoke fit rows"}
+        train = [r for r in rows if r["split"] == "train"]
+        val = [r for r in rows if r["split"] == "val"]
+        base = {"scope": "Execution benchmark only; no primary estimate or gate override",
+                "n_train_rows": len(train), "n_val_rows": len(val)}
+        if idea not in {"B01", "B04", "B05", "B06", "B08", "B14", "B15"}:
+            output[idea] = dict(base, status="no_nuisance_refit")
             continue
-        tids, ti, weights = _model_series_layout(train)
-        fold, nfolds = _model_fold_labels(tids, ti, seed)
-        scale, scale_audit = _model_boost_scale(train, require_saturation=idea == "B08")
-        if fold is None or scale is None:
-            output[idea] = {"status":"not_computable", "reason":"Insufficient training folds/boost saturation"}
-            continue
-        tx, vx, _ = _model_prepare(train, val, idea, scale)
-        started = time.perf_counter()
-        _, _, error = _model_components(tx, vx, weights, idea, fold)
-        duration = time.perf_counter()-started
-        output[idea] = {"status":"computed" if error is None else "not_computable",
-                        "seconds_per_complete_nuisance_refit":duration,
-                        "n_train_rows":len(train), "n_val_rows":len(val),
-                        "n_train_series":len(tids), "folds":nfolds,
-                        "feature_columns":tx["own"].shape[1],
-                        "fit_error":error,
-                        "scope":"Same bounded smoke sample; runtime benchmark only, no extra observed replay"}
+        try:
+            if idea in {"B04", "B08"}:
+                train = [r for r in train if r.get("region")]
+                val = [r for r in val if r.get("region")]
+                if idea == "B04":
+                    train = [r for r in train if
+                        np.max(np.abs(np.sort(r["teammate_distances"])-np.sort(r["opponent_distances"]))) <= 500
+                        and np.max(np.abs(np.sort(r["teammate_speeds"])-np.sort(r["opponent_speeds"]))) <= 400]
+                if not train or not val:
+                    raise ValueError("No smoke fit rows")
+                tids, ti, weights = _model_series_layout(train)
+                vids, _, _ = _model_series_layout(val)
+                fold, nfolds = _model_fold_labels(tids, ti, seed)
+                scale, _ = _model_boost_scale(train, require_saturation=idea == "B08")
+                if fold is None or scale is None:
+                    raise ValueError("Insufficient training folds/boost saturation")
+                tx, vx, _ = _model_prepare(train, val, idea, scale)
+                started = time.perf_counter()
+                _, fitted, error = _model_components(tx, vx, weights, idea, fold)
+                duration = time.perf_counter()-started
+                if error:
+                    raise ValueError(error)
+                samples = _prediction_bootstrap(train, val, idea, tids, ti, weights, vids,
+                    fold, scale, tx, vx, fitted, reps, seed, workers)
+                output[idea] = dict(base, status="computed", n_train_rows=len(train),
+                    n_val_rows=len(val), n_train_series=len(tids), folds=nfolds,
+                    seconds_per_initial_nuisance_fit=duration,
+                    bootstrap_replicates=reps, bootstrap_samples=samples,
+                    valid_primary_samples=int(sum(np.isfinite(sample[0]) for sample in samples)),
+                    failed_refits=sum(sample[3] is not None for sample in samples),
+                    **{k:v for k,v in _REPLICATE_TIMINGS[-1].items() if k != "idea"})
+                continue
+            if idea in {"B01", "B06", "B14"}:
+                train = _sg_rows(train, idea)
+                if len({r["series_id"] for r in train}) < 2:
+                    raise ValueError("Fewer than two training series for ridge refit")
+                target = np.asarray([r["y"] if idea == "B06" else [r["x"],r["y"]] for r in train], float)
+                cache = _sg_ridge_cache(train, target)
+                def refit(rng):
+                    _sg_boot_fit(cache, rng)
+            else:
+                if idea == "B15":
+                    train = [r for r in train if _nm_phase_valid(r)]
+                    val = [r for r in val if _nm_phase_valid(r)]
+                if not train or not val:
+                    raise ValueError("No smoke train/validation rows")
+                extra = _nm_phase_extra if idea == "B15" else lambda r:np.asarray(r['initial_distances'],float)/1500
+                xt, _, _ = _nm_design(train, val, extra)
+                y = np.asarray([r["y"] for r in train], float)
+                if idea == "B15":
+                    xt = _nm_phase_matrix(xt, train)
+                if len({r["series_id"] for r in train}) < 3:
+                    def primitive(rng):
+                        for target in ((y[:,0],y[:,1]) if idea == "B05" else (y,)):
+                            _nm_logistic(xt, target, _nm_weights(train))
+                    replicate_map(primitive, min(5,reps), seed, idea, "smoke_logistic_only", workers)
+                    output[idea] = dict(base, status="kernel_only",
+                        reason="Fewer than three training series: complete calibrated refit unavailable",
+                        scope="Unresampled logistic solver only; excludes cross-fitting/calibration/pools",
+                        logistic_fits_per_replicate=2 if idea == "B05" else 1,
+                        **{k:v for k,v in _REPLICATE_TIMINGS[-1].items() if k != "idea"})
+                    continue
+                def refit(rng):
+                    multiplicity = _nm_draw_series(train, rng)
+                    targets = (y[:,0],y[:,1]) if idea == "B05" else (y,)
+                    for target in targets:
+                        _nm_calibrated_fit(xt, target, train, multiplicity)
+            # Isolated refit time excludes matching/null-pool reconstruction.
+            # B15 would need nine such fits plus matching for each bootstrap.
+            replicate_map(refit, min(5,reps), seed, idea, "smoke_refit_only", workers)
+            output[idea] = dict(base, status="computed", n_train_rows=len(train),
+                **{k:v for k,v in _REPLICATE_TIMINGS[-1].items() if k != "idea"})
+        except ValueError as exc:
+            output[idea] = dict(base, status="not_computable", reason=str(exc))
     return output
 
 
@@ -3326,6 +3431,86 @@ def select_smoke(groups):
     return selected
 
 
+
+def input_identity(root):
+    """Allowlisted manifest; cp -a to scratch preserves shard size/mtime identity."""
+    root = guard_path(root)
+    manifest = {"extraction_sha256": hashlib.sha256(
+        guard_path(root / "extraction.json").read_bytes()).hexdigest(), "files": []}
+    for season in ALLOWED_SEASONS:
+        for parquet in sorted(guard_path(root / season).glob("compact-*.parquet")):
+            for path in (parquet, parquet.with_suffix(".npz")):
+                stat = guard_path(path).stat()
+                manifest["files"].append((str(path.relative_to(root)), stat.st_size, stat.st_mtime_ns))
+    return hashlib.sha256(json.dumps(manifest, sort_keys=True).encode()).hexdigest()
+
+
+def merge_parts(paths, output, specs):
+    """Merge explicit completed parts, then reapply the unchanged fixed family."""
+    parts, results, identity = [], {}, None
+    for path in paths:
+        payload = json.loads(Path(path).read_text())
+        detail = payload["details"]
+        if not detail.get("is_part"):
+            raise ValueError(f"Not a screen part: {path}")
+        current = detail["merge_identity"]
+        if identity is None:
+            identity = current
+        elif current != identity:
+            raise ValueError(f"Incompatible source/spec/input/seed/reps/smoke/replays: {path}")
+        ideas = detail["ideas"]
+        if not ideas or set(ideas) - set(IDS):
+            raise ValueError(f"Invalid idea IDs in {path}")
+        duplicate = set(results) & set(ideas)
+        if duplicate:
+            raise ValueError(f"Duplicate ideas in parts: {sorted(duplicate)}")
+        for idea, result in ideas.items():
+            if result.get("id") != idea or result.get("split") != "val":
+                raise ValueError(f"Invalid result identity in {path}: {idea}")
+        results.update(ideas)
+        parts.append((str(path), payload))
+    if not parts:
+        raise ValueError("At least one part is required")
+    if identity["source_sha256"] != hashlib.sha256(Path(__file__).read_bytes()).hexdigest():
+        raise ValueError("Current screen implementation differs from parts")
+    if identity["spec_sha256"] != hashlib.sha256(json.dumps(specs, sort_keys=True).encode()).hexdigest():
+        raise ValueError("Current registered specifications differ from parts")
+    missing = [idea for idea in IDS if idea not in results]
+    for idea in missing:
+        results[idea] = dict(id=idea, split="val", effect=None, ci95=[None, None], p=None,
+            status="not_computable", verdict="not_computable", n_events=0, n_series=0,
+            reason="Missing from supplied screen parts; enters fixed BH family as p=1",
+            missing_from_parts=True, details={}, name=specs[idea]["name"],
+            metric_spec=specs[idea]["metric"], null_spec=specs[idea]["null"],
+            test_spec=specs[idea]["test"])
+    results = {idea: results[idea] for idea in IDS}
+    apply_verdicts(results, specs)
+    payload = parts[0][1]
+    detail = payload["details"]
+    detail.update(ideas=results, is_part=False, missing_ideas=missing,
+        merged_parts=[path for path, _ in parts],
+        part_runs=[part["details"]["config"]["run"] for _, part in parts],
+        part_runtime=[dict(path=path, extraction_seconds=part["details"]["extraction_seconds"],
+            inference_seconds=part["details"]["inference_seconds"],
+            replicate_timings=part["details"]["replicate_timings"]) for path, part in parts])
+    # A merge has no single execution config or timing; keep provenance per part.
+    detail["part_configs"] = [part["details"]["config"] for _, part in parts]
+    detail.pop("config")
+    detail.pop("inference_seconds")
+    detail.pop("replicate_timings")
+    detail.pop("extraction_seconds")
+    detail["family"].update(adjustment_applied=True, missing_ideas=missing)
+    verdicts = Counter(r["verdict"] for r in results.values())
+    payload["updated"] = now()
+    payload["metrics"].update(ideas=18, primary_estimates=sum(r["p"] is not None for r in results.values()),
+        elapsed_seconds=None, missing_ideas=len(missing),
+        **{k:verdicts[k] for k in ("promising", "weak", "null", "not_computable")})
+    atomic_json(Path(output)/"results"/"screen.json", payload)
+    print(json.dumps({"stage":"merged", "parts":len(parts), "missing_ideas":missing,
+                      "output":str(Path(output)/"results"/"screen.json")}), flush=True)
+    return payload
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input", type=Path, default=DEFAULT_INPUT)
@@ -3333,27 +3518,43 @@ def main(argv=None):
     parser.add_argument("--workers", type=int, default=1)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--bootstrap-reps", type=int, default=2000)
-    parser.add_argument("--smoke", action="store_true", help="At most 6 unique replay slices, one worker")
+    parser.add_argument("--smoke", action="store_true", help="At most 6 unique replay slices; 1-4 inference workers")
     parser.add_argument("--sanity-check", action="store_true", help="Two shuffled whole-series label controls")
     parser.add_argument("--run", default="screen-"+time.strftime("%Y%m%dT%H%M%S"))
     parser.add_argument("--scratch", type=Path)
+    parser.add_argument("--ideas", help="Comma-separated B01..B18 subset; writes screen_part-<run>.json")
+    parser.add_argument("--merge", nargs="+", type=Path, metavar="PART",
+                        help="Merge explicit part files and apply BH over exactly B01..B18")
     args = parser.parse_args(argv)
+    specs_path = Path(__file__).resolve().parents[2]/"status"/"ideas_brainstorm.json"
+    specs = {r["id"]:r for r in json.loads(specs_path.read_text())}
+    if set(specs) != set(IDS):
+        raise ValueError("Expected exactly the eighteen registered ideas")
+    if args.merge is not None:
+        if args.ideas or args.smoke or args.sanity_check:
+            parser.error("--merge cannot be combined with execution/subset options")
+        return merge_parts(args.merge, args.output, specs)
     if args.workers < 1 or args.bootstrap_reps < 2:
         parser.error("positive workers and >=2 bootstrap replicates required")
-    if args.smoke and args.workers != 1:
-        parser.error("Login smoke MUST use --workers 1")
+    if args.smoke and args.workers > 4:
+        parser.error("Login smoke is bounded to at most four inference workers")
     if not args.smoke and args.bootstrap_reps != 2000:
         parser.error("Prespecified full screen requires exactly 2000 bootstrap replicates")
     if not args.smoke and not os.environ.get("SLURM_JOB_ID"):
         parser.error("Full screen must run in a CPU allocation, never on the login node")
     if args.sanity_check and not args.smoke:
         parser.error("Light sanity check is defined on the smoke sample only")
+    selected = args.ideas.split(",") if args.ideas is not None else list(IDS)
+    selected = [idea.strip() for idea in selected]
+    if not selected or len(set(selected)) != len(selected) or set(selected) - set(IDS):
+        parser.error("--ideas must be unique comma-separated IDs from B01..B18")
+    selected = [idea for idea in IDS if idea in selected]
+    result_path = args.output/"results"/(f"screen_part-{args.run}.json" if args.ideas else "screen.json")
+    if args.ideas and result_path.exists():
+        parser.error(f"Part already exists: {result_path}; choose a fresh --run tag")
+    _REPLICATE_TIMINGS.clear()
     started = time.perf_counter()
     log = Metrics(args.output, args.run)
-    specs_path = Path(__file__).resolve().parents[2]/"status"/"ideas_brainstorm.json"
-    specs = {r["id"]:r for r in json.loads(specs_path.read_text())}
-    if set(specs) != set(IDS):
-        raise ValueError("Expected exactly the eighteen registered ideas")
     groups, audit = metadata_inventory(args.input)
     if args.smoke:
         groups = select_smoke(groups)
@@ -3387,7 +3588,8 @@ def main(argv=None):
                 raise ValueError("Replay perspectives must share compact shard")
             by_shard[pair[0]["_shard"]].append(pair)
         with tempfile.TemporaryDirectory(prefix="screen-arrays-", dir=args.scratch) as temp:
-            with ProcessPoolExecutor(max_workers=args.workers) as pool:
+            with ProcessPoolExecutor(max_workers=args.workers,
+                    mp_context=multiprocessing.get_context("fork")) as pool:
                 for shard, pairs in sorted(by_shard.items()):
                     directory = unpack_shard(Path(shard), Path(temp))
                     tasks = ((pair, args.seed, directory) for pair in pairs)
@@ -3395,11 +3597,13 @@ def main(argv=None):
                         accept(item)
                     shutil.rmtree(directory)
     extraction_seconds = time.perf_counter()-extraction_start
-    results = {}
-    for idea in IDS:
+    results, inference_seconds = {}, {}
+    for idea in selected:
+        idea_started = time.perf_counter()
         log.emit(stage="primary_screen_started", idea=idea)
         results[idea] = infer_idea(idea, totals[idea], audit, args,
             progress=lambda **values: log.emit(stage="inference", **values))
+        inference_seconds[idea] = time.perf_counter()-idea_started
         results[idea]["name"] = specs[idea]["name"]
         results[idea]["metric_spec"] = specs[idea]["metric"]
         results[idea]["null_spec"] = specs[idea]["null"]
@@ -3407,17 +3611,18 @@ def main(argv=None):
         log.emit(stage="primary_screen", idea=idea, effect=results[idea]["effect"],
                  p=results[idea]["p"], n_series=results[idea]["n_series"],
                  n_events=results[idea]["n_events"])
-    apply_verdicts(results, specs)
-    sanity = calibration_sanity({k:totals[k]["rows"] for k in ("B02", "B10")}, args.seed) if args.sanity_check else None
+    if args.ideas is None:
+        apply_verdicts(results, specs)
+    sanity = calibration_sanity({k:totals[k]["rows"] for k in ("B02", "B10")}, args.seed, workers=args.workers) if args.sanity_check else None
     if sanity is not None and any(v["status"] != "passed" for v in sanity.values()):
         raise AssertionError(f"Smoke label control did not pass: {sanity}")
-    benchmark = smoke_model_benchmark(totals, args.seed) if args.smoke else None
+    benchmark = smoke_model_benchmark(totals, args.seed, min(50, args.bootstrap_reps), args.workers, selected) if args.smoke else None
     elapsed = time.perf_counter()-started
-    verdicts = Counter(r["verdict"] for r in results.values())
+    verdicts = Counter(r.get("verdict", "pending_merge") for r in results.values())
     payload = {
         "method": "brainstorm_quick_screen", "task": "screen", "split": "val",
         "is_baseline": False, "updated": now(),
-        "metrics": {"ideas": len(IDS), "replays_processed": len(completed),
+        "metrics": {"ideas": len(selected), "replays_processed": len(completed),
                     "n_train_replays": sum(p[0]["split"] == "train" for p in groups),
                     "n_val_replays": sum(p[0]["split"] == "val" for p in groups),
                     "primary_estimates": sum(r["p"] is not None for r in results.values()),
@@ -3425,10 +3630,19 @@ def main(argv=None):
                     **{k:verdicts[k] for k in ("promising", "weak", "null", "not_computable")}},
         "details": {
             "ideas": results, "audit": audit, "smoke": args.smoke,
+            "is_part": args.ideas is not None,
+            "merge_identity": {
+                "seed": args.seed, "bootstrap_reps": args.bootstrap_reps, "smoke": args.smoke,
+                "source_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+                "spec_sha256": hashlib.sha256(json.dumps(specs, sort_keys=True).encode()).hexdigest(),
+                "input_manifest_sha256": input_identity(args.input),
+                "processed_replay_ids": completed},
+            "inference_seconds": inference_seconds, "replicate_timings": list(_REPLICATE_TIMINGS),
             "config": vars(args), "processed_replay_ids": completed,
             "extraction_seconds": extraction_seconds, "smoke_model_benchmark": benchmark,
             "shuffled_label_sanity": sanity, "training_boost_range_audit": boost_audit,
             "family": {"size": 18, "adjustment": "Benjamini-Hochberg",
+                       "adjustment_applied": args.ideas is None,
                        "missing_primary_p": 1., "promising_q_strictly_below": .1},
             "limitations": [
                 "Smoke output is an execution check, not a scientific screen of all development replays."
@@ -3440,7 +3654,7 @@ def main(argv=None):
                 "no outcome-selected calipers, no exposure-defining covariates controlled away.",
                 "No independently certified complete series membership or terminal-score provenance."
             ]}}
-    atomic_json(args.output/"results"/"screen.json", payload)
+    atomic_json(result_path, payload)
     atomic_json(log.directory/"summary.json", payload)
     log.emit(stage="complete", elapsed_seconds=elapsed, **dict(verdicts))
     return payload
