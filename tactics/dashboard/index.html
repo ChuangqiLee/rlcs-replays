@@ -1,0 +1,52 @@
+<!doctype html><html><head><meta charset="utf-8"><title>RLCS Tactics 大屏</title>
+<style>
+body{font-family:-apple-system,Segoe UI,sans-serif;background:#0f1419;color:#e6e6e6;margin:0}
+header{padding:12px 20px;background:#1a2230;display:flex;justify-content:space-between;align-items:center}
+nav button{background:#26324a;color:#ddd;border:0;padding:8px 14px;margin-right:4px;border-radius:4px;cursor:pointer}
+nav button.on{background:#3d7eff;color:#fff}
+main{padding:16px 20px}.tab{display:none}.tab.on{display:block}
+.tl{display:flex;gap:10px;flex-wrap:wrap}.ph{flex:1;min-width:180px;background:#1a2230;border-radius:6px;padding:10px;border-top:4px solid #555}
+.done{border-color:#2ecc71}.in_progress{border-color:#f1c40f}.blocked{border-color:#e74c3c}.not_started{border-color:#555}
+pre{background:#11161d;padding:10px;overflow:auto;max-height:500px;white-space:pre-wrap;font-size:12px}
+table{border-collapse:collapse;width:100%}td,th{border:1px solid #333;padding:4px 8px;font-size:13px}th{background:#1a2230}
+.best{color:#2ecc71;font-weight:bold}canvas{background:#11161d;margin:6px 0}small{color:#999}
+</style></head><body>
+<header><b>RLCS Tactics 科研进度大屏</b><span id="host"></span></header>
+<nav style="padding:8px 20px"><button data-t="home" class="on">总览</button><button data-t="curves">训练曲线</button><button data-t="logs">会话日志</button><button data-t="results">结果对比</button><button data-t="progress">PROGRESS.md</button></nav>
+<main>
+<div id="home" class="tab on"><h3>阶段时间线</h3><div class="tl" id="tl"></div><h3>SLURM 作业 (squeue -u $USER)</h3><pre id="sq"></pre></div>
+<div id="curves" class="tab"><div id="cv"></div></div>
+<div id="logs" class="tab"><div id="lg"></div></div>
+<div id="results" class="tab"><div id="rs"></div></div>
+<div id="progress" class="tab"><div id="pg"></div></div>
+</main>
+<script>
+const $=id=>document.getElementById(id), E=s=>String(s==null?'':s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const J=u=>fetch(u).then(r=>r.json());
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button,.tab').forEach(x=>x.classList.remove('on'));b.classList.add('on');$(b.dataset.t).classList.add('on');});
+const ST={done:'✅ 完成',in_progress:'⏳ 进行中',blocked:'⛔ 阻塞',not_started:'○ 未开始'};
+function md(s){return E(s).replace(/^### (.*)$/gm,'<h4>$1</h4>').replace(/^## (.*)$/gm,'<h3>$1</h3>').replace(/^# (.*)$/gm,'<h2>$1</h2>').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/`([^`]+)`/g,'<code>$1</code>').replace(/^- (.*)$/gm,'• $1').replace(/\n/g,'<br>');}
+function plot(c,series,title){const x=c.getContext('2d'),W=c.width,Hh=c.height,P=40;x.clearRect(0,0,W,Hh);
+ let xs=[],ys=[];series.forEach(s=>s.pts.forEach(p=>{xs.push(p[0]);ys.push(p[1]);}));if(!xs.length)return;
+ let x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);if(x1==x0)x1++;if(y1==y0)y1+=1e-9;
+ x.fillStyle='#ccc';x.font='12px sans-serif';x.fillText(title,P,14);x.fillText(y1.toPrecision(4),2,P);x.fillText(y0.toPrecision(4),2,Hh-P);x.fillText(x1,W-50,Hh-8);
+ const C=['#3d7eff','#2ecc71','#f1c40f','#e74c3c','#9b59b6','#1abc9c','#e67e22','#ecf0f1'];
+ series.forEach((s,i)=>{x.strokeStyle=C[i%C.length];x.beginPath();s.pts.forEach((p,j)=>{const X=P+(p[0]-x0)/(x1-x0)*(W-2*P),Y=Hh-P-(p[1]-y0)/(y1-y0)*(Hh-2*P);j?x.lineTo(X,Y):x.moveTo(X,Y);});x.stroke();x.fillStyle=C[i%C.length];x.fillText(s.name,W-200,20+14*i);});}
+async function load(){
+ J('/api/host').then(h=>$('host').innerHTML=`<small>${E(h.host)}:${h.port} · 更新 ${E(h.time)}</small>`);
+ J('/api/phases').then(p=>{$('tl').innerHTML=(p.phases||[]).map(q=>`<div class="ph ${q.status}"><b>${E(q.id)} ${E(q.name)}</b><br>${ST[q.status]||E(q.status)}<br><small>开始 ${E(q.started||'-')}<br>完成 ${E(q.finished||'-')}</small><p>${E(q.conclusion||'')}</p></div>`).join('')+(p.updated?`<small>phases.json 更新: ${E(p.updated)}</small>`:'')});
+ J('/api/squeue').then(s=>$('sq').textContent=s);
+ J('/api/runs').then(r=>{const ks=Object.keys(r);if(!ks.length){$('cv').innerHTML='<p>暂无 runs/*/metrics.jsonl</p>';return;}
+  const metrics=new Set();ks.forEach(k=>r[k].rows.forEach(o=>Object.keys(o).forEach(m=>{if(!['step','epoch','time','split'].includes(m)&&typeof o[m]=='number')metrics.add(m);})));
+  $('cv').innerHTML='';[...metrics].forEach(m=>{const c=document.createElement('canvas');c.width=900;c.height=260;$('cv').appendChild(c);
+   plot(c,ks.map(k=>({name:k,pts:r[k].rows.filter(o=>typeof o[m]=='number').map((o,i)=>[o.step!=null?o.step:(o.epoch!=null?o.epoch:i),o[m]])})).filter(s=>s.pts.length),m);});});
+ J('/api/logs').then(l=>$('lg').innerHTML=Object.keys(l).map(k=>`<details><summary>${E(k)} <small>${E(l[k].mtime)}</small></summary><pre>${E(l[k].tail)}</pre></details>`).join('')||'<p>暂无 logs/*.log</p>');
+ J('/api/results').then(r=>{const ks=Object.keys(r);if(!ks.length){$('rs').innerHTML='<p>暂无 results/*.json</p>';return;}
+  const groups={};ks.forEach(k=>{const o=r[k],t=(o.task||'default')+' / '+(o.split||'test');(groups[t]=groups[t]||[]).push(Object.assign({_f:k},o));});
+  $('rs').innerHTML=Object.keys(groups).map(g=>{const L=groups[g],ms=[...new Set(L.flatMap(o=>Object.keys(o.metrics||{})))];
+   const best={};ms.forEach(m=>{const v=L.map(o=>(o.metrics||{})[m]).filter(v=>typeof v=='number');const lo=(L[0].lower_is_better||[]).includes(m);best[m]=lo?Math.min(...v):Math.max(...v);});
+   return `<h3>${E(g)}</h3><table><tr><th>方法</th><th>类型</th>${ms.map(m=>`<th>${E(m)}</th>`).join('')}<th>备注</th></tr>`+L.map(o=>`<tr><td>${E(o.method||o._f)}</td><td>${o.is_baseline?'baseline':'ours'}</td>${ms.map(m=>{const v=(o.metrics||{})[m];return `<td class="${v===best[m]?'best':''}">${v==null?'':E(typeof v=='number'?v.toFixed(4):v)}</td>`}).join('')}<td><small>${E(o.notes||'')}</small></td></tr>`).join('')+'</table>';}).join('');});
+ fetch('/api/progress').then(r=>r.json()).then(s=>$('pg').innerHTML=md(s));
+}
+load();setInterval(load,30000);
+</script></body></html>

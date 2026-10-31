@@ -25,3 +25,9 @@ build on glibc 2.17; numpy not installed.
 
 **Next:** install numpy/pandas/pyarrow from conda-forge (or pin manylinux2014 wheels) in the env
 script; consider a cached env tarball to unpack into $TMPDIR; then P1 dashboard + P2 literature.
+
+## P1 进度大屏 — 2026-10-31 14:55 CET（已上线）
+- 服务：login006 127.0.0.1:18765，标准库 http.server（/usr/bin/python3 3.6），tmux 会话 dash + watchdog.sh（30s 健康检查自动拉起）+ crontab */5 与 @reboot 调 ensure.sh。
+- Mac 转发：ssh -N -L 18765:127.0.0.1:18765 cheaha-tunnel → http://127.0.0.1:18765/ ，已 curl 验证。
+- 数据约定见 tactics/dashboard/README.md（status/phases.json、runs/*/metrics.jsonl、logs/*.log、results/*.json）。
+- 下一步：各阶段完成时更新 status/phases.json 和本文件。
