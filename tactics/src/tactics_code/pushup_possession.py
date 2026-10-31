@@ -300,7 +300,7 @@ def analyze(df, pred, x, names):
              'tied_full_model': df['population'].eq('tied').to_numpy()}
     estimates, contributions = {}, {}
     for name, mask in masks.items():
-        mask &= df['split'].eq('val').to_numpy()
+        mask = mask & df['split'].eq('val').to_numpy()
         sub = df.loc[mask].reset_index(drop=True)
         estimates[name] = estimate_contrast(sub, pred[mask], x[mask], names)
         if name in ('full_model', 'tied_full_model'):
