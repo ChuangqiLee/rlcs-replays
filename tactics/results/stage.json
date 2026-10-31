@@ -9,10 +9,10 @@
     "selected_replays": 1500.0
   },
   "notes": "",
-  "updated": "2026-10-31T15:20:17+00:00",
+  "updated": "2026-10-31T15:36:20+00:00",
   "details": {
     "source": "/home/c.li16@students.uu.nl/workspace/rlcs-replays/data",
-    "destination": "/local/p3-small-41104704-s42-w6-f10-ksweep/data",
+    "destination": "/local/p3-small-41104720-s42-w6-f10-ksweep/data",
     "max_replays_per_season": 300,
     "all_frames": false,
     "selected_by_season": {

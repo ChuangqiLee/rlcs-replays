@@ -71,3 +71,12 @@ global state map gave only 470k live frames of 11.9 M and 0 detected goals → R
 5,268 windows (K=8, val recon 0.687; RQ1 p=0.023, Holm 0.069 — not trustworthy yet). Fix in progress: per-replay decoding
 (live = dominant code while ball-has-been-hit; goal = leaving live with |ball y|>5000, sign gives scorer; OT after 0-s regulation end),
 validated against summed player Goals. Infra fixes: env.sh nounset-safe, conda-forge matplotlib/statsmodels, no tee/`set -u` (bash 4.2).
+
+## P3 small run 3 (decoding fixed) — 2026-10-31 17:11 CET
+Job 41104720 (1,500 3v3 replays, 38 min, 1 A100). Goal agreement 99.2% (1426/1438), 6,381 goals, 0 decode failures.
+RQ1: 120,524 windows, K=8, val recon 0.637; learned-token excess gain 0.0049 bits/jump, p=0.001 (999 nulls), Holm 0.003;
+heldout predictive gain -0.0013 bits (learned) / +0.0007 (handcrafted). Significant but very small → needs scale + seed check.
+RQ3 primary (uncovered fraction, late×trailing): +0.023, SE 0.016, p=0.155, series bootstrap CI [-0.008, 0.053] → not significant.
+Secondary: third-man depth -740 uu (CI [-969,-521], p=1.1e-8, BH q=2.3e-6): trailing late teams push the last man up. MixedLM did not converge.
+RQ4: 0 eligible rosters (needs >=20 series) → insufficient data. Exploratory BH: 16/203 discoveries.
+Next: medium run 41104745 (1,500 replays/season = 7,500, NULLS=499, 3 h limit; est. ~1.5 h).

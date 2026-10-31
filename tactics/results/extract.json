@@ -7,104 +7,96 @@
     "replays": 1500.0,
     "perspectives": 3000.0,
     "frames": 11949886.0,
-    "live_frames": 469986.0,
+    "live_frames": 10005190.0,
     "shards": 10.0
   },
   "notes": "NaN context stays unknown; no frame-wise complete-case mode filter.",
-  "updated": "2026-10-31T15:21:58+00:00",
+  "updated": "2026-10-31T15:39:44+00:00",
   "details": {
     "shards": [
       {
         "replays": 50,
         "perspectives": 100,
-        "frames": 393964,
+        "frames": 399800,
         "reasons": {},
-        "shard": "/scratch/local/p3-small-41104704-s42-w6-f10-ksweep/compact/rlcs-2024/compact-0001.npz",
-        "live_frames": 1376
+        "shard": "/scratch/local/p3-small-41104720-s42-w6-f10-ksweep/compact/rlcs-2025/compact-0001.npz",
+        "live_frames": 333218
       },
       {
         "replays": 50,
         "perspectives": 100,
-        "frames": 399800,
+        "frames": 393964,
         "reasons": {},
-        "shard": "/scratch/local/p3-small-41104704-s42-w6-f10-ksweep/compact/rlcs-2025/compact-0001.npz",
-        "live_frames": 15268
+        "shard": "/scratch/local/p3-small-41104720-s42-w6-f10-ksweep/compact/rlcs-2024/compact-0001.npz",
+        "live_frames": 338428
       },
       {
         "replays": 50,
         "perspectives": 100,
         "frames": 418540,
         "reasons": {},
-        "shard": "/scratch/local/p3-small-41104704-s42-w6-f10-ksweep/compact/rlcs-2026/compact-0001.npz",
-        "live_frames": 25680
-      },
-      {
-        "replays": 250,
-        "perspectives": 500,
-        "frames": 2018944,
-        "reasons": {},
-        "shard": "/scratch/local/p3-small-41104704-s42-w6-f10-ksweep/compact/rlcs-2024/compact-0000.npz",
-        "live_frames": 51932
+        "shard": "/scratch/local/p3-small-41104720-s42-w6-f10-ksweep/compact/rlcs-2026/compact-0001.npz",
+        "live_frames": 350260
       },
       {
         "replays": 250,
         "perspectives": 500,
         "frames": 1973488,
         "reasons": {},
-        "shard": "/scratch/local/p3-small-41104704-s42-w6-f10-ksweep/compact/rlcs-2025/compact-0000.npz",
-        "live_frames": 92946
+        "shard": "/scratch/local/p3-small-41104720-s42-w6-f10-ksweep/compact/rlcs-2025/compact-0000.npz",
+        "live_frames": 1649292
+      },
+      {
+        "replays": 250,
+        "perspectives": 500,
+        "frames": 2018944,
+        "reasons": {},
+        "shard": "/scratch/local/p3-small-41104720-s42-w6-f10-ksweep/compact/rlcs-2024/compact-0000.npz",
+        "live_frames": 1680872
       },
       {
         "replays": 50,
         "perspectives": 100,
         "frames": 389150,
         "reasons": {},
-        "shard": "/scratch/local/p3-small-41104704-s42-w6-f10-ksweep/compact/rlcs-21-22/compact-0001.npz",
-        "live_frames": 4216
+        "shard": "/scratch/local/p3-small-41104720-s42-w6-f10-ksweep/compact/rlcs-21-22/compact-0001.npz",
+        "live_frames": 332152
       },
       {
         "replays": 250,
         "perspectives": 500,
         "frames": 2030394,
         "reasons": {},
-        "shard": "/scratch/local/p3-small-41104704-s42-w6-f10-ksweep/compact/rlcs-2026/compact-0000.npz",
-        "live_frames": 77628
-      },
-      {
-        "replays": 50,
-        "perspectives": 100,
-        "frames": 400800,
-        "reasons": {},
-        "shard": "/scratch/local/p3-small-41104704-s42-w6-f10-ksweep/compact/rlcs-22-23/compact-0001.npz",
-        "live_frames": 0
+        "shard": "/scratch/local/p3-small-41104720-s42-w6-f10-ksweep/compact/rlcs-2026/compact-0000.npz",
+        "live_frames": 1700164
       },
       {
         "replays": 250,
         "perspectives": 500,
         "frames": 1955298,
         "reasons": {},
-        "shard": "/scratch/local/p3-small-41104704-s42-w6-f10-ksweep/compact/rlcs-21-22/compact-0000.npz",
-        "live_frames": 91046
+        "shard": "/scratch/local/p3-small-41104720-s42-w6-f10-ksweep/compact/rlcs-21-22/compact-0000.npz",
+        "live_frames": 1645758
+      },
+      {
+        "replays": 50,
+        "perspectives": 100,
+        "frames": 400800,
+        "reasons": {},
+        "shard": "/scratch/local/p3-small-41104720-s42-w6-f10-ksweep/compact/rlcs-22-23/compact-0001.npz",
+        "live_frames": 329394
       },
       {
         "replays": 250,
         "perspectives": 500,
         "frames": 1969508,
         "reasons": {},
-        "shard": "/scratch/local/p3-small-41104704-s42-w6-f10-ksweep/compact/rlcs-22-23/compact-0000.npz",
-        "live_frames": 109894
+        "shard": "/scratch/local/p3-small-41104720-s42-w6-f10-ksweep/compact/rlcs-22-23/compact-0000.npz",
+        "live_frames": 1645652
       }
     ],
     "state_map": {
-      "live_states": [
-        78
-      ],
-      "kickoff_states": [
-        73
-      ],
-      "goal_replay_states": [
-        96
-      ],
+      "state_decoding": "per_replay_decoded",
       "goal_detection": "frame_state_transitions",
       "overtime_detection": "frame_state_transitions"
     },

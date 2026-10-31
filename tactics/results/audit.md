@@ -40,21 +40,27 @@ Observed parsed-game gap: 94; odd-player games: 94.
 
 ## Coverage and semantics
 
-Series coverage: 100.0%; timed-goal coverage among scanned replays: 8.7%; stable player-ID coverage: 100.0%.
-Metadata-only timed-goal coverage across index rows: 0.0%; complete frame-derived timelines among scanned replays: 8.7%.
+Series coverage: 100.0%; timed-goal coverage among scanned replays: 100.0%; stable player-ID coverage: 100.0%.
+Metadata-only timed-goal coverage across index rows: 0.0%; complete frame-derived timelines among scanned replays: 100.0%.
 Frame scan: 17,923,321 frames; 0 selected replays missing locally.
 
 Header goal totals cross-check frame-derived events; they do not establish event times.
-The default state_map_rlcs.json supplies the empirically decoded RLCS states; --state-map overrides it.
-Goals use live-to-goal-state transitions and the preceding ball y coordinate, with ambiguous scoring teams reported.
-With the default map, a live-to-kickoff transition at zero seconds starts overtime; its live state code is unchanged.
+The default state_map_rlcs.json decodes replay-specific object IDs independently (per_replay_decoded; explicit_state_map provenance).
+Live is the unique most frequent code among hit==1 frames and must cover at least 50% of all replay frames.
+Goals are exits from live with preceding |ball y| > 5000; positive y credits team 0.
+A non-goal exit at zero seconds and |ball y| <= 5000 marks regulation end; subsequent live frames are overtime.
 The explicit exploratory clock/hit heuristic does not validate these semantics.
 Raw demolition and boost ranges are reported without assuming a unit or duration convention.
 
+## Per-replay state decoding
+
+Decoding failures: 0; reasons: {}.
+Every scanned replay has its decoded live code, live share and failures recorded in audit.json.
+
 ## Goal agreement
 
-Per-replay agreement of both frame-derived team counts with summed player Goals: 0.0% (0/127 comparable replays).
-Detected goal events: 0; ambiguous scoring teams: 0; disagreeing replays: 127.
+Per-replay agreement of both frame-derived team counts with summed player Goals: 99.2% (1426/1438 comparable replays).
+Detected goal events: 6381; ambiguous scoring teams: 0; disagreeing replays: 12.
 
 ## Game-state codes and transitions
 

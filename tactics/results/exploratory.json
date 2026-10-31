@@ -4,260 +4,53 @@
   "split": "all",
   "is_baseline": false,
   "metrics": {
-    "tests": 200,
-    "discoveries_q005": 0
+    "tests": 203,
+    "discoveries_q005": 16
   },
   "details": {
     "tests": [
       {
-        "id": "tokens_handcrafted_val:motif:6,2",
-        "source": "tokens_handcrafted_val.json",
+        "id": "pressure:val:third_depth",
+        "source": "pressure.json",
         "split": "val",
-        "kind": "motif",
-        "motif": [
-          6,
-          2
-        ],
-        "p_value": 0.703,
-        "q_value": 0.963013698630137,
+        "kind": "pressure_secondary",
+        "response": "third_depth",
+        "p_value": 1.1401702486379118e-08,
+        "q_value": 2.314545604734961e-06,
+        "reject_005": true
+      },
+      {
+        "id": "pressure:val:coverage",
+        "source": "pressure.json",
+        "split": "val",
+        "kind": "pressure_secondary",
+        "response": "coverage",
+        "p_value": 0.10799863118152561,
+        "q_value": 0.5347249299963341,
         "reject_005": false
       },
       {
-        "id": "tokens_handcrafted_val:motif:1,5",
-        "source": "tokens_handcrafted_val.json",
+        "id": "pressure:val:spacing",
+        "source": "pressure.json",
         "split": "val",
-        "kind": "motif",
-        "motif": [
-          1,
-          5
-        ],
-        "p_value": 0.963,
-        "q_value": 0.9876923076923076,
+        "kind": "pressure_secondary",
+        "response": "spacing",
+        "p_value": 0.11076224050844924,
+        "q_value": 0.5353508291241713,
         "reject_005": false
       },
       {
-        "id": "tokens_handcrafted_val:motif:7,1",
+        "id": "tokens_handcrafted_val:motif:3,1",
         "source": "tokens_handcrafted_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
-          7,
+          3,
           1
         ],
-        "p_value": 0.881,
-        "q_value": 0.9689839572192515,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:5,0",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          5,
-          0
-        ],
-        "p_value": 0.935,
-        "q_value": 0.9760416666666667,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:0,7",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          0,
-          7
-        ],
-        "p_value": 0.959,
-        "q_value": 0.9876923076923076,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:1,0",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          1,
-          0
-        ],
-        "p_value": 0.797,
-        "q_value": 0.9655172413793104,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:0,1",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          0,
-          1
-        ],
-        "p_value": 0.686,
-        "q_value": 0.952777777777778,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:2,5",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          2,
-          5
-        ],
-        "p_value": 0.723,
-        "q_value": 0.964,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:2,7",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          2,
-          7
-        ],
-        "p_value": 0.495,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:2,1",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          2,
-          1
-        ],
-        "p_value": 0.445,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:5,6",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          5,
-          6
-        ],
-        "p_value": 0.917,
-        "q_value": 0.975531914893617,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:2,0",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          2,
-          0
-        ],
-        "p_value": 0.385,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:1,5,0",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          1,
-          5,
-          0
-        ],
-        "p_value": 0.718,
-        "q_value": 0.964,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:1,6",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          1,
-          6
-        ],
-        "p_value": 0.508,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:0,6",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          0,
-          6
-        ],
-        "p_value": 0.59,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:7,6",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          7,
-          6
-        ],
-        "p_value": 0.755,
-        "q_value": 0.9655172413793104,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:0,7,1",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          0,
-          7,
-          1
-        ],
-        "p_value": 0.77,
-        "q_value": 0.9655172413793104,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:7,2",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          7,
-          2
-        ],
-        "p_value": 0.446,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:7,1,5",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          7,
-          1,
-          5
-        ],
-        "p_value": 0.625,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
+        "p_value": 0.001,
+        "q_value": 0.013533333333333335,
+        "reject_005": true
       },
       {
         "id": "tokens_handcrafted_val:motif:5,2",
@@ -268,74 +61,73 @@
           5,
           2
         ],
-        "p_value": 0.366,
-        "q_value": 0.9422535211267606,
+        "p_value": 1.0,
+        "q_value": 1.0,
         "reject_005": false
       },
       {
-        "id": "tokens_handcrafted_val:motif:5,7",
+        "id": "tokens_handcrafted_val:motif:4,0",
         "source": "tokens_handcrafted_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
-          5,
-          7
+          4,
+          0
         ],
-        "p_value": 0.983,
-        "q_value": 0.9929292929292929,
+        "p_value": 1.0,
+        "q_value": 1.0,
         "reject_005": false
       },
       {
-        "id": "tokens_handcrafted_val:motif:0,2",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          0,
-          2
-        ],
-        "p_value": 0.903,
-        "q_value": 0.9689839572192515,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:5,0,7",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          5,
-          0,
-          7
-        ],
-        "p_value": 0.662,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:7,5",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          7,
-          5
-        ],
-        "p_value": 0.977,
-        "q_value": 0.9918781725888325,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:2,6",
+        "id": "tokens_handcrafted_val:motif:2,4",
         "source": "tokens_handcrafted_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
           2,
-          6
+          4
         ],
-        "p_value": 0.217,
-        "q_value": 0.9422535211267606,
+        "p_value": 1.0,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:0,5",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          0,
+          5
+        ],
+        "p_value": 1.0,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:4,5",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          4,
+          5
+        ],
+        "p_value": 1.0,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:5,4",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          5,
+          4
+        ],
+        "p_value": 1.0,
+        "q_value": 1.0,
         "reject_005": false
       },
       {
@@ -347,298 +139,756 @@
           1,
           2
         ],
-        "p_value": 0.835,
-        "q_value": 0.9655172413793104,
-        "reject_005": false
+        "p_value": 0.001,
+        "q_value": 0.013533333333333335,
+        "reject_005": true
       },
       {
-        "id": "tokens_handcrafted_val:motif:6,5",
+        "id": "tokens_handcrafted_val:motif:1,4",
         "source": "tokens_handcrafted_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
-          6,
-          5
+          1,
+          4
         ],
-        "p_value": 0.632,
-        "q_value": 0.9422535211267606,
+        "p_value": 0.797,
+        "q_value": 1.0,
         "reject_005": false
       },
       {
-        "id": "tokens_handcrafted_val:motif:6,7",
+        "id": "tokens_handcrafted_val:motif:1,0",
         "source": "tokens_handcrafted_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
-          6,
-          7
-        ],
-        "p_value": 0.627,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:6,0",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          6,
+          1,
           0
         ],
-        "p_value": 0.86,
-        "q_value": 0.9689839572192515,
+        "p_value": 0.001,
+        "q_value": 0.013533333333333335,
+        "reject_005": true
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:0,3",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          0,
+          3
+        ],
+        "p_value": 0.001,
+        "q_value": 0.013533333333333335,
+        "reject_005": true
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:4,3",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          4,
+          3
+        ],
+        "p_value": 0.08,
+        "q_value": 0.4736666666666666,
         "reject_005": false
       },
       {
-        "id": "tokens_handcrafted_val:motif:5,0,1",
+        "id": "tokens_handcrafted_val:motif:3,0",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          3,
+          0
+        ],
+        "p_value": 0.001,
+        "q_value": 0.013533333333333335,
+        "reject_005": true
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:2,3",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          2,
+          3
+        ],
+        "p_value": 0.001,
+        "q_value": 0.013533333333333335,
+        "reject_005": true
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:2,1",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          2,
+          1
+        ],
+        "p_value": 0.342,
+        "q_value": 0.9438181818181817,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:2,0",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          2,
+          0
+        ],
+        "p_value": 0.934,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:1,3",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          1,
+          3
+        ],
+        "p_value": 0.001,
+        "q_value": 0.013533333333333335,
+        "reject_005": true
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:5,1",
         "source": "tokens_handcrafted_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
           5,
-          0,
           1
         ],
-        "p_value": 0.496,
-        "q_value": 0.9422535211267606,
+        "p_value": 0.056,
+        "q_value": 0.37893333333333334,
         "reject_005": false
       },
       {
-        "id": "tokens_handcrafted_val:motif:7,1,0",
+        "id": "tokens_handcrafted_val:motif:1,5",
         "source": "tokens_handcrafted_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
-          7,
           1,
-          0
+          5
         ],
-        "p_value": 0.681,
-        "q_value": 0.9524475524475525,
+        "p_value": 0.397,
+        "q_value": 0.9550227272727273,
         "reject_005": false
       },
       {
-        "id": "tokens_handcrafted_val:motif:2,7,1",
+        "id": "tokens_handcrafted_val:motif:4,0,5",
         "source": "tokens_handcrafted_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
-          2,
-          7,
-          1
+          4,
+          0,
+          5
         ],
-        "p_value": 0.167,
-        "q_value": 0.9422535211267606,
+        "p_value": 1.0,
+        "q_value": 1.0,
         "reject_005": false
       },
       {
-        "id": "tokens_handcrafted_val:motif:2,5,0",
+        "id": "tokens_handcrafted_val:motif:0,2",
         "source": "tokens_handcrafted_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
-          2,
+          0,
+          2
+        ],
+        "p_value": 0.943,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:5,3",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
           5,
-          0
-        ],
-        "p_value": 0.454,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:0,1,5",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          0,
-          1,
-          5
-        ],
-        "p_value": 0.666,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:6,1",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          6,
-          1
-        ],
-        "p_value": 0.795,
-        "q_value": 0.9655172413793104,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:6,2,5",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          6,
-          2,
-          5
-        ],
-        "p_value": 0.075,
-        "q_value": 0.8260869565217391,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:1,0,7",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          1,
-          0,
-          7
-        ],
-        "p_value": 0.447,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:6,2,7",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          6,
-          2,
-          7
-        ],
-        "p_value": 0.008,
-        "q_value": 0.4,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:7,6,2",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          7,
-          6,
-          2
-        ],
-        "p_value": 0.429,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:6,2,1",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          6,
-          2,
-          1
-        ],
-        "p_value": 0.086,
-        "q_value": 0.8260869565217391,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:1,6,2",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          1,
-          6,
-          2
+          3
         ],
         "p_value": 0.018,
-        "q_value": 0.5142857142857142,
+        "q_value": 0.1588695652173913,
         "reject_005": false
       },
       {
-        "id": "tokens_handcrafted_val:motif:6,2,0",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          6,
-          2,
-          0
-        ],
-        "p_value": 0.087,
-        "q_value": 0.8260869565217391,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:5,6,2",
+        "id": "tokens_handcrafted_val:motif:5,2,4",
         "source": "tokens_handcrafted_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
           5,
-          6,
-          2
+          2,
+          4
         ],
-        "p_value": 0.489,
-        "q_value": 0.9422535211267606,
+        "p_value": 1.0,
+        "q_value": 1.0,
         "reject_005": false
       },
       {
-        "id": "tokens_handcrafted_val:motif:1,5,6",
+        "id": "tokens_handcrafted_val:motif:3,2",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          3,
+          2
+        ],
+        "p_value": 0.083,
+        "q_value": 0.4736666666666666,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:0,1",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          0,
+          1
+        ],
+        "p_value": 0.24,
+        "q_value": 0.84,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:3,5",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          3,
+          5
+        ],
+        "p_value": 0.477,
+        "q_value": 0.9942857142857142,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:4,5,2",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          4,
+          5,
+          2
+        ],
+        "p_value": 1.0,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:4,1",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          4,
+          1
+        ],
+        "p_value": 0.026,
+        "q_value": 0.21111999999999997,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:0,5,2",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          0,
+          5,
+          2
+        ],
+        "p_value": 1.0,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:3,4",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          3,
+          4
+        ],
+        "p_value": 0.185,
+        "q_value": 0.7085849056603774,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:2,4,0",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          2,
+          4,
+          0
+        ],
+        "p_value": 1.0,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:2,4,5",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          2,
+          4,
+          5
+        ],
+        "p_value": 1.0,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:5,4,0",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          5,
+          4,
+          0
+        ],
+        "p_value": 0.999,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:0,5,4",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          0,
+          5,
+          4
+        ],
+        "p_value": 0.998,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:4,5,4",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          4,
+          5,
+          4
+        ],
+        "p_value": 0.993,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:3,1,2",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          3,
+          1,
+          2
+        ],
+        "p_value": 0.001,
+        "q_value": 0.013533333333333335,
+        "reject_005": true
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:5,4,5",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          5,
+          4,
+          5
+        ],
+        "p_value": 0.987,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:4,2",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          4,
+          2
+        ],
+        "p_value": 1.0,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:3,1,0",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          3,
+          1,
+          0
+        ],
+        "p_value": 0.001,
+        "q_value": 0.013533333333333335,
+        "reject_005": true
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:3,1,4",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          3,
+          1,
+          4
+        ],
+        "p_value": 0.256,
+        "q_value": 0.8729,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:1,2,4",
         "source": "tokens_handcrafted_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
           1,
-          5,
-          6
+          2,
+          4
         ],
-        "p_value": 0.476,
-        "q_value": 0.9422535211267606,
+        "p_value": 0.12,
+        "q_value": 0.55825,
         "reject_005": false
       },
       {
-        "id": "tokens_handcrafted_val:motif:2,1,5",
+        "id": "tokens_handcrafted_val:motif:0,4",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          0,
+          4
+        ],
+        "p_value": 0.946,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:4,3,1",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          4,
+          3,
+          1
+        ],
+        "p_value": 0.121,
+        "q_value": 0.55825,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:4,0,3",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          4,
+          0,
+          3
+        ],
+        "p_value": 0.331,
+        "q_value": 0.933236111111111,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:0,3,1",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          0,
+          3,
+          1
+        ],
+        "p_value": 0.001,
+        "q_value": 0.013533333333333335,
+        "reject_005": true
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:2,3,1",
         "source": "tokens_handcrafted_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
           2,
+          3,
+          1
+        ],
+        "p_value": 0.001,
+        "q_value": 0.013533333333333335,
+        "reject_005": true
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:1,0,5",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          1,
+          0,
+          5
+        ],
+        "p_value": 0.298,
+        "q_value": 0.8914347826086957,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:5,2,3",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          5,
+          2,
+          3
+        ],
+        "p_value": 0.358,
+        "q_value": 0.9438181818181817,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:3,0,5",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          3,
+          0,
+          5
+        ],
+        "p_value": 0.223,
+        "q_value": 0.808375,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:5,2,1",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          5,
+          2,
+          1
+        ],
+        "p_value": 0.574,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:3,1,5",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          3,
           1,
           5
         ],
-        "p_value": 0.456,
-        "q_value": 0.9422535211267606,
+        "p_value": 0.089,
+        "q_value": 0.4736666666666666,
         "reject_005": false
       },
       {
-        "id": "tokens_handcrafted_val:motif:1,0,1",
+        "id": "tokens_handcrafted_val:motif:1,4,0",
         "source": "tokens_handcrafted_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
           1,
-          0,
-          1
+          4,
+          0
         ],
-        "p_value": 0.135,
-        "q_value": 0.9133333333333334,
+        "p_value": 0.897,
+        "q_value": 1.0,
         "reject_005": false
       },
       {
-        "id": "tokens_handcrafted_val:motif:0,6,2",
+        "id": "tokens_handcrafted_val:motif:5,3,1",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          5,
+          3,
+          1
+        ],
+        "p_value": 0.03,
+        "q_value": 0.23423076923076921,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:1,4,5",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          1,
+          4,
+          5
+        ],
+        "p_value": 0.806,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:1,3,1",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          1,
+          3,
+          1
+        ],
+        "p_value": 0.001,
+        "q_value": 0.013533333333333335,
+        "reject_005": true
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:5,2,0",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          5,
+          2,
+          0
+        ],
+        "p_value": 0.999,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:2,5",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          2,
+          5
+        ],
+        "p_value": 0.823,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:3,1,3",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          3,
+          1,
+          3
+        ],
+        "p_value": 0.001,
+        "q_value": 0.013533333333333335,
+        "reject_005": true
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:2,4,3",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          2,
+          4,
+          3
+        ],
+        "p_value": 0.791,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:0,5,1",
         "source": "tokens_handcrafted_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
           0,
-          6,
+          5,
+          1
+        ],
+        "p_value": 0.1,
+        "q_value": 0.5075000000000001,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:5,0",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          5,
+          0
+        ],
+        "p_value": 0.997,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:4,0,2",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          4,
+          0,
           2
         ],
-        "p_value": 0.082,
-        "q_value": 0.8260869565217391,
+        "p_value": 0.999,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:2,0,5",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          2,
+          0,
+          5
+        ],
+        "p_value": 0.99,
+        "q_value": 1.0,
         "reject_005": false
       },
       {
@@ -651,862 +901,524 @@
           5,
           2
         ],
-        "p_value": 0.163,
-        "q_value": 0.9422535211267606,
+        "p_value": 0.757,
+        "q_value": 1.0,
         "reject_005": false
       },
       {
-        "id": "tokens_handcrafted_val:motif:0,7,6",
+        "id": "tokens_handcrafted_val:motif:0,2,4",
         "source": "tokens_handcrafted_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
           0,
-          7,
-          6
-        ],
-        "p_value": 0.647,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:0,1,0",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          0,
-          1,
-          0
-        ],
-        "p_value": 0.498,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:2,0,7",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
           2,
-          0,
-          7
+          4
         ],
-        "p_value": 0.711,
-        "q_value": 0.964,
+        "p_value": 0.995,
+        "q_value": 1.0,
         "reject_005": false
       },
       {
-        "id": "tokens_handcrafted_val:motif:0,7,2",
+        "id": "tokens_handcrafted_val:motif:0,5,3",
         "source": "tokens_handcrafted_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
           0,
-          7,
-          2
-        ],
-        "p_value": 0.169,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:7,1,6",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          7,
-          1,
-          6
-        ],
-        "p_value": 0.233,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:5,0,6",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
           5,
-          0,
-          6
+          3
         ],
-        "p_value": 0.474,
-        "q_value": 0.9422535211267606,
+        "p_value": 0.145,
+        "q_value": 0.6132291666666666,
         "reject_005": false
       },
       {
-        "id": "tokens_handcrafted_val:motif:5,7,1",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          5,
-          7,
-          1
-        ],
-        "p_value": 0.937,
-        "q_value": 0.9760416666666667,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:1,0,2",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          1,
-          0,
-          2
-        ],
-        "p_value": 0.655,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:0,7,1,5",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          0,
-          7,
-          1,
-          5
-        ],
-        "p_value": 0.518,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:1,5,0,7",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          1,
-          5,
-          0,
-          7
-        ],
-        "p_value": 0.297,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:2,6,2",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          2,
-          6,
-          2
-        ],
-        "p_value": 0.045,
-        "q_value": 0.8181818181818182,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:2,1,0",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          2,
-          1,
-          0
-        ],
-        "p_value": 0.073,
-        "q_value": 0.8260869565217391,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:1,5,7",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          1,
-          5,
-          7
-        ],
-        "p_value": 0.974,
-        "q_value": 0.9918781725888325,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:7,1,5,0",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          7,
-          1,
-          5,
-          0
-        ],
-        "p_value": 0.745,
-        "q_value": 0.9655172413793104,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:6,2,6",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          6,
-          2,
-          6
-        ],
-        "p_value": 0.289,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:5,0,7,1",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          5,
-          0,
-          7,
-          1
-        ],
-        "p_value": 0.506,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:4,3",
+        "id": "tokens_handcrafted_val:motif:4,5,1",
         "source": "tokens_handcrafted_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
           4,
+          5,
+          1
+        ],
+        "p_value": 0.357,
+        "q_value": 0.9438181818181817,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:4,0,1",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          4,
+          0,
+          1
+        ],
+        "p_value": 0.789,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:4,0,5,2",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          4,
+          0,
+          5,
+          2
+        ],
+        "p_value": 1.0,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:3,2,4",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          3,
+          2,
+          4
+        ],
+        "p_value": 0.766,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:5,4,3",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          5,
+          4,
+          3
+        ],
+        "p_value": 0.303,
+        "q_value": 0.8914347826086957,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:4,5,2,4",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          4,
+          5,
+          2,
+          4
+        ],
+        "p_value": 0.99,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:4,5,3",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          4,
+          5,
+          3
+        ],
+        "p_value": 0.48,
+        "q_value": 0.9942857142857142,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:2,4,0,5",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          2,
+          4,
+          0,
+          5
+        ],
+        "p_value": 1.0,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:0,5,2,4",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          0,
+          5,
+          2,
+          4
+        ],
+        "p_value": 1.0,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:5,2,4,0",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          5,
+          2,
+          4,
+          0
+        ],
+        "p_value": 1.0,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:3,5,2",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          3,
+          5,
+          2
+        ],
+        "p_value": 0.977,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:5,2,4,5",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          5,
+          2,
+          4,
+          5
+        ],
+        "p_value": 1.0,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:1,5,4",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          1,
+          5,
+          4
+        ],
+        "p_value": 0.656,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:5,4,0,5",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          5,
+          4,
+          0,
+          5
+        ],
+        "p_value": 0.975,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:2,4,1",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          2,
+          4,
+          1
+        ],
+        "p_value": 0.284,
+        "q_value": 0.8858181818181818,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:2,1,2",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          2,
+          1,
+          2
+        ],
+        "p_value": 0.012,
+        "q_value": 0.11599999999999999,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:4,0,5,4",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          4,
+          0,
+          5,
+          4
+        ],
+        "p_value": 0.996,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:0,3,0",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          0,
+          3,
+          0
+        ],
+        "p_value": 0.005,
+        "q_value": 0.0563888888888889,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:1,2,3",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          1,
+          2,
+          3
+        ],
+        "p_value": 0.005,
+        "q_value": 0.0563888888888889,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:2,4,5,2",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          2,
+          4,
+          5,
+          2
+        ],
+        "p_value": 1.0,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:1,0,3",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          1,
+          0,
+          3
+        ],
+        "p_value": 0.002,
+        "q_value": 0.025375,
+        "reject_005": true
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:2,1,4",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          2,
+          1,
+          4
+        ],
+        "p_value": 0.922,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:5,1,4",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          5,
+          1,
+          4
+        ],
+        "p_value": 0.551,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:3,4,0",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          3,
+          4,
+          0
+        ],
+        "p_value": 0.808,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:1,2,1",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          1,
+          2,
+          1
+        ],
+        "p_value": 0.01,
+        "q_value": 0.1015,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:4,3,0",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          4,
+          3,
+          0
+        ],
+        "p_value": 0.173,
+        "q_value": 0.6886078431372549,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:0,5,4,0",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          0,
+          5,
+          4,
+          0
+        ],
+        "p_value": 0.989,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:1,4,3",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          1,
+          4,
+          3
+        ],
+        "p_value": 0.154,
+        "q_value": 0.62524,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:3,5,4",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          3,
+          5,
+          4
+        ],
+        "p_value": 0.091,
+        "q_value": 0.4736666666666666,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_handcrafted_val:motif:3,0,3",
+        "source": "tokens_handcrafted_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          3,
+          0,
           3
         ],
         "p_value": 0.001,
-        "q_value": 0.1,
-        "reject_005": false
+        "q_value": 0.013533333333333335,
+        "reject_005": true
       },
       {
-        "id": "tokens_handcrafted_val:motif:1,5,0,1",
+        "id": "tokens_handcrafted_val:motif:3,1,2,4",
         "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          1,
-          5,
-          0,
-          1
-        ],
-        "p_value": 0.633,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:5,1",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          5,
-          1
-        ],
-        "p_value": 0.242,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:5,0,2",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          5,
-          0,
-          2
-        ],
-        "p_value": 0.601,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:0,1,2",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          0,
-          1,
-          2
-        ],
-        "p_value": 0.342,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:1,0,6",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          1,
-          0,
-          6
-        ],
-        "p_value": 0.573,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:6,2,7,1",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          6,
-          2,
-          7,
-          1
-        ],
-        "p_value": 0.003,
-        "q_value": 0.19999999999999998,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:2,7,1,5",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          2,
-          7,
-          1,
-          5
-        ],
-        "p_value": 0.442,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:6,7,1",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          6,
-          7,
-          1
-        ],
-        "p_value": 0.148,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:0,1,6",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          0,
-          1,
-          6
-        ],
-        "p_value": 0.012,
-        "q_value": 0.48,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:7,1,2",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          7,
-          1,
-          2
-        ],
-        "p_value": 0.434,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:2,0,1",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          2,
-          0,
-          1
-        ],
-        "p_value": 0.101,
-        "q_value": 0.8416666666666668,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:6,5,0",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          6,
-          5,
-          0
-        ],
-        "p_value": 0.44,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:1,7",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          1,
-          7
-        ],
-        "p_value": 0.195,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:2,5,7",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          2,
-          5,
-          7
-        ],
-        "p_value": 0.568,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:0,1,5,0",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          0,
-          1,
-          5,
-          0
-        ],
-        "p_value": 0.374,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:7,5,0",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          7,
-          5,
-          0
-        ],
-        "p_value": 0.901,
-        "q_value": 0.9689839572192515,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:0,2,5",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          0,
-          2,
-          5
-        ],
-        "p_value": 0.602,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:0,5",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          0,
-          5
-        ],
-        "p_value": 0.427,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:7,2,7",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          7,
-          2,
-          7
-        ],
-        "p_value": 0.299,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:2,7,2",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          2,
-          7,
-          2
-        ],
-        "p_value": 0.383,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:2,5,2",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          2,
-          5,
-          2
-        ],
-        "p_value": 0.24,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:2,5,6",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          2,
-          5,
-          6
-        ],
-        "p_value": 0.776,
-        "q_value": 0.9655172413793104,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:5,6,5",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          5,
-          6,
-          5
-        ],
-        "p_value": 0.86,
-        "q_value": 0.9689839572192515,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:0,7,1,0",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          0,
-          7,
-          1,
-          0
-        ],
-        "p_value": 0.473,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:6,2,5,0",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          6,
-          2,
-          5,
-          0
-        ],
-        "p_value": 0.032,
-        "q_value": 0.7111111111111111,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:2,5,0,7",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          2,
-          5,
-          0,
-          7
-        ],
-        "p_value": 0.667,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:0,7,5",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          0,
-          7,
-          5
-        ],
-        "p_value": 0.954,
-        "q_value": 0.9876923076923076,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:7,0",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          7,
-          0
-        ],
-        "p_value": 0.137,
-        "q_value": 0.9133333333333334,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:2,1,5,0",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          2,
-          1,
-          5,
-          0
-        ],
-        "p_value": 0.554,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:2,7,5",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          2,
-          7,
-          5
-        ],
-        "p_value": 0.44,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:0,2,7",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          0,
-          2,
-          7
-        ],
-        "p_value": 0.849,
-        "q_value": 0.9689839572192515,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:2,7,6",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          2,
-          7,
-          6
-        ],
-        "p_value": 0.409,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:5,2,5",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          5,
-          2,
-          5
-        ],
-        "p_value": 0.34,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:5,0,1,5",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          5,
-          0,
-          1,
-          5
-        ],
-        "p_value": 0.519,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_handcrafted_val:motif:6,2,1,5",
-        "source": "tokens_handcrafted_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          6,
-          2,
-          1,
-          5
-        ],
-        "p_value": 0.095,
-        "q_value": 0.8260869565217391,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:7,3",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          7,
-          3
-        ],
-        "p_value": 0.721,
-        "q_value": 0.964,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:5,3",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          5,
-          3
-        ],
-        "p_value": 0.93,
-        "q_value": 0.9760416666666667,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:0,2",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          0,
-          2
-        ],
-        "p_value": 0.64,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:1,2",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          1,
-          2
-        ],
-        "p_value": 0.656,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:3,0",
-        "source": "tokens_learned_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
           3,
-          0
+          1,
+          2,
+          4
         ],
-        "p_value": 0.822,
-        "q_value": 0.9655172413793104,
+        "p_value": 0.089,
+        "q_value": 0.4736666666666666,
         "reject_005": false
       },
       {
-        "id": "tokens_learned_val:motif:3,5",
-        "source": "tokens_learned_val.json",
+        "id": "tokens_handcrafted_val:motif:3,4,5",
+        "source": "tokens_handcrafted_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
           3,
+          4,
           5
         ],
-        "p_value": 0.769,
-        "q_value": 0.9655172413793104,
+        "p_value": 0.039,
+        "q_value": 0.28275,
         "reject_005": false
       },
       {
-        "id": "tokens_learned_val:motif:2,5",
-        "source": "tokens_learned_val.json",
+        "id": "tokens_handcrafted_val:motif:5,1,2",
+        "source": "tokens_handcrafted_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
-          2,
-          5
+          5,
+          1,
+          2
         ],
-        "p_value": 0.9,
-        "q_value": 0.9689839572192515,
+        "p_value": 0.411,
+        "q_value": 0.9550227272727273,
         "reject_005": false
       },
       {
-        "id": "tokens_learned_val:motif:2,0",
-        "source": "tokens_learned_val.json",
+        "id": "tokens_handcrafted_val:motif:3,1,0,5",
+        "source": "tokens_handcrafted_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
-          2,
-          0
-        ],
-        "p_value": 0.782,
-        "q_value": 0.9655172413793104,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:0,7",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
+          3,
+          1,
           0,
-          7
+          5
         ],
-        "p_value": 0.433,
-        "q_value": 0.9422535211267606,
+        "p_value": 0.026,
+        "q_value": 0.21111999999999997,
         "reject_005": false
       },
       {
@@ -1518,73 +1430,34 @@
           5,
           1
         ],
-        "p_value": 0.397,
-        "q_value": 0.9422535211267606,
+        "p_value": 0.063,
+        "q_value": 0.39965625,
         "reject_005": false
       },
       {
-        "id": "tokens_learned_val:motif:2,7",
+        "id": "tokens_learned_val:motif:4,5",
         "source": "tokens_learned_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
-          2,
-          7
-        ],
-        "p_value": 0.391,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:7,5",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          7,
+          4,
           5
         ],
-        "p_value": 0.629,
-        "q_value": 0.9422535211267606,
+        "p_value": 0.924,
+        "q_value": 1.0,
         "reject_005": false
       },
       {
-        "id": "tokens_learned_val:motif:3,1",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          3,
-          1
-        ],
-        "p_value": 0.476,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:1,7",
+        "id": "tokens_learned_val:motif:1,6",
         "source": "tokens_learned_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
           1,
-          7
+          6
         ],
-        "p_value": 0.889,
-        "q_value": 0.9689839572192515,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:1,0",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          1,
-          0
-        ],
-        "p_value": 0.543,
-        "q_value": 0.9422535211267606,
+        "p_value": 0.393,
+        "q_value": 0.9550227272727273,
         "reject_005": false
       },
       {
@@ -1596,220 +1469,151 @@
           7,
           1
         ],
-        "p_value": 0.875,
-        "q_value": 0.9689839572192515,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:0,3",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          0,
-          3
-        ],
-        "p_value": 0.399,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:5,2",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          5,
-          2
-        ],
-        "p_value": 0.816,
-        "q_value": 0.9655172413793104,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:3,7",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          3,
-          7
-        ],
-        "p_value": 0.927,
-        "q_value": 0.9760416666666667,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:0,5",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          0,
-          5
-        ],
-        "p_value": 0.734,
-        "q_value": 0.9655172413793104,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:7,0",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          7,
-          0
-        ],
-        "p_value": 0.587,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:2,3",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          2,
-          3
-        ],
-        "p_value": 0.534,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:5,0",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          5,
-          0
-        ],
-        "p_value": 0.338,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:3,2",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          3,
-          2
-        ],
-        "p_value": 0.346,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:2,1",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          2,
-          1
-        ],
-        "p_value": 0.537,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:1,5",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          1,
-          5
-        ],
-        "p_value": 0.451,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:7,2",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          7,
-          2
-        ],
-        "p_value": 0.45,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:7,3,0",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          7,
-          3,
-          0
-        ],
         "p_value": 0.386,
-        "q_value": 0.9422535211267606,
+        "q_value": 0.9550227272727273,
         "reject_005": false
       },
       {
-        "id": "tokens_learned_val:motif:3,0,7",
+        "id": "tokens_learned_val:motif:6,4",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          6,
+          4
+        ],
+        "p_value": 0.745,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:0,4",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          0,
+          4
+        ],
+        "p_value": 0.972,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:0,2",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          0,
+          2
+        ],
+        "p_value": 0.771,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:4,0",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          4,
+          0
+        ],
+        "p_value": 0.43,
+        "q_value": 0.9560645161290323,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:7,3",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          7,
+          3
+        ],
+        "p_value": 0.452,
+        "q_value": 0.9658526315789474,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:1,7",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          1,
+          7
+        ],
+        "p_value": 0.368,
+        "q_value": 0.9481898734177214,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:6,5",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          6,
+          5
+        ],
+        "p_value": 0.737,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:5,6",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          5,
+          6
+        ],
+        "p_value": 0.936,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:2,7",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          2,
+          7
+        ],
+        "p_value": 0.409,
+        "q_value": 0.9550227272727273,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:3,0",
         "source": "tokens_learned_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
           3,
-          0,
-          7
+          0
         ],
-        "p_value": 0.236,
-        "q_value": 0.9422535211267606,
+        "p_value": 0.526,
+        "q_value": 1.0,
         "reject_005": false
       },
       {
-        "id": "tokens_learned_val:motif:5,7",
+        "id": "tokens_learned_val:motif:2,0",
         "source": "tokens_learned_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
-          5,
-          7
-        ],
-        "p_value": 0.426,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:1,2,5",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          1,
           2,
-          5
+          0
         ],
-        "p_value": 0.564,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:5,1,2",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          5,
-          1,
-          2
-        ],
-        "p_value": 0.286,
-        "q_value": 0.9422535211267606,
+        "p_value": 0.988,
+        "q_value": 1.0,
         "reject_005": false
       },
       {
@@ -1821,273 +1625,294 @@
           1,
           3
         ],
-        "p_value": 0.269,
-        "q_value": 0.9422535211267606,
+        "p_value": 0.981,
+        "q_value": 1.0,
         "reject_005": false
       },
       {
-        "id": "tokens_learned_val:motif:5,3,0",
+        "id": "tokens_learned_val:motif:6,0",
         "source": "tokens_learned_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
-          5,
-          3,
+          6,
           0
         ],
-        "p_value": 0.84,
-        "q_value": 0.9655172413793104,
+        "p_value": 0.016,
+        "q_value": 0.14763636363636365,
         "reject_005": false
       },
       {
-        "id": "tokens_learned_val:motif:2,5,3",
+        "id": "tokens_learned_val:motif:4,2",
         "source": "tokens_learned_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
-          2,
-          5,
-          3
+          4,
+          2
         ],
-        "p_value": 0.797,
-        "q_value": 0.9655172413793104,
+        "p_value": 0.998,
+        "q_value": 1.0,
         "reject_005": false
       },
       {
-        "id": "tokens_learned_val:motif:0,7,3",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          0,
-          7,
-          3
-        ],
-        "p_value": 0.079,
-        "q_value": 0.8260869565217391,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:3,0,2",
+        "id": "tokens_learned_val:motif:3,7",
         "source": "tokens_learned_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
           3,
-          0,
-          2
-        ],
-        "p_value": 0.823,
-        "q_value": 0.9655172413793104,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:3,5,3",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          3,
-          5,
-          3
-        ],
-        "p_value": 0.837,
-        "q_value": 0.9655172413793104,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:2,0,2",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          2,
-          0,
-          2
-        ],
-        "p_value": 0.821,
-        "q_value": 0.9655172413793104,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:0,2,0",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          0,
-          2,
-          0
-        ],
-        "p_value": 0.563,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:2,7,3",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          2,
-          7,
-          3
-        ],
-        "p_value": 0.589,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:1,2,7",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          1,
-          2,
           7
         ],
-        "p_value": 0.051,
-        "q_value": 0.8260869565217391,
+        "p_value": 0.655,
+        "q_value": 1.0,
         "reject_005": false
       },
       {
-        "id": "tokens_learned_val:motif:0,1",
+        "id": "tokens_learned_val:motif:3,1",
         "source": "tokens_learned_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
-          0,
-          1
-        ],
-        "p_value": 0.232,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:1,7,3",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          1,
-          7,
-          3
-        ],
-        "p_value": 0.291,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:0,2,5",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          0,
-          2,
-          5
-        ],
-        "p_value": 0.574,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:5,3,5",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          5,
           3,
-          5
-        ],
-        "p_value": 0.772,
-        "q_value": 0.9655172413793104,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:7,5,3",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          7,
-          5,
-          3
-        ],
-        "p_value": 0.558,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:2,5,1",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          2,
-          5,
           1
-        ],
-        "p_value": 0.126,
-        "q_value": 0.9,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:7,3,5",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          7,
-          3,
-          5
         ],
         "p_value": 0.437,
-        "q_value": 0.9422535211267606,
+        "q_value": 0.9560645161290323,
         "reject_005": false
       },
       {
-        "id": "tokens_learned_val:motif:3,5,1",
+        "id": "tokens_learned_val:motif:0,5",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          0,
+          5
+        ],
+        "p_value": 0.697,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:5,7",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          5,
+          7
+        ],
+        "p_value": 0.715,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:2,3",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          2,
+          3
+        ],
+        "p_value": 0.803,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:6,2",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          6,
+          2
+        ],
+        "p_value": 0.485,
+        "q_value": 0.9944949494949494,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:5,3",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          5,
+          3
+        ],
+        "p_value": 1.0,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:3,2",
         "source": "tokens_learned_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
           3,
-          5,
-          1
+          2
         ],
-        "p_value": 0.054,
-        "q_value": 0.8260869565217391,
+        "p_value": 0.916,
+        "q_value": 1.0,
         "reject_005": false
       },
       {
-        "id": "tokens_learned_val:motif:7,1,2",
+        "id": "tokens_learned_val:motif:2,4",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          2,
+          4
+        ],
+        "p_value": 0.414,
+        "q_value": 0.9550227272727273,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:1,4",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          1,
+          4
+        ],
+        "p_value": 0.303,
+        "q_value": 0.8914347826086957,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:7,6",
         "source": "tokens_learned_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
           7,
-          1,
-          2
+          6
         ],
-        "p_value": 0.029,
-        "q_value": 0.7111111111111111,
+        "p_value": 0.963,
+        "q_value": 1.0,
         "reject_005": false
       },
       {
-        "id": "tokens_learned_val:motif:3,1,2",
+        "id": "tokens_learned_val:motif:0,7",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          0,
+          7
+        ],
+        "p_value": 0.086,
+        "q_value": 0.4736666666666666,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:7,0",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          7,
+          0
+        ],
+        "p_value": 0.868,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:2,5",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          2,
+          5
+        ],
+        "p_value": 0.966,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:3,6",
         "source": "tokens_learned_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
           3,
-          1,
-          2
+          6
         ],
-        "p_value": 0.647,
-        "q_value": 0.9422535211267606,
+        "p_value": 0.619,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:4,1",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          4,
+          1
+        ],
+        "p_value": 0.748,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:1,0",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          1,
+          0
+        ],
+        "p_value": 0.059,
+        "q_value": 0.38635483870967735,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:2,1",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          2,
+          1
+        ],
+        "p_value": 0.272,
+        "q_value": 0.8764444444444445,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:3,4",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          3,
+          4
+        ],
+        "p_value": 0.582,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:2,6",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          2,
+          6
+        ],
+        "p_value": 0.357,
+        "q_value": 0.9438181818181817,
         "reject_005": false
       },
       {
@@ -2099,540 +1924,369 @@
           4,
           6
         ],
-        "p_value": 0.001,
-        "q_value": 0.1,
+        "p_value": 0.67,
+        "q_value": 1.0,
         "reject_005": false
       },
       {
-        "id": "tokens_learned_val:motif:7,3,1",
+        "id": "tokens_learned_val:motif:4,7",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          4,
+          7
+        ],
+        "p_value": 0.665,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:7,2",
         "source": "tokens_learned_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
           7,
-          3,
-          1
-        ],
-        "p_value": 0.457,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:3,1,0",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          3,
-          1,
-          0
-        ],
-        "p_value": 0.036,
-        "q_value": 0.72,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:7,0,2",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          7,
-          0,
           2
         ],
-        "p_value": 0.112,
-        "q_value": 0.8923076923076925,
+        "p_value": 0.975,
+        "q_value": 1.0,
         "reject_005": false
       },
       {
-        "id": "tokens_learned_val:motif:1,0,2",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          1,
-          0,
-          2
-        ],
-        "p_value": 0.509,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:0,2,7",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          0,
-          2,
-          7
-        ],
-        "p_value": 0.284,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:7,5,1",
+        "id": "tokens_learned_val:motif:7,4",
         "source": "tokens_learned_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
           7,
-          5,
-          1
+          4
         ],
-        "p_value": 0.252,
-        "q_value": 0.9422535211267606,
+        "p_value": 0.909,
+        "q_value": 1.0,
         "reject_005": false
       },
       {
-        "id": "tokens_learned_val:motif:2,0,7",
+        "id": "tokens_learned_val:motif:0,3",
         "source": "tokens_learned_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
-          2,
-          0,
-          7
-        ],
-        "p_value": 0.332,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:5,1,7",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          5,
-          1,
-          7
-        ],
-        "p_value": 0.091,
-        "q_value": 0.8260869565217391,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:0,7,1",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          0,
-          7,
-          1
-        ],
-        "p_value": 0.522,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:3,1,7",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          3,
-          1,
-          7
-        ],
-        "p_value": 0.992,
-        "q_value": 0.9969849246231156,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:5,3,1",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          5,
-          3,
-          1
-        ],
-        "p_value": 0.272,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:5,3,7",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          5,
-          3,
-          7
-        ],
-        "p_value": 0.815,
-        "q_value": 0.9655172413793104,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:2,7,5",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          2,
-          7,
-          5
-        ],
-        "p_value": 0.016,
-        "q_value": 0.5142857142857142,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:0,3,0",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          0,
-          3,
-          0
-        ],
-        "p_value": 0.116,
-        "q_value": 0.8923076923076925,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:0,7,5",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          0,
-          7,
-          5
-        ],
-        "p_value": 0.254,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:2,0,5",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          2,
-          0,
-          5
-        ],
-        "p_value": 0.702,
-        "q_value": 0.963013698630137,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:1,2,0",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          1,
-          2,
-          0
-        ],
-        "p_value": 0.542,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:2,7,1",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          2,
-          7,
-          1
-        ],
-        "p_value": 0.615,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:0,7,0",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          0,
-          7,
-          0
-        ],
-        "p_value": 0.313,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:0,3,5",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          0,
-          3,
-          5
-        ],
-        "p_value": 0.661,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:5,2,5",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          5,
-          2,
-          5
-        ],
-        "p_value": 0.574,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:7,5,2",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          7,
-          5,
-          2
-        ],
-        "p_value": 0.122,
-        "q_value": 0.9,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:1,7,5",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          1,
-          7,
-          5
-        ],
-        "p_value": 0.782,
-        "q_value": 0.9655172413793104,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:2,7,0",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          2,
-          7,
-          0
-        ],
-        "p_value": 0.078,
-        "q_value": 0.8260869565217391,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:1,0,7",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          1,
-          0,
-          7
-        ],
-        "p_value": 0.076,
-        "q_value": 0.8260869565217391,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:3,5,2",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          3,
-          5,
-          2
-        ],
-        "p_value": 0.865,
-        "q_value": 0.9689839572192515,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:3,7,3",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          3,
-          7,
-          3
-        ],
-        "p_value": 0.601,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:3,5,0",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          3,
-          5,
-          0
-        ],
-        "p_value": 0.618,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:1,5,3",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          1,
-          5,
-          3
-        ],
-        "p_value": 0.357,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:1,0,3",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          1,
           0,
           3
         ],
-        "p_value": 0.267,
-        "q_value": 0.9422535211267606,
+        "p_value": 0.429,
+        "q_value": 0.9560645161290323,
         "reject_005": false
       },
       {
-        "id": "tokens_learned_val:motif:0,2,1",
+        "id": "tokens_learned_val:motif:6,1",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          6,
+          1
+        ],
+        "p_value": 0.583,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:1,5",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          1,
+          5
+        ],
+        "p_value": 0.636,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:1,2",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          1,
+          2
+        ],
+        "p_value": 0.143,
+        "q_value": 0.6132291666666666,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:3,5",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          3,
+          5
+        ],
+        "p_value": 0.759,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:5,4",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          5,
+          4
+        ],
+        "p_value": 0.703,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:0,1",
         "source": "tokens_learned_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
           0,
-          2,
           1
         ],
-        "p_value": 0.274,
-        "q_value": 0.9422535211267606,
+        "p_value": 0.421,
+        "q_value": 0.9560645161290323,
         "reject_005": false
       },
       {
-        "id": "tokens_learned_val:motif:7,1,7",
+        "id": "tokens_learned_val:motif:4,3",
         "source": "tokens_learned_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
-          7,
-          1,
+          4,
+          3
+        ],
+        "p_value": 0.943,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:6,7",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          6,
           7
         ],
-        "p_value": 0.894,
-        "q_value": 0.9689839572192515,
+        "p_value": 0.265,
+        "q_value": 0.8764444444444445,
         "reject_005": false
       },
       {
-        "id": "tokens_learned_val:motif:3,7,5",
+        "id": "tokens_learned_val:motif:6,3",
         "source": "tokens_learned_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
-          3,
-          7,
-          5
+          6,
+          3
         ],
-        "p_value": 0.821,
-        "q_value": 0.9655172413793104,
+        "p_value": 0.98,
+        "q_value": 1.0,
         "reject_005": false
       },
       {
-        "id": "tokens_learned_val:motif:5,1,0",
+        "id": "tokens_learned_val:motif:4,5,1",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          4,
+          5,
+          1
+        ],
+        "p_value": 0.328,
+        "q_value": 0.933236111111111,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:0,6",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          0,
+          6
+        ],
+        "p_value": 0.049,
+        "q_value": 0.343,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:5,2",
         "source": "tokens_learned_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
           5,
-          1,
-          0
-        ],
-        "p_value": 0.531,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:5,2,0",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          5,
-          2,
-          0
-        ],
-        "p_value": 0.669,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:7,3,7",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          7,
-          3,
-          7
-        ],
-        "p_value": 0.78,
-        "q_value": 0.9655172413793104,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:5,1,5",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          5,
-          1,
-          5
-        ],
-        "p_value": 0.178,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:2,1,2",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          2,
-          1,
           2
         ],
-        "p_value": 0.25,
-        "q_value": 0.9422535211267606,
+        "p_value": 0.575,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:5,1,6",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          5,
+          1,
+          6
+        ],
+        "p_value": 0.203,
+        "q_value": 0.7631296296296297,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:6,4,5",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          6,
+          4,
+          5
+        ],
+        "p_value": 0.937,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:6,5,1",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          6,
+          5,
+          1
+        ],
+        "p_value": 0.138,
+        "q_value": 0.6090000000000001,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:5,0",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          5,
+          0
+        ],
+        "p_value": 0.006,
+        "q_value": 0.06410526315789473,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:5,6,4",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          5,
+          6,
+          4
+        ],
+        "p_value": 0.447,
+        "q_value": 0.9653297872340425,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:1,6,5",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          1,
+          6,
+          5
+        ],
+        "p_value": 0.269,
+        "q_value": 0.8764444444444445,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:1,6,4",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          1,
+          6,
+          4
+        ],
+        "p_value": 0.87,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:7,5",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          7,
+          5
+        ],
+        "p_value": 0.649,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:7,1,6",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          7,
+          1,
+          6
+        ],
+        "p_value": 0.399,
+        "q_value": 0.9550227272727273,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:0,4,5",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          0,
+          4,
+          5
+        ],
+        "p_value": 0.823,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:4,0,2",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          4,
+          0,
+          2
+        ],
+        "p_value": 0.258,
+        "q_value": 0.8729,
         "reject_005": false
       },
       {
@@ -2645,125 +2299,475 @@
           7,
           1
         ],
-        "p_value": 0.549,
-        "q_value": 0.9422535211267606,
+        "p_value": 0.699,
+        "q_value": 1.0,
         "reject_005": false
       },
       {
-        "id": "tokens_learned_val:motif:7,1,0",
+        "id": "tokens_learned_val:motif:0,4,0",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          0,
+          4,
+          0
+        ],
+        "p_value": 0.392,
+        "q_value": 0.9550227272727273,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:4,5,6",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          4,
+          5,
+          6
+        ],
+        "p_value": 0.867,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:7,1,7",
         "source": "tokens_learned_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
           7,
           1,
+          7
+        ],
+        "p_value": 0.038,
+        "q_value": 0.28275,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:4,0,4",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          4,
+          0,
+          4
+        ],
+        "p_value": 0.734,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:5,1,7",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          5,
+          1,
+          7
+        ],
+        "p_value": 0.559,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:6,4,0",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          6,
+          4,
           0
         ],
-        "p_value": 0.997,
-        "q_value": 0.997,
+        "p_value": 0.288,
+        "q_value": 0.8858181818181818,
         "reject_005": false
       },
       {
-        "id": "tokens_learned_val:motif:0,5,2",
+        "id": "tokens_learned_val:motif:2,0,4",
         "source": "tokens_learned_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
+          2,
           0,
-          5,
-          2
+          4
         ],
-        "p_value": 0.827,
-        "q_value": 0.9655172413793104,
+        "p_value": 0.976,
+        "q_value": 1.0,
         "reject_005": false
       },
       {
-        "id": "tokens_learned_val:motif:3,0,5",
+        "id": "tokens_learned_val:motif:2,7,1",
         "source": "tokens_learned_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
-          3,
-          0,
-          5
+          2,
+          7,
+          1
         ],
-        "p_value": 0.893,
-        "q_value": 0.9689839572192515,
+        "p_value": 0.573,
+        "q_value": 1.0,
         "reject_005": false
       },
       {
-        "id": "tokens_learned_val:motif:3,0,3",
+        "id": "tokens_learned_val:motif:1,7,3",
         "source": "tokens_learned_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
-          3,
-          0,
+          1,
+          7,
           3
         ],
-        "p_value": 0.381,
-        "q_value": 0.9422535211267606,
+        "p_value": 0.279,
+        "q_value": 0.8849531250000001,
         "reject_005": false
       },
       {
-        "id": "tokens_learned_val:motif:7,3,2",
+        "id": "tokens_learned_val:motif:0,2,0",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          0,
+          2,
+          0
+        ],
+        "p_value": 0.928,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:5,1,3",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          5,
+          1,
+          3
+        ],
+        "p_value": 0.864,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:6,4,2",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          6,
+          4,
+          2
+        ],
+        "p_value": 0.772,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:3,0,2",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          3,
+          0,
+          2
+        ],
+        "p_value": 0.857,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:0,2,3",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          0,
+          2,
+          3
+        ],
+        "p_value": 0.234,
+        "q_value": 0.8333684210526316,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:6,0,2",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          6,
+          0,
+          2
+        ],
+        "p_value": 0.409,
+        "q_value": 0.9550227272727273,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:7,3,0",
         "source": "tokens_learned_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
           7,
           3,
-          2
+          0
         ],
-        "p_value": 0.525,
-        "q_value": 0.9422535211267606,
+        "p_value": 0.952,
+        "q_value": 1.0,
         "reject_005": false
       },
       {
-        "id": "tokens_learned_val:motif:2,5,0",
+        "id": "tokens_learned_val:motif:6,5,6",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          6,
+          5,
+          6
+        ],
+        "p_value": 0.724,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:4,5,3",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          4,
+          5,
+          3
+        ],
+        "p_value": 0.947,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:3,7,1",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          3,
+          7,
+          1
+        ],
+        "p_value": 0.134,
+        "q_value": 0.604488888888889,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:0,5,1",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          0,
+          5,
+          1
+        ],
+        "p_value": 0.369,
+        "q_value": 0.9481898734177214,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:2,0,2",
         "source": "tokens_learned_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
           2,
+          0,
+          2
+        ],
+        "p_value": 0.523,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:3,0,4",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          3,
+          0,
+          4
+        ],
+        "p_value": 0.764,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:4,5,7",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          4,
           5,
+          7
+        ],
+        "p_value": 0.438,
+        "q_value": 0.9560645161290323,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:1,6,2",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          1,
+          6,
+          2
+        ],
+        "p_value": 0.179,
+        "q_value": 0.6987884615384614,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:0,2,7",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          0,
+          2,
+          7
+        ],
+        "p_value": 0.63,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:3,1,6",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          3,
+          1,
+          6
+        ],
+        "p_value": 0.475,
+        "q_value": 0.9942857142857142,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:7,3,7",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          7,
+          3,
+          7
+        ],
+        "p_value": 0.084,
+        "q_value": 0.4736666666666666,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:1,6,0",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          1,
+          6,
           0
         ],
-        "p_value": 0.906,
-        "q_value": 0.9689839572192515,
+        "p_value": 0.311,
+        "q_value": 0.9019,
         "reject_005": false
       },
       {
-        "id": "tokens_learned_val:motif:5,0,3",
-        "source": "tokens_learned_val.json",
-        "split": "val",
-        "kind": "motif",
-        "motif": [
-          5,
-          0,
-          3
-        ],
-        "p_value": 0.337,
-        "q_value": 0.9422535211267606,
-        "reject_005": false
-      },
-      {
-        "id": "tokens_learned_val:motif:0,5,3",
+        "id": "tokens_learned_val:motif:0,2,4",
         "source": "tokens_learned_val.json",
         "split": "val",
         "kind": "motif",
         "motif": [
           0,
+          2,
+          4
+        ],
+        "p_value": 0.209,
+        "q_value": 0.7714,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:2,4,5",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          2,
+          4,
+          5
+        ],
+        "p_value": 0.692,
+        "q_value": 1.0,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:5,1,4",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
           5,
+          1,
+          4
+        ],
+        "p_value": 0.151,
+        "q_value": 0.62524,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:2,7,3",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          2,
+          7,
           3
         ],
-        "p_value": 0.807,
-        "q_value": 0.9655172413793104,
+        "p_value": 0.356,
+        "q_value": 0.9438181818181817,
+        "reject_005": false
+      },
+      {
+        "id": "tokens_learned_val:motif:7,1,3",
+        "source": "tokens_learned_val.json",
+        "split": "val",
+        "kind": "motif",
+        "motif": [
+          7,
+          1,
+          3
+        ],
+        "p_value": 0.912,
+        "q_value": 1.0,
         "reject_005": false
       }
     ],
     "family": "All available learned/control motif tests across evaluated val/test plus all secondary pressure responses in current result files"
   },
   "notes": "The pooled q_value is the reported exploratory correction; per-vocabulary q-values are diagnostics only. No exploratory finding is confirmatory.",
-  "updated": "2026-10-31T15:25:39+00:00"
+  "updated": "2026-10-31T16:11:33+00:00"
 }

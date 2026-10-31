@@ -4,203 +4,59 @@
   "split": "val",
   "is_baseline": false,
   "metrics": {
-    "predictive_gain_bits": -0.035421642299191286,
-    "excess_gain_bits": 0.028520066784835336,
-    "p_value": 0.023
+    "predictive_gain_bits": -0.0012800332034447524,
+    "excess_gain_bits": 0.004874137469977382,
+    "p_value": 0.001
   },
   "notes": "Held-out global grammar test; motifs exploratory; nonoverlapping windows and complete-series uncertainty",
-  "updated": "2026-10-31T15:24:12+00:00",
+  "updated": "2026-10-31T15:56:08+00:00",
   "details": {
     "status": "ok",
-    "n_series": 6,
-    "n_sequences": 248,
-    "predictive_gain_bits": -0.035421642299191286,
-    "null_gain_bits": -0.06394170908402665,
-    "excess_gain_bits": 0.028520066784835336,
+    "n_series": 74,
+    "n_sequences": 2980,
+    "predictive_gain_bits": -0.0012800332034447524,
+    "null_gain_bits": -0.006154170673422135,
+    "excess_gain_bits": 0.004874137469977382,
     "ci95": [
-      -0.010135869390372207,
-      0.07170138254951113
+      0.003091756843948759,
+      0.006721931213908831
     ],
-    "p_value": 0.023,
+    "p_value": 0.001,
     "motifs": [
       {
         "motif": [
-          7,
-          3
-        ],
-        "train_count": 127,
-        "heldout_rate": 0.021827474369320768,
-        "null_rate": 0.03643409491913719,
-        "p_value": 0.721,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          5,
-          3
-        ],
-        "train_count": 122,
-        "heldout_rate": 0.015283344589303893,
-        "null_rate": 0.027960698887653717,
-        "p_value": 0.93,
-        "q_value": 0.9489795918367347,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          0,
-          2
-        ],
-        "train_count": 120,
-        "heldout_rate": 0.01922585332011907,
-        "null_rate": 0.025852228578365843,
-        "p_value": 0.64,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          1,
-          2
-        ],
-        "train_count": 119,
-        "heldout_rate": 0.021536744969556296,
-        "null_rate": 0.03246242053181201,
-        "p_value": 0.656,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          3,
-          0
-        ],
-        "train_count": 113,
-        "heldout_rate": 0.0157543885595039,
-        "null_rate": 0.02869139687146272,
-        "p_value": 0.822,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          3,
-          5
-        ],
-        "train_count": 108,
-        "heldout_rate": 0.01579825833740875,
-        "null_rate": 0.02751135877219047,
-        "p_value": 0.769,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          2,
-          5
-        ],
-        "train_count": 107,
-        "heldout_rate": 0.013314838488905445,
-        "null_rate": 0.027256825904751772,
-        "p_value": 0.9,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          2,
-          0
-        ],
-        "train_count": 103,
-        "heldout_rate": 0.014392613760229102,
-        "null_rate": 0.025420616814580757,
-        "p_value": 0.782,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          0,
-          7
-        ],
-        "train_count": 103,
-        "heldout_rate": 0.01960146244068787,
-        "null_rate": 0.023374173879530252,
-        "p_value": 0.433,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
           5,
           1
         ],
-        "train_count": 99,
-        "heldout_rate": 0.019653158056899617,
-        "null_rate": 0.02329321044360047,
-        "p_value": 0.397,
-        "q_value": 0.9437500000000001,
+        "train_count": 2268,
+        "heldout_rate": 0.030016121433864215,
+        "null_rate": 0.028458444154194136,
+        "p_value": 0.063,
+        "q_value": 1.0,
         "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
       },
       {
         "motif": [
-          2,
-          7
-        ],
-        "train_count": 94,
-        "heldout_rate": 0.021128694026410644,
-        "null_rate": 0.023692301928353997,
-        "p_value": 0.391,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          7,
+          4,
           5
         ],
-        "train_count": 89,
-        "heldout_rate": 0.01584187917001589,
-        "null_rate": 0.025942167386187244,
-        "p_value": 0.629,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          3,
-          1
-        ],
-        "train_count": 87,
-        "heldout_rate": 0.01620253942904918,
-        "null_rate": 0.021699355024526593,
-        "p_value": 0.476,
-        "q_value": 0.9437500000000001,
+        "train_count": 2177,
+        "heldout_rate": 0.02584601203716961,
+        "null_rate": 0.027296121954325295,
+        "p_value": 0.924,
+        "q_value": 1.0,
         "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
       },
       {
         "motif": [
           1,
-          7
+          6
         ],
-        "train_count": 83,
-        "heldout_rate": 0.010210033720794221,
-        "null_rate": 0.023368977147200348,
-        "p_value": 0.889,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          1,
-          0
-        ],
-        "train_count": 82,
-        "heldout_rate": 0.015715446835922266,
-        "null_rate": 0.02303127785694174,
-        "p_value": 0.543,
-        "q_value": 0.9437500000000001,
+        "train_count": 2116,
+        "heldout_rate": 0.026890999042405207,
+        "null_rate": 0.026607465330432043,
+        "p_value": 0.393,
+        "q_value": 1.0,
         "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
       },
       {
@@ -208,465 +64,419 @@
           7,
           1
         ],
-        "train_count": 77,
-        "heldout_rate": 0.009499701708886817,
-        "null_rate": 0.02131557170436248,
-        "p_value": 0.875,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          0,
-          3
-        ],
-        "train_count": 71,
-        "heldout_rate": 0.013048462466481033,
-        "null_rate": 0.01594418136689555,
-        "p_value": 0.399,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          5,
-          2
-        ],
-        "train_count": 70,
-        "heldout_rate": 0.009084485998636411,
-        "null_rate": 0.015633637636469074,
-        "p_value": 0.816,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          3,
-          7
-        ],
-        "train_count": 59,
-        "heldout_rate": 0.005842681623931624,
-        "null_rate": 0.014135890270505522,
-        "p_value": 0.927,
-        "q_value": 0.9489795918367347,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          0,
-          5
-        ],
-        "train_count": 58,
-        "heldout_rate": 0.008068824097049903,
-        "null_rate": 0.012810292375083748,
-        "p_value": 0.734,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          7,
-          0
-        ],
-        "train_count": 58,
-        "heldout_rate": 0.00998436177250412,
-        "null_rate": 0.017628258337307127,
-        "p_value": 0.587,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          2,
-          3
-        ],
-        "train_count": 56,
-        "heldout_rate": 0.009494460954982336,
-        "null_rate": 0.014145574618049508,
-        "p_value": 0.534,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          5,
-          0
-        ],
-        "train_count": 53,
-        "heldout_rate": 0.010350252159727966,
-        "null_rate": 0.012056673433410846,
-        "p_value": 0.338,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          3,
-          2
-        ],
-        "train_count": 52,
-        "heldout_rate": 0.010351446034585569,
-        "null_rate": 0.012932902966565895,
-        "p_value": 0.346,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          2,
-          1
-        ],
-        "train_count": 51,
-        "heldout_rate": 0.008244961243953181,
-        "null_rate": 0.012682707531810432,
-        "p_value": 0.537,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          1,
-          5
-        ],
-        "train_count": 42,
-        "heldout_rate": 0.007865983772069669,
-        "null_rate": 0.012133459561592638,
-        "p_value": 0.451,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          7,
-          2
-        ],
-        "train_count": 41,
-        "heldout_rate": 0.007461086389021497,
-        "null_rate": 0.011316975873327636,
-        "p_value": 0.45,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          7,
-          3,
-          0
-        ],
-        "train_count": 35,
-        "heldout_rate": 0.010646280794337779,
-        "null_rate": 0.009764856034770314,
+        "train_count": 2108,
+        "heldout_rate": 0.02705088973850976,
+        "null_rate": 0.026743948512568148,
         "p_value": 0.386,
-        "q_value": 0.9437500000000001,
+        "q_value": 1.0,
         "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
       },
       {
         "motif": [
-          3,
+          6,
+          4
+        ],
+        "train_count": 2106,
+        "heldout_rate": 0.025676321872935143,
+        "null_rate": 0.026334737860472742,
+        "p_value": 0.745,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
           0,
-          7
+          4
         ],
-        "train_count": 34,
-        "heldout_rate": 0.011034781182838169,
-        "null_rate": 0.008818220781636799,
-        "p_value": 0.236,
-        "q_value": 0.9437500000000001,
+        "train_count": 2010,
+        "heldout_rate": 0.023719243504402066,
+        "null_rate": 0.02554459041367557,
+        "p_value": 0.972,
+        "q_value": 1.0,
         "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
       },
       {
         "motif": [
-          5,
-          7
-        ],
-        "train_count": 33,
-        "heldout_rate": 0.005813831292661937,
-        "null_rate": 0.007692790349218345,
-        "p_value": 0.426,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          1,
-          2,
-          5
-        ],
-        "train_count": 32,
-        "heldout_rate": 0.0081105524456013,
-        "null_rate": 0.008942211463144419,
-        "p_value": 0.564,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          5,
-          1,
+          0,
           2
         ],
-        "train_count": 32,
-        "heldout_rate": 0.011950862993228922,
-        "null_rate": 0.010013128034048559,
-        "p_value": 0.286,
-        "q_value": 0.9437500000000001,
+        "train_count": 1997,
+        "heldout_rate": 0.024645331213063434,
+        "null_rate": 0.025360965200546974,
+        "p_value": 0.771,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          4,
+          0
+        ],
+        "train_count": 1885,
+        "heldout_rate": 0.023822663770760658,
+        "null_rate": 0.02362769028458492,
+        "p_value": 0.43,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          7,
+          3
+        ],
+        "train_count": 1838,
+        "heldout_rate": 0.02344563314424607,
+        "null_rate": 0.02336185632976376,
+        "p_value": 0.452,
+        "q_value": 1.0,
         "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
       },
       {
         "motif": [
           1,
-          3
+          7
         ],
-        "train_count": 31,
-        "heldout_rate": 0.00760073635226017,
-        "null_rate": 0.009064092497125234,
-        "p_value": 0.269,
-        "q_value": 0.9437500000000001,
+        "train_count": 1744,
+        "heldout_rate": 0.0221653486972298,
+        "null_rate": 0.02186271828431121,
+        "p_value": 0.368,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          6,
+          5
+        ],
+        "train_count": 1679,
+        "heldout_rate": 0.020421103261462042,
+        "null_rate": 0.020976971818820193,
+        "p_value": 0.737,
+        "q_value": 1.0,
         "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
       },
       {
         "motif": [
           5,
+          6
+        ],
+        "train_count": 1613,
+        "heldout_rate": 0.018807707947110282,
+        "null_rate": 0.02024410261951795,
+        "p_value": 0.936,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          2,
+          7
+        ],
+        "train_count": 1533,
+        "heldout_rate": 0.01894736333500437,
+        "null_rate": 0.018763475487678396,
+        "p_value": 0.409,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
           3,
           0
         ],
-        "train_count": 30,
-        "heldout_rate": 0.006396257897339421,
-        "null_rate": 0.010027393557487012,
-        "p_value": 0.84,
-        "q_value": 0.9437500000000001,
+        "train_count": 1511,
+        "heldout_rate": 0.018408271616131015,
+        "null_rate": 0.01846097053499256,
+        "p_value": 0.526,
+        "q_value": 1.0,
         "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
       },
       {
         "motif": [
-          2,
-          5,
-          3
-        ],
-        "train_count": 30,
-        "heldout_rate": 0.006795234109323765,
-        "null_rate": 0.009954211953374913,
-        "p_value": 0.797,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          0,
-          7,
-          3
-        ],
-        "train_count": 29,
-        "heldout_rate": 0.015492375681083073,
-        "null_rate": 0.010375002327382095,
-        "p_value": 0.079,
-        "q_value": 0.8777777777777778,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          3,
-          0,
-          2
-        ],
-        "train_count": 29,
-        "heldout_rate": 0.006795234109323765,
-        "null_rate": 0.010286179555618682,
-        "p_value": 0.823,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          3,
-          5,
-          3
-        ],
-        "train_count": 29,
-        "heldout_rate": 0.006429684327424314,
-        "null_rate": 0.010318529520148905,
-        "p_value": 0.837,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          2,
-          0,
-          2
-        ],
-        "train_count": 29,
-        "heldout_rate": 0.00581240037680703,
-        "null_rate": 0.009352694374269615,
-        "p_value": 0.821,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          0,
           2,
           0
         ],
-        "train_count": 28,
-        "heldout_rate": 0.007848342453399512,
-        "null_rate": 0.00891304362590783,
-        "p_value": 0.563,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          2,
-          7,
-          3
-        ],
-        "train_count": 28,
-        "heldout_rate": 0.007844920702010282,
-        "null_rate": 0.00889231816048653,
-        "p_value": 0.589,
-        "q_value": 0.9437500000000001,
+        "train_count": 1487,
+        "heldout_rate": 0.016318884507174582,
+        "null_rate": 0.018151514146432686,
+        "p_value": 0.988,
+        "q_value": 1.0,
         "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
       },
       {
         "motif": [
           1,
-          2,
+          3
+        ],
+        "train_count": 1442,
+        "heldout_rate": 0.01648313375375267,
+        "null_rate": 0.018150208985984295,
+        "p_value": 0.981,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          6,
+          0
+        ],
+        "train_count": 1438,
+        "heldout_rate": 0.01988247235229419,
+        "null_rate": 0.017968701105452286,
+        "p_value": 0.016,
+        "q_value": 0.8,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          4,
+          2
+        ],
+        "train_count": 1433,
+        "heldout_rate": 0.015527543659323307,
+        "null_rate": 0.017979348216419572,
+        "p_value": 0.998,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          3,
           7
         ],
-        "train_count": 28,
-        "heldout_rate": 0.013899211131999975,
-        "null_rate": 0.007858550876225447,
-        "p_value": 0.051,
-        "q_value": 0.8777777777777778,
+        "train_count": 1381,
+        "heldout_rate": 0.016467468650605367,
+        "null_rate": 0.016801859240652903,
+        "p_value": 0.655,
+        "q_value": 1.0,
         "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
       },
       {
         "motif": [
-          0,
+          3,
           1
         ],
-        "train_count": 27,
-        "heldout_rate": 0.00594408205295302,
-        "null_rate": 0.005998898197468673,
-        "p_value": 0.232,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          1,
-          7,
-          3
-        ],
-        "train_count": 27,
-        "heldout_rate": 0.009630020631736154,
-        "null_rate": 0.007742133906464867,
-        "p_value": 0.291,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          0,
-          2,
-          5
-        ],
-        "train_count": 27,
-        "heldout_rate": 0.008612868447283305,
-        "null_rate": 0.009424131436126276,
-        "p_value": 0.574,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          5,
-          3,
-          5
-        ],
-        "train_count": 26,
-        "heldout_rate": 0.006647992066057255,
-        "null_rate": 0.009657562541282767,
-        "p_value": 0.772,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          7,
-          5,
-          3
-        ],
-        "train_count": 26,
-        "heldout_rate": 0.007811494271925391,
-        "null_rate": 0.008576251524932285,
-        "p_value": 0.558,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          2,
-          5,
-          1
-        ],
-        "train_count": 25,
-        "heldout_rate": 0.012051041345439795,
-        "null_rate": 0.008112407217145205,
-        "p_value": 0.126,
-        "q_value": 0.9,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          7,
-          3,
-          5
-        ],
-        "train_count": 24,
-        "heldout_rate": 0.009891078288184278,
-        "null_rate": 0.009465728214709536,
+        "train_count": 1324,
+        "heldout_rate": 0.01627629665552355,
+        "null_rate": 0.01613067490325532,
         "p_value": 0.437,
-        "q_value": 0.9437500000000001,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          0,
+          5
+        ],
+        "train_count": 1306,
+        "heldout_rate": 0.016145705613727503,
+        "null_rate": 0.016569224145851925,
+        "p_value": 0.697,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          5,
+          7
+        ],
+        "train_count": 1304,
+        "heldout_rate": 0.015930603777150196,
+        "null_rate": 0.016382184179644745,
+        "p_value": 0.715,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          2,
+          3
+        ],
+        "train_count": 1266,
+        "heldout_rate": 0.014761675610646768,
+        "null_rate": 0.015488581168179957,
+        "p_value": 0.803,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          6,
+          2
+        ],
+        "train_count": 1235,
+        "heldout_rate": 0.015464383614754235,
+        "null_rate": 0.015489029303985699,
+        "p_value": 0.485,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          5,
+          3
+        ],
+        "train_count": 1225,
+        "heldout_rate": 0.012373057226042046,
+        "null_rate": 0.015373724431134668,
+        "p_value": 1.0,
+        "q_value": 1.0,
         "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
       },
       {
         "motif": [
           3,
-          5,
-          1
+          2
         ],
-        "train_count": 24,
-        "heldout_rate": 0.014244440974880299,
-        "null_rate": 0.0082495546979965,
-        "p_value": 0.054,
-        "q_value": 0.8777777777777778,
+        "train_count": 1212,
+        "heldout_rate": 0.013678470589923409,
+        "null_rate": 0.01475668308208602,
+        "p_value": 0.916,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          2,
+          4
+        ],
+        "train_count": 1212,
+        "heldout_rate": 0.014991190996181243,
+        "null_rate": 0.014847392318646046,
+        "p_value": 0.414,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          1,
+          4
+        ],
+        "train_count": 1195,
+        "heldout_rate": 0.015385495399557482,
+        "null_rate": 0.01499433818401948,
+        "p_value": 0.303,
+        "q_value": 1.0,
         "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
       },
       {
         "motif": [
           7,
-          1,
-          2
+          6
         ],
-        "train_count": 24,
-        "heldout_rate": 0.01445958727602645,
-        "null_rate": 0.007623906288299405,
-        "p_value": 0.029,
-        "q_value": 0.8777777777777778,
+        "train_count": 1182,
+        "heldout_rate": 0.013793698882526224,
+        "null_rate": 0.015029752259991458,
+        "p_value": 0.963,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          0,
+          7
+        ],
+        "train_count": 1154,
+        "heldout_rate": 0.01566630486083862,
+        "null_rate": 0.014673379030277317,
+        "p_value": 0.086,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          7,
+          0
+        ],
+        "train_count": 1102,
+        "heldout_rate": 0.013205282619819275,
+        "null_rate": 0.013987785757241411,
+        "p_value": 0.868,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          2,
+          5
+        ],
+        "train_count": 1073,
+        "heldout_rate": 0.011838462035112834,
+        "null_rate": 0.01311717817378552,
+        "p_value": 0.966,
+        "q_value": 1.0,
         "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
       },
       {
         "motif": [
           3,
-          1,
-          2
+          6
         ],
-        "train_count": 24,
-        "heldout_rate": 0.007137302514717298,
-        "null_rate": 0.00857524123949347,
-        "p_value": 0.647,
-        "q_value": 0.9437500000000001,
+        "train_count": 1069,
+        "heldout_rate": 0.012812737555694875,
+        "null_rate": 0.013047233667504493,
+        "p_value": 0.619,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          4,
+          1
+        ],
+        "train_count": 1046,
+        "heldout_rate": 0.012660262415784627,
+        "null_rate": 0.013133636882606029,
+        "p_value": 0.748,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          1,
+          0
+        ],
+        "train_count": 912,
+        "heldout_rate": 0.0124554895673288,
+        "null_rate": 0.011449898533507079,
+        "p_value": 0.059,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          2,
+          1
+        ],
+        "train_count": 860,
+        "heldout_rate": 0.010894479589124973,
+        "null_rate": 0.01050928901502607,
+        "p_value": 0.272,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          3,
+          4
+        ],
+        "train_count": 838,
+        "heldout_rate": 0.010098781503429619,
+        "null_rate": 0.010232401119241738,
+        "p_value": 0.582,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          2,
+          6
+        ],
+        "train_count": 793,
+        "heldout_rate": 0.009923149812214455,
+        "null_rate": 0.009721465258304491,
+        "p_value": 0.357,
+        "q_value": 1.0,
         "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
       },
       {
@@ -674,414 +484,384 @@
           4,
           6
         ],
-        "train_count": 24,
-        "heldout_rate": 0.48333333333333334,
-        "null_rate": 0.08000291166019664,
-        "p_value": 0.001,
-        "q_value": 0.1,
+        "train_count": 792,
+        "heldout_rate": 0.009631101272639097,
+        "null_rate": 0.009913350639744434,
+        "p_value": 0.67,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          4,
+          7
+        ],
+        "train_count": 791,
+        "heldout_rate": 0.009612808101277848,
+        "null_rate": 0.009922894535677232,
+        "p_value": 0.665,
+        "q_value": 1.0,
         "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
       },
       {
         "motif": [
           7,
-          3,
-          1
-        ],
-        "train_count": 24,
-        "heldout_rate": 0.007745002663701851,
-        "null_rate": 0.007608019510591136,
-        "p_value": 0.457,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          3,
-          1,
-          0
-        ],
-        "train_count": 23,
-        "heldout_rate": 0.012014193163965672,
-        "null_rate": 0.0060391682570809565,
-        "p_value": 0.036,
-        "q_value": 0.8777777777777778,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          7,
-          0,
           2
         ],
-        "train_count": 21,
-        "heldout_rate": 0.008793536920634705,
-        "null_rate": 0.00531722330989712,
-        "p_value": 0.112,
-        "q_value": 0.9,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          1,
-          0,
-          2
-        ],
-        "train_count": 21,
-        "heldout_rate": 0.007046968278041598,
-        "null_rate": 0.007420124834673343,
-        "p_value": 0.509,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          0,
-          2,
-          7
-        ],
-        "train_count": 21,
-        "heldout_rate": 0.01007200707543812,
-        "null_rate": 0.008243110508441776,
-        "p_value": 0.284,
-        "q_value": 0.9437500000000001,
+        "train_count": 785,
+        "heldout_rate": 0.008769023499461667,
+        "null_rate": 0.009987880161869961,
+        "p_value": 0.975,
+        "q_value": 1.0,
         "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
       },
       {
         "motif": [
           7,
-          5,
-          1
+          4
         ],
-        "train_count": 21,
-        "heldout_rate": 0.008156193344900737,
-        "null_rate": 0.0064944883277070166,
-        "p_value": 0.252,
-        "q_value": 0.9437500000000001,
+        "train_count": 743,
+        "heldout_rate": 0.00864340524536742,
+        "null_rate": 0.009448219442379826,
+        "p_value": 0.909,
+        "q_value": 1.0,
         "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
       },
       {
         "motif": [
-          2,
-          0,
-          7
-        ],
-        "train_count": 20,
-        "heldout_rate": 0.009206410707492231,
-        "null_rate": 0.007908622499811734,
-        "p_value": 0.332,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          5,
-          1,
-          7
-        ],
-        "train_count": 20,
-        "heldout_rate": 0.01143375739482251,
-        "null_rate": 0.007115533526349877,
-        "p_value": 0.091,
-        "q_value": 0.9,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          0,
-          7,
-          1
-        ],
-        "train_count": 20,
-        "heldout_rate": 0.005802816575174299,
-        "null_rate": 0.006264294624023787,
-        "p_value": 0.522,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          3,
-          1,
-          7
-        ],
-        "train_count": 20,
-        "heldout_rate": 0.000925925925925926,
-        "null_rate": 0.0059196436340493205,
-        "p_value": 0.992,
-        "q_value": 0.997,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          5,
-          3,
-          1
-        ],
-        "train_count": 20,
-        "heldout_rate": 0.009511630931411644,
-        "null_rate": 0.007796349554731715,
-        "p_value": 0.272,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          5,
-          3,
-          7
-        ],
-        "train_count": 20,
-        "heldout_rate": 0.002706712082411344,
-        "null_rate": 0.005185956992572662,
-        "p_value": 0.815,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          2,
-          7,
-          5
-        ],
-        "train_count": 19,
-        "heldout_rate": 0.013647737277184581,
-        "null_rate": 0.006315273058875766,
-        "p_value": 0.016,
-        "q_value": 0.8,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          0,
-          3,
-          0
-        ],
-        "train_count": 19,
-        "heldout_rate": 0.00898810296885929,
-        "null_rate": 0.005655877052107324,
-        "p_value": 0.116,
-        "q_value": 0.9,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          0,
-          7,
-          5
-        ],
-        "train_count": 19,
-        "heldout_rate": 0.009229361314093172,
-        "null_rate": 0.007171400851319302,
-        "p_value": 0.254,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          2,
-          0,
-          5
-        ],
-        "train_count": 18,
-        "heldout_rate": 0.0030153540577199864,
-        "null_rate": 0.004562837802383756,
-        "p_value": 0.702,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          1,
-          2,
-          0
-        ],
-        "train_count": 18,
-        "heldout_rate": 0.008006060320149973,
-        "null_rate": 0.008599350168776311,
-        "p_value": 0.542,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          2,
-          7,
-          1
-        ],
-        "train_count": 18,
-        "heldout_rate": 0.004487498238896762,
-        "null_rate": 0.005511350444829087,
-        "p_value": 0.615,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          0,
-          7,
-          0
-        ],
-        "train_count": 17,
-        "heldout_rate": 0.0055510824064564646,
-        "null_rate": 0.004663854792035482,
-        "p_value": 0.313,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          0,
-          3,
-          5
-        ],
-        "train_count": 17,
-        "heldout_rate": 0.00408852202691242,
-        "null_rate": 0.005466861601854655,
-        "p_value": 0.661,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          5,
-          2,
-          5
-        ],
-        "train_count": 17,
-        "heldout_rate": 0.004577832475572463,
-        "null_rate": 0.005455632415015159,
-        "p_value": 0.574,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          7,
-          5,
-          2
-        ],
-        "train_count": 17,
-        "heldout_rate": 0.007720368951442271,
-        "null_rate": 0.0045914271570299805,
-        "p_value": 0.122,
-        "q_value": 0.9,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          1,
-          7,
-          5
-        ],
-        "train_count": 17,
-        "heldout_rate": 0.0032099201059445706,
-        "null_rate": 0.005568890507106862,
-        "p_value": 0.782,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          2,
-          7,
-          0
-        ],
-        "train_count": 17,
-        "heldout_rate": 0.007730844774926225,
-        "null_rate": 0.004138435024456423,
-        "p_value": 0.078,
-        "q_value": 0.8777777777777778,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          1,
-          0,
-          7
-        ],
-        "train_count": 17,
-        "heldout_rate": 0.011057471475536665,
-        "null_rate": 0.00656452511260254,
-        "p_value": 0.076,
-        "q_value": 0.8777777777777778,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          3,
-          5,
-          2
-        ],
-        "train_count": 16,
-        "heldout_rate": 0.002706712082411344,
-        "null_rate": 0.005710824412359543,
-        "p_value": 0.865,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          3,
-          7,
-          3
-        ],
-        "train_count": 16,
-        "heldout_rate": 0.00454440604548757,
-        "null_rate": 0.005633449046715748,
-        "p_value": 0.601,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          3,
-          5,
-          0
-        ],
-        "train_count": 16,
-        "heldout_rate": 0.0033239960330286276,
-        "null_rate": 0.004323888367947718,
-        "p_value": 0.618,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          1,
-          5,
-          3
-        ],
-        "train_count": 16,
-        "heldout_rate": 0.004577832475572462,
-        "null_rate": 0.003962454784372025,
-        "p_value": 0.357,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          1,
           0,
           3
         ],
-        "train_count": 16,
-        "heldout_rate": 0.0059395827949568535,
-        "null_rate": 0.0045438691479731405,
-        "p_value": 0.267,
-        "q_value": 0.9437500000000001,
+        "train_count": 734,
+        "heldout_rate": 0.009414202139444739,
+        "null_rate": 0.009299634946589048,
+        "p_value": 0.429,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          6,
+          1
+        ],
+        "train_count": 726,
+        "heldout_rate": 0.00894006121320486,
+        "null_rate": 0.009090829648511014,
+        "p_value": 0.583,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          1,
+          5
+        ],
+        "train_count": 704,
+        "heldout_rate": 0.008630606989606115,
+        "null_rate": 0.008848482217039067,
+        "p_value": 0.636,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          1,
+          2
+        ],
+        "train_count": 678,
+        "heldout_rate": 0.00912796749145628,
+        "null_rate": 0.008514733481293203,
+        "p_value": 0.143,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          3,
+          5
+        ],
+        "train_count": 668,
+        "heldout_rate": 0.007725850162791514,
+        "null_rate": 0.008141701153154338,
+        "p_value": 0.759,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          5,
+          4
+        ],
+        "train_count": 653,
+        "heldout_rate": 0.007903724202263925,
+        "null_rate": 0.008210430533322134,
+        "p_value": 0.703,
+        "q_value": 1.0,
         "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
       },
       {
         "motif": [
           0,
-          2,
           1
         ],
-        "train_count": 16,
-        "heldout_rate": 0.005849248558281153,
-        "null_rate": 0.004570449471952003,
-        "p_value": 0.274,
-        "q_value": 0.9437500000000001,
+        "train_count": 647,
+        "heldout_rate": 0.008294783420541867,
+        "null_rate": 0.008189581274432239,
+        "p_value": 0.421,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          4,
+          3
+        ],
+        "train_count": 544,
+        "heldout_rate": 0.006059130491143084,
+        "null_rate": 0.0068330414155390725,
+        "p_value": 0.943,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          6,
+          7
+        ],
+        "train_count": 542,
+        "heldout_rate": 0.00710954037810272,
+        "null_rate": 0.006795025503991051,
+        "p_value": 0.265,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          6,
+          3
+        ],
+        "train_count": 540,
+        "heldout_rate": 0.005693451938852103,
+        "null_rate": 0.006734238420699405,
+        "p_value": 0.98,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          4,
+          5,
+          1
+        ],
+        "train_count": 531,
+        "heldout_rate": 0.007945312547876287,
+        "null_rate": 0.0077104567948805105,
+        "p_value": 0.328,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          0,
+          6
+        ],
+        "train_count": 501,
+        "heldout_rate": 0.007237116177596106,
+        "null_rate": 0.006382734505445678,
+        "p_value": 0.049,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          5,
+          2
+        ],
+        "train_count": 490,
+        "heldout_rate": 0.006058399037745919,
+        "null_rate": 0.006158615874517477,
+        "p_value": 0.575,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          5,
+          1,
+          6
+        ],
+        "train_count": 469,
+        "heldout_rate": 0.007121192542648519,
+        "null_rate": 0.00667139763934779,
+        "p_value": 0.203,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          6,
+          4,
+          5
+        ],
+        "train_count": 460,
+        "heldout_rate": 0.005640323437978264,
+        "null_rate": 0.006448878803920844,
+        "p_value": 0.937,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          6,
+          5,
+          1
+        ],
+        "train_count": 446,
+        "heldout_rate": 0.006434257153134812,
+        "null_rate": 0.0059034145128252676,
+        "p_value": 0.138,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          5,
+          0
+        ],
+        "train_count": 439,
+        "heldout_rate": 0.006666935151860089,
+        "null_rate": 0.005518092274772029,
+        "p_value": 0.006,
+        "q_value": 0.6,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          5,
+          6,
+          4
+        ],
+        "train_count": 431,
+        "heldout_rate": 0.005179398846932063,
+        "null_rate": 0.005114483473622152,
+        "p_value": 0.447,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          1,
+          6,
+          5
+        ],
+        "train_count": 427,
+        "heldout_rate": 0.00562034155119486,
+        "null_rate": 0.005330261102368987,
+        "p_value": 0.269,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          1,
+          6,
+          4
+        ],
+        "train_count": 422,
+        "heldout_rate": 0.006086198264344015,
+        "null_rate": 0.006702992968008027,
+        "p_value": 0.87,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          7,
+          5
+        ],
+        "train_count": 405,
+        "heldout_rate": 0.004962896136413222,
+        "null_rate": 0.005161395576715968,
+        "p_value": 0.649,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          7,
+          1,
+          6
+        ],
+        "train_count": 402,
+        "heldout_rate": 0.006386702511650597,
+        "null_rate": 0.0062378067325291895,
+        "p_value": 0.399,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          0,
+          4,
+          5
+        ],
+        "train_count": 400,
+        "heldout_rate": 0.005717111976978127,
+        "null_rate": 0.006217463826778033,
+        "p_value": 0.823,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          4,
+          0,
+          2
+        ],
+        "train_count": 393,
+        "heldout_rate": 0.005845144434262204,
+        "null_rate": 0.005530355328331118,
+        "p_value": 0.258,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          1,
+          7,
+          1
+        ],
+        "train_count": 388,
+        "heldout_rate": 0.005277862233282152,
+        "null_rate": 0.005525117350693111,
+        "p_value": 0.699,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          0,
+          4,
+          0
+        ],
+        "train_count": 388,
+        "heldout_rate": 0.005538686958303681,
+        "null_rate": 0.005394130523305309,
+        "p_value": 0.392,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          4,
+          5,
+          6
+        ],
+        "train_count": 383,
+        "heldout_rate": 0.0049283591051735446,
+        "null_rate": 0.005475514432060957,
+        "p_value": 0.867,
+        "q_value": 1.0,
         "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
       },
       {
@@ -1090,50 +870,310 @@
           1,
           7
         ],
-        "train_count": 16,
-        "heldout_rate": 0.0021367521367521365,
-        "null_rate": 0.00534562395447671,
-        "p_value": 0.894,
-        "q_value": 0.9437500000000001,
+        "train_count": 374,
+        "heldout_rate": 0.006103616895697682,
+        "null_rate": 0.0051311677655134485,
+        "p_value": 0.038,
+        "q_value": 1.0,
         "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
       },
       {
         "motif": [
-          3,
-          7,
-          5
+          4,
+          0,
+          4
         ],
-        "train_count": 16,
-        "heldout_rate": 0.00163354411321891,
-        "null_rate": 0.003856346561995076,
-        "p_value": 0.821,
-        "q_value": 0.9437500000000001,
+        "train_count": 370,
+        "heldout_rate": 0.005245555667477491,
+        "null_rate": 0.005552591796620054,
+        "p_value": 0.734,
+        "q_value": 1.0,
         "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
       },
       {
         "motif": [
           5,
           1,
+          7
+        ],
+        "train_count": 368,
+        "heldout_rate": 0.005391538339759928,
+        "null_rate": 0.0054763715159433565,
+        "p_value": 0.559,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          6,
+          4,
           0
         ],
-        "train_count": 16,
-        "heldout_rate": 0.006704108788840646,
-        "null_rate": 0.007123111966629311,
-        "p_value": 0.531,
-        "q_value": 0.9437500000000001,
+        "train_count": 367,
+        "heldout_rate": 0.005820319814334175,
+        "null_rate": 0.005540752419436406,
+        "p_value": 0.288,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          2,
+          0,
+          4
+        ],
+        "train_count": 366,
+        "heldout_rate": 0.0034304770770599755,
+        "null_rate": 0.004291698648355514,
+        "p_value": 0.976,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          2,
+          7,
+          1
+        ],
+        "train_count": 343,
+        "heldout_rate": 0.004652807478512602,
+        "null_rate": 0.004742108299448624,
+        "p_value": 0.573,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          1,
+          7,
+          3
+        ],
+        "train_count": 340,
+        "heldout_rate": 0.005089228491027449,
+        "null_rate": 0.004832312386809326,
+        "p_value": 0.279,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          0,
+          2,
+          0
+        ],
+        "train_count": 336,
+        "heldout_rate": 0.0039010293034320103,
+        "null_rate": 0.004509495846762472,
+        "p_value": 0.928,
+        "q_value": 1.0,
         "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
       },
       {
         "motif": [
           5,
+          1,
+          3
+        ],
+        "train_count": 325,
+        "heldout_rate": 0.00401881324256495,
+        "null_rate": 0.004520705401754711,
+        "p_value": 0.864,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          6,
+          4,
+          2
+        ],
+        "train_count": 322,
+        "heldout_rate": 0.003915587524002444,
+        "null_rate": 0.004231805824719242,
+        "p_value": 0.772,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          3,
+          0,
+          2
+        ],
+        "train_count": 321,
+        "heldout_rate": 0.0038490573775406896,
+        "null_rate": 0.004308131973499555,
+        "p_value": 0.857,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          0,
           2,
+          3
+        ],
+        "train_count": 315,
+        "heldout_rate": 0.00412171992429237,
+        "null_rate": 0.003830381718070327,
+        "p_value": 0.234,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          6,
+          0,
+          2
+        ],
+        "train_count": 311,
+        "heldout_rate": 0.004303194278702294,
+        "null_rate": 0.00420079406116762,
+        "p_value": 0.409,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          7,
+          3,
           0
         ],
-        "train_count": 15,
-        "heldout_rate": 0.0037798800516037783,
-        "null_rate": 0.005185744976318723,
-        "p_value": 0.669,
-        "q_value": 0.9437500000000001,
+        "train_count": 307,
+        "heldout_rate": 0.0036082375419808272,
+        "null_rate": 0.004300005072360472,
+        "p_value": 0.952,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          6,
+          5,
+          6
+        ],
+        "train_count": 307,
+        "heldout_rate": 0.003945464748440032,
+        "null_rate": 0.004207137490856043,
+        "p_value": 0.724,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          4,
+          5,
+          3
+        ],
+        "train_count": 304,
+        "heldout_rate": 0.0034579853564735983,
+        "null_rate": 0.0041370031144170654,
+        "p_value": 0.947,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          3,
+          7,
+          1
+        ],
+        "train_count": 302,
+        "heldout_rate": 0.004715791354547452,
+        "null_rate": 0.0042478282063295614,
+        "p_value": 0.134,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          0,
+          5,
+          1
+        ],
+        "train_count": 302,
+        "heldout_rate": 0.004807344255450256,
+        "null_rate": 0.004668899964049335,
+        "p_value": 0.369,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          2,
+          0,
+          2
+        ],
+        "train_count": 299,
+        "heldout_rate": 0.004210421038947052,
+        "null_rate": 0.004240357914773913,
+        "p_value": 0.523,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          3,
+          0,
+          4
+        ],
+        "train_count": 296,
+        "heldout_rate": 0.004012242559200531,
+        "null_rate": 0.00433319902097465,
+        "p_value": 0.764,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          4,
+          5,
+          7
+        ],
+        "train_count": 294,
+        "heldout_rate": 0.004491544489398171,
+        "null_rate": 0.00442489490115357,
+        "p_value": 0.438,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          1,
+          6,
+          2
+        ],
+        "train_count": 294,
+        "heldout_rate": 0.004344885326927197,
+        "null_rate": 0.003952808068436964,
+        "p_value": 0.179,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          0,
+          2,
+          7
+        ],
+        "train_count": 293,
+        "heldout_rate": 0.004493294183885425,
+        "null_rate": 0.004637721017727068,
+        "p_value": 0.63,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          3,
+          1,
+          6
+        ],
+        "train_count": 292,
+        "heldout_rate": 0.003800469816628112,
+        "null_rate": 0.0037681125630898323,
+        "p_value": 0.475,
+        "q_value": 1.0,
         "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
       },
       {
@@ -1142,154 +1182,89 @@
           3,
           7
         ],
-        "train_count": 15,
-        "heldout_rate": 0.002706712082411344,
-        "null_rate": 0.005091179485359971,
-        "p_value": 0.78,
-        "q_value": 0.9437500000000001,
+        "train_count": 289,
+        "heldout_rate": 0.004509956317559264,
+        "null_rate": 0.003936483820371962,
+        "p_value": 0.084,
+        "q_value": 1.0,
         "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
       },
       {
         "motif": [
-          5,
           1,
-          5
+          6,
+          0
         ],
-        "train_count": 15,
-        "heldout_rate": 0.005698324449722973,
-        "null_rate": 0.00362649146493407,
-        "p_value": 0.178,
-        "q_value": 0.9437500000000001,
+        "train_count": 287,
+        "heldout_rate": 0.0047637871049829444,
+        "null_rate": 0.004567544571253553,
+        "p_value": 0.311,
+        "q_value": 1.0,
+        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
+      },
+      {
+        "motif": [
+          0,
+          2,
+          4
+        ],
+        "train_count": 287,
+        "heldout_rate": 0.0039787479845198185,
+        "null_rate": 0.0036569669774770956,
+        "p_value": 0.209,
+        "q_value": 1.0,
         "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
       },
       {
         "motif": [
           2,
-          1,
-          2
-        ],
-        "train_count": 15,
-        "heldout_rate": 0.006681158182239706,
-        "null_rate": 0.005009207531314557,
-        "p_value": 0.25,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          1,
-          7,
-          1
-        ],
-        "train_count": 15,
-        "heldout_rate": 0.004169272461955389,
-        "null_rate": 0.004893927170985314,
-        "p_value": 0.549,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          7,
-          1,
-          0
-        ],
-        "train_count": 15,
-        "heldout_rate": 0.00030864197530864197,
-        "null_rate": 0.0052895811840835034,
-        "p_value": 0.997,
-        "q_value": 0.997,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          0,
-          5,
-          2
-        ],
-        "train_count": 14,
-        "heldout_rate": 0.0013249021379102683,
-        "null_rate": 0.0033363224709508713,
-        "p_value": 0.827,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          3,
-          0,
+          4,
           5
         ],
-        "train_count": 14,
-        "heldout_rate": 0.001837693963076226,
-        "null_rate": 0.004984521815834371,
-        "p_value": 0.893,
-        "q_value": 0.9437500000000001,
+        "train_count": 286,
+        "heldout_rate": 0.0034094314864383597,
+        "null_rate": 0.0036256136158931197,
+        "p_value": 0.692,
+        "q_value": 1.0,
         "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
       },
       {
         "motif": [
-          3,
-          0,
-          3
+          5,
+          1,
+          4
         ],
-        "train_count": 14,
-        "heldout_rate": 0.006524332337340468,
-        "null_rate": 0.005917714039922174,
-        "p_value": 0.381,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          7,
-          3,
-          2
-        ],
-        "train_count": 14,
-        "heldout_rate": 0.004215704445062244,
-        "null_rate": 0.004593066505997563,
-        "p_value": 0.525,
-        "q_value": 0.9437500000000001,
+        "train_count": 281,
+        "heldout_rate": 0.004134860297423229,
+        "null_rate": 0.00373446234697853,
+        "p_value": 0.151,
+        "q_value": 1.0,
         "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
       },
       {
         "motif": [
           2,
-          5,
-          0
+          7,
+          3
         ],
-        "train_count": 13,
-        "heldout_rate": 0.001381809944501076,
-        "null_rate": 0.00445806691397027,
-        "p_value": 0.906,
-        "q_value": 0.9437500000000001,
+        "train_count": 277,
+        "heldout_rate": 0.004283235132158365,
+        "null_rate": 0.004131669367661504,
+        "p_value": 0.356,
+        "q_value": 1.0,
         "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
       },
       {
         "motif": [
-          5,
-          0,
+          7,
+          1,
           3
         ],
-        "train_count": 13,
-        "heldout_rate": 0.003541512687854151,
-        "null_rate": 0.003026105280386488,
-        "p_value": 0.337,
-        "q_value": 0.9437500000000001,
-        "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
-      },
-      {
-        "motif": [
-          0,
-          5,
-          3
-        ],
-        "train_count": 13,
-        "heldout_rate": 0.00317675398976212,
-        "null_rate": 0.005716616418322824,
-        "p_value": 0.807,
-        "q_value": 0.9437500000000001,
+        "train_count": 273,
+        "heldout_rate": 0.00367875495904578,
+        "null_rate": 0.004272106646079233,
+        "p_value": 0.912,
+        "q_value": 1.0,
         "q_scope": "within-vocabulary only; use results/exploratory.json pooled family for claims"
       }
     ],
@@ -1300,7 +1275,7 @@
     "motif_family": "All training-selected length2-4 motifs for this frozen vocabulary/heldout split, BH; exploratory cross-analysis pooling required for additional families",
     "confirmatory": {
       "rq": "RQ1",
-      "p_value": 0.023,
+      "p_value": 0.001,
       "split": "val"
     }
   },

@@ -4,15 +4,183 @@
   "split": "val",
   "is_baseline": false,
   "metrics": {
-    "context_rows": 1800.0,
-    "series": 46.0
+    "context_rows": 64941.0,
+    "series": 284.0,
+    "interaction": 0.022835153786708317,
+    "p_value": 0.15538860026595344
   },
   "notes": "Primary response is uncovered fraction; depth, coverage count and spacing are exploratory. Known-score live regulation only.",
-  "updated": "2026-10-31T15:25:27+00:00",
+  "updated": "2026-10-31T16:11:13+00:00",
   "details": {
-    "status": "insufficient_data",
-    "reason": "no known-score regulation observations in the declared contrast",
-    "models": {},
+    "status": "fit",
+    "cell_series": {
+      "late=0,score=-1": 74,
+      "late=0,score=1": 74,
+      "late=1,score=-1": 72,
+      "late=1,score=1": 72
+    },
+    "models": {
+      "uncovered": {
+        "status": "fit",
+        "method": "OLS with series-clustered CR1 uncertainty",
+        "estimate": 0.022835153786708317,
+        "se": 0.01590639642858539,
+        "p_value": 0.15538860026595344,
+        "n_series": 74,
+        "n_rows": 3538,
+        "covariates": [
+          "intercept",
+          "late",
+          "trailing",
+          "late_trailing",
+          "remaining",
+          "remaining_squared",
+          "ball_x",
+          "ball_y",
+          "ball_z",
+          "ball_speed",
+          "mean_boost",
+          "region=Europe",
+          "region=Middle East & North Africa",
+          "region=North America",
+          "region=Oceania",
+          "region=South America",
+          "region=Sub-Saharan Africa"
+        ],
+        "omitted_covariates": [
+          "roster fixed effects: >80 levels; see mixed-effects sensitivity"
+        ],
+        "series_bootstrap": {
+          "ci_low": -0.0075743598583138975,
+          "ci_high": 0.053485358767172836,
+          "successful_replicates": 1990,
+          "requested_replicates": 2000
+        },
+        "mixed_effects": {
+          "status": "failed",
+          "reason": "mixed model did not converge"
+        }
+      },
+      "third_depth": {
+        "status": "fit",
+        "method": "OLS with series-clustered CR1 uncertainty",
+        "estimate": -740.3041111789173,
+        "se": 115.04065247910123,
+        "p_value": 1.1401702486379118e-08,
+        "n_series": 74,
+        "n_rows": 3537,
+        "covariates": [
+          "intercept",
+          "late",
+          "trailing",
+          "late_trailing",
+          "remaining",
+          "remaining_squared",
+          "ball_x",
+          "ball_y",
+          "ball_z",
+          "ball_speed",
+          "mean_boost",
+          "region=Europe",
+          "region=Middle East & North Africa",
+          "region=North America",
+          "region=Oceania",
+          "region=South America",
+          "region=Sub-Saharan Africa"
+        ],
+        "omitted_covariates": [
+          "roster fixed effects: >80 levels; see mixed-effects sensitivity"
+        ],
+        "series_bootstrap": {
+          "ci_low": -968.8735277366792,
+          "ci_high": -521.1863506205036,
+          "successful_replicates": 1990,
+          "requested_replicates": 2000
+        }
+      },
+      "coverage": {
+        "status": "fit",
+        "method": "OLS with series-clustered CR1 uncertainty",
+        "estimate": -0.057006827806651075,
+        "se": 0.03503318133679125,
+        "p_value": 0.10799863118152561,
+        "n_series": 74,
+        "n_rows": 3538,
+        "covariates": [
+          "intercept",
+          "late",
+          "trailing",
+          "late_trailing",
+          "remaining",
+          "remaining_squared",
+          "ball_x",
+          "ball_y",
+          "ball_z",
+          "ball_speed",
+          "mean_boost",
+          "region=Europe",
+          "region=Middle East & North Africa",
+          "region=North America",
+          "region=Oceania",
+          "region=South America",
+          "region=Sub-Saharan Africa"
+        ],
+        "omitted_covariates": [
+          "roster fixed effects: >80 levels; see mixed-effects sensitivity"
+        ],
+        "series_bootstrap": {
+          "ci_low": -0.12240730245341867,
+          "ci_high": 0.012369783352092371,
+          "successful_replicates": 1990,
+          "requested_replicates": 2000
+        }
+      },
+      "spacing": {
+        "status": "fit",
+        "method": "OLS with series-clustered CR1 uncertainty",
+        "estimate": 87.17576637991782,
+        "se": 53.999947071012755,
+        "p_value": 0.11076224050844924,
+        "n_series": 74,
+        "n_rows": 3538,
+        "covariates": [
+          "intercept",
+          "late",
+          "trailing",
+          "late_trailing",
+          "remaining",
+          "remaining_squared",
+          "ball_x",
+          "ball_y",
+          "ball_z",
+          "ball_speed",
+          "mean_boost",
+          "region=Europe",
+          "region=Middle East & North Africa",
+          "region=North America",
+          "region=Oceania",
+          "region=South America",
+          "region=Sub-Saharan Africa"
+        ],
+        "omitted_covariates": [
+          "roster fixed effects: >80 levels; see mixed-effects sensitivity"
+        ],
+        "series_bootstrap": {
+          "ci_low": -18.379333423186715,
+          "ci_high": 196.14431630916363,
+          "successful_replicates": 1990,
+          "requested_replicates": 2000
+        }
+      }
+    },
+    "estimand": "[late-earlier, trailing by one]-[late-earlier, leading by one]",
+    "primary_uncertainty": "Converged crossed MixedLM with Wald uncertainty when available; otherwise series-clustered OLS and whole-series bootstrap. OLS bootstrap accompanying MixedLM is a separately labelled sensitivity.",
+    "limitations": [
+      "observational association, not causal or psychological pressure",
+      "opponent historical strength unavailable; not silently imputed",
+      "zero-second live play and overtime are excluded from the regulation contrast",
+      "common support gate checks four cells; unmeasured confounding remains"
+    ],
     "measurement_gate": {
       "passed": true,
       "state_sources": [
@@ -23,7 +191,7 @@
     "confirmatory": {
       "rq": "RQ3",
       "split": "val",
-      "p_value": null
+      "p_value": 0.15538860026595344
     }
   },
   "lower_is_better": [

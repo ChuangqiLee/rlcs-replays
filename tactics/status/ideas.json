@@ -1,328 +1,336 @@
 {
-  "updated": "2026-10-31T15:25:39+00:00",
-  "source": "tactics/docs/P2_design.md §6",
-  "ideas": [
+ "updated": "2026-10-31T17:35:00+01:00",
+ "source": "tactics/docs/P2_design.md §6",
+ "ideas": [
+  {
+   "id": "RQ1",
+   "name": "RQ1 三人轮转是否存在可复用的“语法”",
+   "status": "running",
+   "motivation": "动机：协调中可能存在超越静态站位、一阶角色转移与停留时间的高阶多步序列（如 接近→撤出→补位→再进入）。 方法：追踪最近球员变化与深度/逼近速度，从冻结词表挖掘 2–4 token 序列；时序图表示+聚类+游程编码+序列挖掘，与一阶半马尔可夫零模型对比，按系列赛 bootstrap。",
+   "method": "追踪最近球员变化与深度/逼近速度，从冻结词表挖掘 2–4 token 序列；时序图表示+聚类+游程编码+序列挖掘，与一阶半马尔可夫零模型对比，按系列赛 bootstrap。",
+   "refs": [
     {
-      "id": "RQ1",
-      "name": "RQ1 三人轮转是否存在可复用的“语法”",
-      "status": "running",
-      "motivation": "动机：协调中可能存在超越静态站位、一阶角色转移与停留时间的高阶多步序列（如 接近→撤出→补位→再进入）。 方法：追踪最近球员变化与深度/逼近速度，从冻结词表挖掘 2–4 token 序列；时序图表示+聚类+游程编码+序列挖掘，与一阶半马尔可夫零模型对比，按系列赛 bootstrap。",
-      "method": "追踪最近球员变化与深度/逼近速度，从冻结词表挖掘 2–4 token 序列；时序图表示+聚类+游程编码+序列挖掘，与一阶半马尔可夫零模型对比，按系列赛 bootstrap。",
-      "refs": [
-        {
-          "title": "TAGNet: Temporal Attention Graph Network for Defensive Tactical Pattern Recognition in Professional Counter-Strike 2 (IEEE Transactions on Games 2026)",
-          "url": "https://doi.org/10.1109/TG.2026.3745970"
-        },
-        {
-          "title": "TS2Vec: Towards Universal Representation of Time Series (AAAI 2022)",
-          "url": "https://doi.org/10.1609/aaai.v36i8.20881"
-        },
-        {
-          "title": "Coordinated Multi-Agent Imitation Learning (ICML 2017)",
-          "url": "https://proceedings.mlr.press/v70/le17a.html"
-        },
-        {
-          "title": "Generating Multi-Agent Trajectories using Programmatic Weak Supervision (ICLR 2019)",
-          "url": "https://iclr.cc/virtual/2019/poster/985"
-        }
-      ],
-      "updated": "2026-10-31T15:37:50+01:00"
+     "title": "TAGNet: Temporal Attention Graph Network for Defensive Tactical Pattern Recognition in Professional Counter-Strike 2 (IEEE Transactions on Games 2026)",
+     "url": "https://doi.org/10.1109/TG.2026.3745970"
     },
     {
-      "id": "RQ2",
-      "name": "RQ2 危险时刻是否与轮转交接缺口相关",
-      "status": "proposed",
-      "motivation": "动机：关键失球可能源于半秒的无人覆盖空档，而非明显糟糕的阵型。 方法：以最近球员交接为锚点，度量交接时延、无覆盖比例、双人同时逼近（overlap 代理）与补位深度；混合效应竞争结局回归，调整交接前球态与资源。",
-      "method": "以最近球员交接为锚点，度量交接时延、无覆盖比例、双人同时逼近（overlap 代理）与补位深度；混合效应竞争结局回归，调整交接前球态与资源。",
-      "refs": [
-        {
-          "title": "Actions Speak Louder than Goals: Valuing Player Actions in Soccer (KDD 2019)",
-          "url": "https://doi.org/10.1145/3292500.3330758"
-        },
-        {
-          "title": "Implicit Coordination Dynamics: A Synchrony-Based Study on Team Positioning and Performance in Competitive Dota 2 (IEEE Transactions on Games 2025)",
-          "url": "https://doi.org/10.1109/TG.2024.3488114"
-        },
-        {
-          "title": "TAGNet: Temporal Attention Graph Network for Defensive Tactical Pattern Recognition in Professional Counter-Strike 2 (IEEE Transactions on Games 2026)",
-          "url": "https://doi.org/10.1109/TG.2026.3745970"
-        }
-      ],
-      "updated": "2026-10-31T15:37:50+01:00"
+     "title": "TS2Vec: Towards Universal Representation of Time Series (AAAI 2022)",
+     "url": "https://doi.org/10.1609/aaai.v36i8.20881"
     },
     {
-      "id": "RQ3",
-      "name": "RQ3 压力下球队是加大冒险还是重新分配职责",
-      "status": "running",
-      "motivation": "动机：“关键时刻”可能表现为保护第三人安全边际、同时另一人更激进。 方法：主对比：[末段−早段, 落后1球]−[末段−早段, 领先1球]，主响应为无覆盖活球比例；层次回归含非线性时间与比分×时间交互，加时单独分析。",
-      "method": "主对比：[末段−早段, 落后1球]−[末段−早段, 领先1球]，主响应为无覆盖活球比例；层次回归含非线性时间与比分×时间交互，加时单独分析。",
-      "refs": [
-        {
-          "title": "Implicit Coordination Dynamics: A Synchrony-Based Study on Team Positioning and Performance in Competitive Dota 2 (IEEE Transactions on Games 2025)",
-          "url": "https://doi.org/10.1109/TG.2024.3488114"
-        },
-        {
-          "title": "Deep Sets (NeurIPS 2017)",
-          "url": "https://papers.nips.cc/paper/2017/hash/f22e4747da1aa27e363d86d40ff442fe-Abstract.html"
-        }
-      ],
-      "updated": "2026-10-31T15:37:50+01:00"
+     "title": "Coordinated Multi-Agent Imitation Learning (ICML 2017)",
+     "url": "https://proceedings.mlr.press/v70/le17a.html"
     },
     {
-      "id": "RQ4",
-      "name": "RQ4 风格属于选手、阵容还是俱乐部，以及 meta 如何演化",
-      "status": "running",
-      "motivation": "动机：选手可能把可识别的习惯带到新阵容，而俱乐部风格会在转会后改变。 方法：以母题频率、转移、角色占用、覆盖与 boost 分布构建情境标准化指纹，比较独立系列赛间同阵容/异阵容距离；赛季变化分解为母题构成、母题内执行与支持外行为。",
-      "method": "以母题频率、转移、角色占用、覆盖与 boost 分布构建情境标准化指纹，比较独立系列赛间同阵容/异阵容距离；赛季变化分解为母题构成、母题内执行与支持外行为。",
-      "refs": [
-        {
-          "title": "A Behavioral Pattern Mining Approach to Model Player Skills in Rocket League (IEEE CoG 2020)",
-          "url": "https://doi.org/10.1109/CoG47356.2020.9231739"
-        },
-        {
-          "title": "TS2Vec: Towards Universal Representation of Time Series (AAAI 2022)",
-          "url": "https://doi.org/10.1609/aaai.v36i8.20881"
-        },
-        {
-          "title": "Deep Sets (NeurIPS 2017)",
-          "url": "https://papers.nips.cc/paper/2017/hash/f22e4747da1aa27e363d86d40ff442fe-Abstract.html"
-        }
-      ],
-      "updated": "2026-10-31T15:37:50+01:00"
-    },
-    {
-      "id": "RQ5",
-      "name": "RQ5 进球前的“势”能否在进球前被度量",
-      "status": "proposed",
-      "motivation": "动机：检验“压力在累积”的直觉，包括最终失败的进攻。 方法：前瞻采样活球时刻，定义 V10=己方10秒内先进球概率−对方概率；历史模型（前6秒）与同等容量快照模型之差 m(t) 作为历史信息量，系列赛交叉拟合并校准。",
-      "method": "前瞻采样活球时刻，定义 V10=己方10秒内先进球概率−对方概率；历史模型（前6秒）与同等容量快照模型之差 m(t) 作为历史信息量，系列赛交叉拟合并校准。",
-      "refs": [
-        {
-          "title": "Actions Speak Louder than Goals: Valuing Player Actions in Soccer (KDD 2019)",
-          "url": "https://doi.org/10.1145/3292500.3330758"
-        },
-        {
-          "title": "Generating Multi-Agent Trajectories using Programmatic Weak Supervision (ICLR 2019)",
-          "url": "https://iclr.cc/virtual/2019/poster/985"
-        }
-      ],
-      "updated": "2026-10-31T15:37:50+01:00"
-    },
-    {
-      "id": "RQ6",
-      "name": "RQ6 队友如何补偿低 boost 或被击毁",
-      "status": "proposed",
-      "motivation": "动机：揭示进球/助攻统计看不到的支援工作。 方法：标记低 boost（<20% 持续≥0.5秒）与击毁起点，度量队友接管时延、覆盖与角色占用；事件中心时序/图表示，与匹配非事件轨迹对比的混合效应事件时间模型。",
-      "method": "标记低 boost（<20% 持续≥0.5秒）与击毁起点，度量队友接管时延、覆盖与角色占用；事件中心时序/图表示，与匹配非事件轨迹对比的混合效应事件时间模型。",
-      "refs": [
-        {
-          "title": "Deep Sets (NeurIPS 2017)",
-          "url": "https://papers.nips.cc/paper/2017/hash/f22e4747da1aa27e363d86d40ff442fe-Abstract.html"
-        },
-        {
-          "title": "Coordinated Multi-Agent Imitation Learning (ICML 2017)",
-          "url": "https://proceedings.mlr.press/v70/le17a.html"
-        }
-      ],
-      "updated": "2026-10-31T15:37:50+01:00"
-    },
-    {
-      "id": "RQ7",
-      "name": "RQ7 一个系列赛中是否存在战术“对话”",
-      "status": "proposed",
-      "motivation": "动机：BO 系列赛可能包含应对与反应对，而非独立重复的比赛。 方法：用第 g 局对手情境标准化行为预测第 g+1 局本队母题，控制自身前局行为、前局结果、局序与阵容连续性；层次滞后组合模型，层内整系列置换检验。",
-      "method": "用第 g 局对手情境标准化行为预测第 g+1 局本队母题，控制自身前局行为、前局结果、局序与阵容连续性；层次滞后组合模型，层内整系列置换检验。",
-      "refs": [
-        {
-          "title": "Implicit Coordination Dynamics: A Synchrony-Based Study on Team Positioning and Performance in Competitive Dota 2 (IEEE Transactions on Games 2025)",
-          "url": "https://doi.org/10.1109/TG.2024.3488114"
-        },
-        {
-          "title": "Coordinated Multi-Agent Imitation Learning (ICML 2017)",
-          "url": "https://proceedings.mlr.press/v70/le17a.html"
-        }
-      ],
-      "updated": "2026-10-31T15:37:50+01:00"
-    },
-    {
-      "id": "p3-staging",
-      "inspiration_refs": [],
-      "name": "Node-local data staging",
-      "status": "selected",
-      "prune_reason": "",
-      "best_metric": null,
-      "motivation": "Avoid random GPFS reads during computation"
-    },
-    {
-      "id": "p3-data-audit",
-      "inspiration_refs": [],
-      "name": "Data and parser semantics audit",
-      "status": "promising",
-      "prune_reason": "",
-      "best_metric": null,
-      "motivation": ""
-    },
-    {
-      "id": "p3-extraction",
-      "inspiration_refs": [],
-      "name": "Audited 3v3 extraction",
-      "status": "promising",
-      "prune_reason": "",
-      "best_metric": null,
-      "motivation": ""
-    },
-    {
-      "id": "rq1-grammar",
-      "inspiration_refs": [],
-      "name": "RQ1 rotation grammar",
-      "status": "promising",
-      "prune_reason": "",
-      "best_metric": {
-        "name": "validation_reconstruction",
-        "value": 0.6874451100052177,
-        "task": "tokens",
-        "split": "val"
-      },
-      "motivation": ""
-    },
-    {
-      "id": "rq3-cover",
-      "inspiration_refs": [],
-      "name": "Pressure redistributes cover",
-      "status": "pruned",
-      "prune_reason": "no known-score regulation observations in the declared contrast",
-      "best_metric": null,
-      "motivation": ""
-    },
-    {
-      "id": "rq4-persistence",
-      "inspiration_refs": [],
-      "name": "Roster style persists across series",
-      "status": "pruned",
-      "prune_reason": "need >=2 eligible rosters matched on region/event exposure/series-count band, >=2 series per half, and common context support",
-      "best_metric": null,
-      "motivation": ""
-    },
-    {
-      "id": "p3-figures",
-      "inspiration_refs": [],
-      "name": "Initial interpretability atlas",
-      "status": "selected",
-      "prune_reason": "",
-      "best_metric": null,
-      "motivation": "Inspectable geometry and uncertainty-aware summaries"
-    },
-    {
-      "id": "rq1-learned-k6-w6-fps10-seed42",
-      "inspiration_refs": [],
-      "name": "learned vocabulary K=6",
-      "status": "pruned",
-      "prune_reason": "Lower validation selection score than chosen K",
-      "best_metric": {
-        "name": "silhouette",
-        "value": 0.12495286762714386,
-        "task": "tokens",
-        "split": "val"
-      },
-      "motivation": "Unsupervised development selection; no hypothesis p-value used"
-    },
-    {
-      "id": "rq1-learned-k8-w6-fps10-seed42",
-      "inspiration_refs": [],
-      "name": "learned vocabulary K=8",
-      "status": "selected",
-      "prune_reason": "",
-      "best_metric": {
-        "name": "silhouette",
-        "value": 0.14751237630844116,
-        "task": "tokens",
-        "split": "val"
-      },
-      "motivation": "Unsupervised development selection; no hypothesis p-value used"
-    },
-    {
-      "id": "rq1-learned-k12-w6-fps10-seed42",
-      "inspiration_refs": [],
-      "name": "learned vocabulary K=12",
-      "status": "pruned",
-      "prune_reason": "Lower validation selection score than chosen K",
-      "best_metric": {
-        "name": "silhouette",
-        "value": 0.12868833541870117,
-        "task": "tokens",
-        "split": "val"
-      },
-      "motivation": "Unsupervised development selection; no hypothesis p-value used"
-    },
-    {
-      "id": "rq1-learned-k16-w6-fps10-seed42",
-      "inspiration_refs": [],
-      "name": "learned vocabulary K=16",
-      "status": "pruned",
-      "prune_reason": "Lower validation selection score than chosen K",
-      "best_metric": {
-        "name": "silhouette",
-        "value": 0.12519805133342743,
-        "task": "tokens",
-        "split": "val"
-      },
-      "motivation": "Unsupervised development selection; no hypothesis p-value used"
-    },
-    {
-      "id": "rq1-handcrafted-k6-w6-fps10-seed42",
-      "inspiration_refs": [],
-      "name": "handcrafted vocabulary K=6",
-      "status": "pruned",
-      "prune_reason": "Lower validation selection score than chosen K",
-      "best_metric": {
-        "name": "silhouette",
-        "value": 0.08639436960220337,
-        "task": "tokens",
-        "split": "val"
-      },
-      "motivation": "Unsupervised development selection; no hypothesis p-value used"
-    },
-    {
-      "id": "rq1-handcrafted-k8-w6-fps10-seed42",
-      "inspiration_refs": [],
-      "name": "handcrafted vocabulary K=8",
-      "status": "selected",
-      "prune_reason": "",
-      "best_metric": {
-        "name": "silhouette",
-        "value": 0.09460214525461197,
-        "task": "tokens",
-        "split": "val"
-      },
-      "motivation": "Unsupervised development selection; no hypothesis p-value used"
-    },
-    {
-      "id": "rq1-handcrafted-k12-w6-fps10-seed42",
-      "inspiration_refs": [],
-      "name": "handcrafted vocabulary K=12",
-      "status": "pruned",
-      "prune_reason": "Lower validation selection score than chosen K",
-      "best_metric": {
-        "name": "silhouette",
-        "value": 0.08991773426532745,
-        "task": "tokens",
-        "split": "val"
-      },
-      "motivation": "Unsupervised development selection; no hypothesis p-value used"
-    },
-    {
-      "id": "rq1-handcrafted-k16-w6-fps10-seed42",
-      "inspiration_refs": [],
-      "name": "handcrafted vocabulary K=16",
-      "status": "pruned",
-      "prune_reason": "Lower validation selection score than chosen K",
-      "best_metric": {
-        "name": "silhouette",
-        "value": 0.08866500109434128,
-        "task": "tokens",
-        "split": "val"
-      },
-      "motivation": "Unsupervised development selection; no hypothesis p-value used"
+     "title": "Generating Multi-Agent Trajectories using Programmatic Weak Supervision (ICLR 2019)",
+     "url": "https://iclr.cc/virtual/2019/poster/985"
     }
-  ]
+   ],
+   "updated": "2026-10-31T15:37:50+01:00",
+   "latest": "小规模：学习词表 excess 0.0049 bit, p=0.001(Holm 0.003)；预测增益 -0.0013 bit；手工词表 excess 0.0052 bit。显著但效应小，待中规模复核"
+  },
+  {
+   "id": "RQ2",
+   "name": "RQ2 危险时刻是否与轮转交接缺口相关",
+   "status": "proposed",
+   "motivation": "动机：关键失球可能源于半秒的无人覆盖空档，而非明显糟糕的阵型。 方法：以最近球员交接为锚点，度量交接时延、无覆盖比例、双人同时逼近（overlap 代理）与补位深度；混合效应竞争结局回归，调整交接前球态与资源。",
+   "method": "以最近球员交接为锚点，度量交接时延、无覆盖比例、双人同时逼近（overlap 代理）与补位深度；混合效应竞争结局回归，调整交接前球态与资源。",
+   "refs": [
+    {
+     "title": "Actions Speak Louder than Goals: Valuing Player Actions in Soccer (KDD 2019)",
+     "url": "https://doi.org/10.1145/3292500.3330758"
+    },
+    {
+     "title": "Implicit Coordination Dynamics: A Synchrony-Based Study on Team Positioning and Performance in Competitive Dota 2 (IEEE Transactions on Games 2025)",
+     "url": "https://doi.org/10.1109/TG.2024.3488114"
+    },
+    {
+     "title": "TAGNet: Temporal Attention Graph Network for Defensive Tactical Pattern Recognition in Professional Counter-Strike 2 (IEEE Transactions on Games 2026)",
+     "url": "https://doi.org/10.1109/TG.2026.3745970"
+    }
+   ],
+   "updated": "2026-10-31T15:37:50+01:00"
+  },
+  {
+   "id": "RQ3",
+   "name": "RQ3 压力下球队是加大冒险还是重新分配职责",
+   "status": "running",
+   "motivation": "动机：“关键时刻”可能表现为保护第三人安全边际、同时另一人更激进。 方法：主对比：[末段−早段, 落后1球]−[末段−早段, 领先1球]，主响应为无覆盖活球比例；层次回归含非线性时间与比分×时间交互，加时单独分析。",
+   "method": "主对比：[末段−早段, 落后1球]−[末段−早段, 领先1球]，主响应为无覆盖活球比例；层次回归含非线性时间与比分×时间交互，加时单独分析。",
+   "refs": [
+    {
+     "title": "Implicit Coordination Dynamics: A Synchrony-Based Study on Team Positioning and Performance in Competitive Dota 2 (IEEE Transactions on Games 2025)",
+     "url": "https://doi.org/10.1109/TG.2024.3488114"
+    },
+    {
+     "title": "Deep Sets (NeurIPS 2017)",
+     "url": "https://papers.nips.cc/paper/2017/hash/f22e4747da1aa27e363d86d40ff442fe-Abstract.html"
+    }
+   ],
+   "updated": "2026-10-31T15:37:50+01:00",
+   "latest": "小规模：落后×末段 未覆盖比例 交互 +0.023 (p=0.155, bootstrap CI [-0.008,0.053]) 不显著；次要：第三人深度 -740 uu (p=1.1e-8, BH q=2.3e-6) 成立候选"
+  },
+  {
+   "id": "RQ4",
+   "name": "RQ4 风格属于选手、阵容还是俱乐部，以及 meta 如何演化",
+   "status": "running",
+   "motivation": "动机：选手可能把可识别的习惯带到新阵容，而俱乐部风格会在转会后改变。 方法：以母题频率、转移、角色占用、覆盖与 boost 分布构建情境标准化指纹，比较独立系列赛间同阵容/异阵容距离；赛季变化分解为母题构成、母题内执行与支持外行为。",
+   "method": "以母题频率、转移、角色占用、覆盖与 boost 分布构建情境标准化指纹，比较独立系列赛间同阵容/异阵容距离；赛季变化分解为母题构成、母题内执行与支持外行为。",
+   "refs": [
+    {
+     "title": "A Behavioral Pattern Mining Approach to Model Player Skills in Rocket League (IEEE CoG 2020)",
+     "url": "https://doi.org/10.1109/CoG47356.2020.9231739"
+    },
+    {
+     "title": "TS2Vec: Towards Universal Representation of Time Series (AAAI 2022)",
+     "url": "https://doi.org/10.1609/aaai.v36i8.20881"
+    },
+    {
+     "title": "Deep Sets (NeurIPS 2017)",
+     "url": "https://papers.nips.cc/paper/2017/hash/f22e4747da1aa27e363d86d40ff442fe-Abstract.html"
+    }
+   ],
+   "updated": "2026-10-31T15:37:50+01:00",
+   "latest": "小规模：符合条件的阵容 0 个(需每阵容≥20 系列)，待中规模"
+  },
+  {
+   "id": "RQ5",
+   "name": "RQ5 进球前的“势”能否在进球前被度量",
+   "status": "proposed",
+   "motivation": "动机：检验“压力在累积”的直觉，包括最终失败的进攻。 方法：前瞻采样活球时刻，定义 V10=己方10秒内先进球概率−对方概率；历史模型（前6秒）与同等容量快照模型之差 m(t) 作为历史信息量，系列赛交叉拟合并校准。",
+   "method": "前瞻采样活球时刻，定义 V10=己方10秒内先进球概率−对方概率；历史模型（前6秒）与同等容量快照模型之差 m(t) 作为历史信息量，系列赛交叉拟合并校准。",
+   "refs": [
+    {
+     "title": "Actions Speak Louder than Goals: Valuing Player Actions in Soccer (KDD 2019)",
+     "url": "https://doi.org/10.1145/3292500.3330758"
+    },
+    {
+     "title": "Generating Multi-Agent Trajectories using Programmatic Weak Supervision (ICLR 2019)",
+     "url": "https://iclr.cc/virtual/2019/poster/985"
+    }
+   ],
+   "updated": "2026-10-31T15:37:50+01:00"
+  },
+  {
+   "id": "RQ6",
+   "name": "RQ6 队友如何补偿低 boost 或被击毁",
+   "status": "proposed",
+   "motivation": "动机：揭示进球/助攻统计看不到的支援工作。 方法：标记低 boost（<20% 持续≥0.5秒）与击毁起点，度量队友接管时延、覆盖与角色占用；事件中心时序/图表示，与匹配非事件轨迹对比的混合效应事件时间模型。",
+   "method": "标记低 boost（<20% 持续≥0.5秒）与击毁起点，度量队友接管时延、覆盖与角色占用；事件中心时序/图表示，与匹配非事件轨迹对比的混合效应事件时间模型。",
+   "refs": [
+    {
+     "title": "Deep Sets (NeurIPS 2017)",
+     "url": "https://papers.nips.cc/paper/2017/hash/f22e4747da1aa27e363d86d40ff442fe-Abstract.html"
+    },
+    {
+     "title": "Coordinated Multi-Agent Imitation Learning (ICML 2017)",
+     "url": "https://proceedings.mlr.press/v70/le17a.html"
+    }
+   ],
+   "updated": "2026-10-31T15:37:50+01:00"
+  },
+  {
+   "id": "RQ7",
+   "name": "RQ7 一个系列赛中是否存在战术“对话”",
+   "status": "proposed",
+   "motivation": "动机：BO 系列赛可能包含应对与反应对，而非独立重复的比赛。 方法：用第 g 局对手情境标准化行为预测第 g+1 局本队母题，控制自身前局行为、前局结果、局序与阵容连续性；层次滞后组合模型，层内整系列置换检验。",
+   "method": "用第 g 局对手情境标准化行为预测第 g+1 局本队母题，控制自身前局行为、前局结果、局序与阵容连续性；层次滞后组合模型，层内整系列置换检验。",
+   "refs": [
+    {
+     "title": "Implicit Coordination Dynamics: A Synchrony-Based Study on Team Positioning and Performance in Competitive Dota 2 (IEEE Transactions on Games 2025)",
+     "url": "https://doi.org/10.1109/TG.2024.3488114"
+    },
+    {
+     "title": "Coordinated Multi-Agent Imitation Learning (ICML 2017)",
+     "url": "https://proceedings.mlr.press/v70/le17a.html"
+    }
+   ],
+   "updated": "2026-10-31T15:37:50+01:00"
+  },
+  {
+   "id": "p3-staging",
+   "inspiration_refs": [],
+   "name": "Node-local data staging",
+   "status": "selected",
+   "prune_reason": "",
+   "best_metric": null,
+   "motivation": "Avoid random GPFS reads during computation"
+  },
+  {
+   "id": "p3-data-audit",
+   "inspiration_refs": [],
+   "name": "Data and parser semantics audit",
+   "status": "promising",
+   "prune_reason": "",
+   "best_metric": null,
+   "motivation": ""
+  },
+  {
+   "id": "p3-extraction",
+   "inspiration_refs": [],
+   "name": "Audited 3v3 extraction",
+   "status": "promising",
+   "prune_reason": "",
+   "best_metric": null,
+   "motivation": ""
+  },
+  {
+   "id": "rq1-grammar",
+   "inspiration_refs": [],
+   "name": "RQ1 rotation grammar",
+   "status": "promising",
+   "prune_reason": "",
+   "best_metric": {
+    "name": "validation_reconstruction",
+    "value": 0.6366725401878357,
+    "task": "tokens",
+    "split": "val"
+   },
+   "motivation": ""
+  },
+  {
+   "id": "rq3-cover",
+   "inspiration_refs": [],
+   "name": "Pressure redistributes cover",
+   "status": "promising",
+   "prune_reason": "",
+   "best_metric": {
+    "name": "interaction",
+    "value": 0.022835153786708317,
+    "task": "pressure",
+    "split": "val"
+   },
+   "motivation": ""
+  },
+  {
+   "id": "rq4-persistence",
+   "inspiration_refs": [],
+   "name": "Roster style persists across series",
+   "status": "pruned",
+   "prune_reason": "need >=2 eligible rosters matched on region/event exposure/series-count band, >=2 series per half, and common context support",
+   "best_metric": null,
+   "motivation": ""
+  },
+  {
+   "id": "p3-figures",
+   "inspiration_refs": [],
+   "name": "Initial interpretability atlas",
+   "status": "selected",
+   "prune_reason": "",
+   "best_metric": null,
+   "motivation": "Inspectable geometry and uncertainty-aware summaries"
+  },
+  {
+   "id": "rq1-learned-k6-w6-fps10-seed42",
+   "inspiration_refs": [],
+   "name": "learned vocabulary K=6",
+   "status": "pruned",
+   "prune_reason": "Validation coverage/stability gate failed",
+   "best_metric": {
+    "name": "silhouette",
+    "value": 0.06108790263533592,
+    "task": "tokens",
+    "split": "val"
+   },
+   "motivation": "Unsupervised development selection; no hypothesis p-value used"
+  },
+  {
+   "id": "rq1-learned-k8-w6-fps10-seed42",
+   "inspiration_refs": [],
+   "name": "learned vocabulary K=8",
+   "status": "selected",
+   "prune_reason": "",
+   "best_metric": {
+    "name": "silhouette",
+    "value": 0.05422184616327286,
+    "task": "tokens",
+    "split": "val"
+   },
+   "motivation": "Unsupervised development selection; no hypothesis p-value used"
+  },
+  {
+   "id": "rq1-learned-k12-w6-fps10-seed42",
+   "inspiration_refs": [],
+   "name": "learned vocabulary K=12",
+   "status": "pruned",
+   "prune_reason": "Lower validation selection score than chosen K",
+   "best_metric": {
+    "name": "silhouette",
+    "value": 0.04723411053419113,
+    "task": "tokens",
+    "split": "val"
+   },
+   "motivation": "Unsupervised development selection; no hypothesis p-value used"
+  },
+  {
+   "id": "rq1-learned-k16-w6-fps10-seed42",
+   "inspiration_refs": [],
+   "name": "learned vocabulary K=16",
+   "status": "pruned",
+   "prune_reason": "Lower validation selection score than chosen K",
+   "best_metric": {
+    "name": "silhouette",
+    "value": 0.04333656653761864,
+    "task": "tokens",
+    "split": "val"
+   },
+   "motivation": "Unsupervised development selection; no hypothesis p-value used"
+  },
+  {
+   "id": "rq1-handcrafted-k6-w6-fps10-seed42",
+   "inspiration_refs": [],
+   "name": "handcrafted vocabulary K=6",
+   "status": "selected",
+   "prune_reason": "",
+   "best_metric": {
+    "name": "silhouette",
+    "value": 0.033035747706890106,
+    "task": "tokens",
+    "split": "val"
+   },
+   "motivation": "Unsupervised development selection; no hypothesis p-value used"
+  },
+  {
+   "id": "rq1-handcrafted-k8-w6-fps10-seed42",
+   "inspiration_refs": [],
+   "name": "handcrafted vocabulary K=8",
+   "status": "pruned",
+   "prune_reason": "Lower validation selection score than chosen K",
+   "best_metric": {
+    "name": "silhouette",
+    "value": 0.029635010287165642,
+    "task": "tokens",
+    "split": "val"
+   },
+   "motivation": "Unsupervised development selection; no hypothesis p-value used"
+  },
+  {
+   "id": "rq1-handcrafted-k12-w6-fps10-seed42",
+   "inspiration_refs": [],
+   "name": "handcrafted vocabulary K=12",
+   "status": "pruned",
+   "prune_reason": "Lower validation selection score than chosen K",
+   "best_metric": {
+    "name": "silhouette",
+    "value": 0.02705649845302105,
+    "task": "tokens",
+    "split": "val"
+   },
+   "motivation": "Unsupervised development selection; no hypothesis p-value used"
+  },
+  {
+   "id": "rq1-handcrafted-k16-w6-fps10-seed42",
+   "inspiration_refs": [],
+   "name": "handcrafted vocabulary K=16",
+   "status": "pruned",
+   "prune_reason": "Validation coverage/stability gate failed",
+   "best_metric": {
+    "name": "silhouette",
+    "value": 0.022065281867980957,
+    "task": "tokens",
+    "split": "val"
+   },
+   "motivation": "Unsupervised development selection; no hypothesis p-value used"
+  }
+ ]
 }

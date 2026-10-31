@@ -5,27 +5,29 @@
     "split": "val",
     "is_baseline": false,
     "metrics": {
-      "RQ1_p_holm": 0.069,
+      "RQ1_p_holm": 0.003,
+      "RQ3_p_holm": 0.3107772005319069,
       "family_size": 3
     },
     "lower_is_better": [
-      "RQ1_p_holm"
+      "RQ1_p_holm",
+      "RQ3_p_holm"
     ],
     "notes": "RQ1 grammar, RQ3 late-by-score coverage, RQ4 persistence. Missing tests retain family slots.",
     "details": {
       "tests": [
         {
           "rq": "RQ1",
-          "p_value": 0.023,
+          "p_value": 0.001,
           "status": "estimated",
-          "p_holm": 0.069,
-          "reject_005": false
+          "p_holm": 0.003,
+          "reject_005": true
         },
         {
           "rq": "RQ3",
-          "p_value": null,
-          "status": "missing_or_conflicting",
-          "p_holm": null,
+          "p_value": 0.15538860026595344,
+          "status": "estimated",
+          "p_holm": 0.3107772005319069,
           "reject_005": false
         },
         {
@@ -37,7 +39,7 @@
         }
       ]
     },
-    "updated": "2026-10-31T15:25:39.870428+00:00"
+    "updated": "2026-10-31T16:11:33.760781+00:00"
   },
   {
     "method": "Predeclared three-test Holm family",
@@ -74,6 +76,6 @@
         }
       ]
     },
-    "updated": "2026-10-31T15:25:39.870477+00:00"
+    "updated": "2026-10-31T16:11:33.760830+00:00"
   }
 ]
