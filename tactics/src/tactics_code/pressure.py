@@ -16,6 +16,34 @@ from .data import iter_compact
 from .stats import bootstrap_ols, cluster_ols, update_confirmatory_family
 
 
+def last_man_arrays(arrays, field_half_length=5120.0):
+    """Literal defensive line in the compact focal-team frame (+y attacks).
+
+    Own slots are 0:3 after extract_replay's team rotation. The minimum
+    own-player y is the defensive-most car, regardless of ball proximity.
+    last_man_y_own = min(y_own) + field_half_length is signed longitudinal
+    distance from the own goal line (not Euclidean distance to goal).
+    last_man_behind_ball = ball_y - min(y_own) is positive when goal-side
+    of the ball. Missing/known-demolished own players invalidate the line:
+    an absent deepest player must not spuriously appear advanced.
+    Unknown demolition duration in legacy compacts remains a measurement
+    limitation; callers must also audit stale tracks/availability.
+    This additive helper does not alter the original pressure estimands.
+    """
+    players = np.asarray(arrays["players"], float)[:, :3]
+    ball = np.asarray(arrays["ball"], float)
+    present = np.isfinite(players[:, :, :3]).all(axis=2)
+    valid = present.all(axis=1) & ~(players[:, :, 7] == 1).any(axis=1)
+    safe_y = np.where(present, players[:, :, 1], np.inf)
+    index = np.argmin(safe_y, axis=1)
+    own_y = safe_y[np.arange(len(players)), index]
+    own_y = np.where(valid, own_y, np.nan)
+    return {"last_man_y_own": own_y + field_half_length,
+            "last_man_behind_ball": ball[:, 1] - own_y,
+            "last_man_index": np.where(valid, index, -1).astype(np.int8),
+            "last_man_valid": valid}
+
+
 def cover_arrays(arrays, field_half_length=5120.0, field_width=8192.0):
     """Planar own-goal-to-ball corridor; heights do not imply a reachable save."""
     ball = np.asarray(arrays["ball"], float)
