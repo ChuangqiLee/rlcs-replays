@@ -1,11 +1,16 @@
 """Development-only defensive-depth risk contrasts and DR diagnostics.
 
-The requested exposure is a state, not the initiation treatment in P4_plan C3.
-Because all six current player coordinates are required controls, depth-tercile
+Default C2 state design: because all six current player coordinates are required controls, depth-tercile
 assignment is deterministic given X. We compute the requested numerical AIPW
-contrasts for audit, but ALWAYS fail the causal positivity gate. Their labels,
+contrasts for audit, but always fail the causal positivity gate for state. Their labels,
 JSON and dose curves describe exploratory state-outcome associations. A fitted
 propensity in (0,1) cannot repair this structural identification failure.
+
+C3 initiation is a separate, observational one-second displacement design with
+full baseline state controls and frozen defender identity. Empirical overlap is
+assessable, not guaranteed. Early-goal exclusion selects one-second survivors;
+causal interpretation requires no unmeasured confounding and noninformative
+landmark selection, in addition to consistency and overlap.
 
 No 2026 directory, metadata, NPZ array, or native replay is opened. Outcomes use
 native decoded goal events and may cross live-segment boundaries. Both focal
@@ -27,6 +32,8 @@ import numpy as np
 import pandas as pd
 from sklearn.ensemble import HistGradientBoostingClassifier
 from sklearn.metrics import brier_score_loss, log_loss
+from joblib import Parallel, delayed, parallel_config
+from threadpoolctl import threadpool_limits
 
 from .common import atomic_json, now
 from .data import DEFAULT_DATA_ROOT
@@ -44,6 +51,23 @@ BALL_FEATURES = [f'ball_{x}' for x in ('x', 'y', 'z', 'vx', 'vy', 'vz')]
 PLAYER_FEATURES = [f'{team}{j}_{x}' for team in ('own', 'opp') for j in range(3)
                    for x in ('x', 'y', 'z', 'vx', 'vy', 'vz', 'boost')]
 NUMERIC_FEATURES = BALL_FEATURES + PLAYER_FEATURES + ['remaining', 'score_diff']
+LABELS = ('y5', 'y10', 'y15', 'ypast10')
+INITIATION_WINDOW = 1.
+DEFAULT_DELTA = 500.
+DEFAULT_DELTA_SENSITIVITIES = (300., 800.)
+OVERLAP_GATES = {'minimum_series': 50, 'minimum_arm_series': 20,
+                 'minimum_unique_goals': 50, 'minimum_anchor_ess': 100,
+                 'minimum_series_ess': 20, 'maximum_extreme_mass': .1,
+                 'maximum_trim_fraction': .2, 'maximum_smd': .1}
+
+
+def parallel_tasks(function, tasks, workers=1, inner_threads=1):
+    if workers == 1:
+        with threadpool_limits(limits=inner_threads):
+            return [function(*args) for args in tasks]
+    with parallel_config(backend='loky', inner_max_num_threads=inner_threads):
+        return Parallel(n_jobs=min(workers, len(tasks)))(delayed(function)(*args) for args in tasks)
+
 
 
 def stable_hash(value):
@@ -111,14 +135,14 @@ def valid_baseline(a):
     return valid
 
 
-def event_labels(anchor_times, focal_team, goals, replay):
+def event_labels(anchor_times, focal_team, goals, replay, followup_delay=0., include_window_goals=False):
     """Competing first-goal labels; unknown truncated tails remain missing."""
     g = goals.sort_values('time')
     gt = g['time'].to_numpy(float)
     teams = g['scoring_team'].to_numpy(int)
     frames = g['frame'].to_numpy(int)
     n = len(anchor_times)
-    after = np.searchsorted(gt, anchor_times, side='right')
+    after = np.searchsorted(gt, anchor_times if include_window_goals else anchor_times+followup_delay, side='right')
     observed_end = float(replay['observed_end_time'])
     observed_start = replay.get('observed_start_time', np.nan)
     terminal_verified = bool(replay.get('terminal_verified', False))
@@ -131,7 +155,7 @@ def event_labels(anchor_times, focal_team, goals, replay):
     gap_ends = np.asarray(json.loads(replay.get('gap_end_times', '[]')), float)
     out = {}
     for horizon in HORIZONS:
-        deadline = np.minimum(anchor_times+horizon, stop)
+        deadline = np.minimum(anchor_times+followup_delay+horizon, stop)
         known = (deadline <= observed_end + 1e-7)
         yy = np.where(known, 0., np.nan)
         goal_id = np.full(n, '', dtype=object)
@@ -162,7 +186,64 @@ def event_labels(anchor_times, focal_team, goals, replay):
     return out
 
 
-def anchors_for_replay(meta, a, goals, replay, seed, spacing=1.):
+def initiation_measurement(a, indices, goals, replay, window=INITIATION_WINDOW):
+    """Fixed-slot displacement; endpoint interpolation never uses reset frames.
+
+    Baseline eligibility is already fixed. Future missingness is an unknown
+    treatment measurement, not a new eligibility rule. Early-goal sensitivity
+    truncates at the final pre-goal live frame and declares the altered exposure.
+    """
+    times = np.asarray(a['time'], float)
+    players = np.asarray(a['players'])
+    identities = last_man_arrays(a)['last_man_index'][indices]
+    sorted_goals = goals.sort_values('time')
+    gt = sorted_goals['time'].to_numpy(float)
+    gaps0 = np.asarray(json.loads(replay.get('gap_start_times', '[]')), float)
+    gaps1 = np.asarray(json.loads(replay.get('gap_end_times', '[]')), float)
+    displacement, sensitivity, early, durations = [], [], [], []
+    for i, identity in zip(indices, identities):
+        start, end = times[i], times[i]+window
+        first = np.searchsorted(gt, start, side='right')
+        hit = first < len(gt) and gt[first] <= end+1e-7
+        early.append(hit)
+        def measure(stop):
+            if stop <= start or stop > times[-1]+1e-7:
+                return np.nan
+            right = int(np.searchsorted(times, stop, side='left'))
+            right = min(right, len(times)-1)
+            left = right if abs(times[right]-stop) < 1e-6 else right-1
+            if left < i or times[right]-times[left] > .160001:
+                return np.nan
+            span = slice(i, right+1)
+            if (not np.all(a['segment'][span] == a['segment'][i]) or
+                    not np.all(a['live'][span]) or np.any(np.diff(times[span]) > .160001) or
+                    np.any((gaps0 < stop) & (gaps1 > start)) or
+                    np.any(players[span, identity, 7] == 1) or
+                    not np.isfinite(players[span, identity, 1]).all()):
+                return np.nan
+            # Only the frozen defender's position is needed after baseline.
+            # No future teammate state, velocity, boost or re-ranking is used.
+            yy = players[[left, right], identity, 1]
+            if not np.isfinite(yy).all() or np.any(players[[left, right], identity, 7] == 1):
+                return np.nan
+            endpoint = yy[0] if left == right else np.interp(stop, times[[left, right]], yy)
+            return float(endpoint-players[i, identity, 1])
+        displacement.append(np.nan if hit else measure(end))
+        if hit:
+            # Compact frame strictly before native goal, in the same live segment.
+            before = np.flatnonzero((times > start) & (times < gt[first]) &
+                                    (a['segment'] == a['segment'][i]) & a['live'].astype(bool))
+            stop = times[before[-1]] if len(before) else start
+            sensitivity.append(measure(stop))
+            durations.append(stop-start)
+        else:
+            sensitivity.append(displacement[-1])
+            durations.append(window)
+    return {'displacement_1s': displacement, 'displacement_including_early': sensitivity,
+            'early_goal': early, 'exposure_observed_seconds': durations}
+
+
+def anchors_for_replay(meta, a, goals, replay, seed, spacing=1., design='state'):
     if meta['season'] not in ALLOWED_SEASONS or meta['split'] not in ('train', 'val'):
         raise ValueError('NEVER read 2026/test')
     if not bool(replay['validated']):
@@ -174,7 +255,7 @@ def anchors_for_replay(meta, a, goals, replay, seed, spacing=1.):
     initial = len(ii)
     valid = valid_baseline(a)
     valid &= (a['remaining'] >= 10) & (a['remaining'] <= 180)
-    valid &= np.isin(a['score_diff'], [-1, 1])
+    valid &= np.isin(a['score_diff'], [-1, 1] if design == 'state' else [-1, 0, 1])
     depths = last_man_arrays(a)
     valid &= depths['last_man_valid']
     valid &= (t >= float(replay['observed_start_time'])) & (t <= float(replay['observed_end_time']))
@@ -204,47 +285,73 @@ def anchors_for_replay(meta, a, goals, replay, seed, spacing=1.):
     df['anchor_time'], df['state_time'], df['frame'] = t[ii], t[ii], a['frame'][ii]
     df['last_man_y_own'] = depths['last_man_y_own'][ii]
     df['last_man_behind_ball'] = depths['last_man_behind_ball'][ii]
+    if design == 'initiation':
+        ids = meta.get('player_ids')
+        ids = json.loads(ids) if isinstance(ids, str) else ids
+        if ids is None or len(ids) != 6:
+            raise ValueError('Initiation requires six stable player IDs in compact metadata')
+        df['last_man_index'] = depths['last_man_index'][ii]
+        df['last_man_id'] = [str(ids[j]) for j in df['last_man_index']]
+        for key, value in initiation_measurement(a, ii, goals, replay).items():
+            df[key] = value
+        df['baseline_goal_side'] = df['last_man_behind_ball'] > 0
+
     df['ball_bin'] = np.digitize(df['ball_y'], BALL_EDGES[1:-1])
     df['dose_500uu'] = np.floor(df['last_man_y_own']/500).astype(int)*500
     df['population'] = np.where(df['remaining'] <= 60,
                                 np.where(df['score_diff'] == -1, 'late_trailing', 'late_leading'),
                                 np.where(df['score_diff'] == -1, 'early_trailing', 'early_leading'))
-    for key, values in event_labels(t[ii], int(meta['focal_team']), goals, replay).items():
+    if design == 'initiation':
+        df.loc[df['score_diff'] == 0, 'population'] = 'tied'
+    for key, values in event_labels(t[ii], int(meta['focal_team']), goals, replay,
+                                   followup_delay=INITIATION_WINDOW if design == 'initiation' else 0.).items():
         df[key] = values
+    if design == 'initiation':
+        for key, values in event_labels(t[ii], int(meta['focal_team']), goals, replay,
+                                       followup_delay=INITIATION_WINDOW, include_window_goals=True).items():
+            df['inclusive_'+key] = values
     return df, {'grid_anchors': initial, 'eligible_anchors': len(df),
                 'score_mismatch_anchors': score_mismatch,
                 'unknown_demolition_state_anchors': int(np.isnan(a['players'][ii, :, 7]).any(axis=1).sum()),
                 'missing_y15': int(df['y15'].isna().sum())}
 
 
-def build_anchors(pairs, goals, replays, artifacts, seed=42, smoke=False, spacing=1., scratch=None):
+def anchor_shard(shard, records, goals, by_replay, artifacts, seed, smoke, spacing, scratch, design):
+    chunks, counts = [], Counter()
+    with tempfile.TemporaryDirectory(prefix='p4-arrays-', dir=scratch or artifacts) as scratch_dir:
+        arrays = None
+        if not smoke:
+            directory = Path(unpack_shard(shard, Path(scratch_dir)))
+            arrays = {k: np.load(directory/(k+'.npy'), mmap_mode='r') for k in REQUIRED}
+        for meta in records:
+            if meta['season'] not in ALLOWED_SEASONS or meta['split'] not in ('train', 'val'):
+                raise ValueError('Forbidden split before compact read')
+            a = read_slice(meta) if smoke else {
+                k: v[int(meta['start']):int(meta['stop'])] for k, v in arrays.items()}
+            rid = meta['replay_id']
+            replay = dict(by_replay[rid], replay_id=rid)
+            gg = goals[goals['replay_id'] == rid]
+            frame, diag = anchors_for_replay(meta, a, gg, replay, seed, spacing, design)
+            if len(frame):
+                chunks.append(frame)
+            counts.update(diag)
+    return chunks, counts
+
+
+def build_anchors(pairs, goals, replays, artifacts, seed=42, smoke=False, spacing=1., scratch=None,
+                  design='state', workers=1):
     by_replay = replays.set_index('replay_id').to_dict('index')
-    goal_groups = {rid: rows for rid, rows in goals.groupby('replay_id')}
     by_shard = defaultdict(list)
     for pair in pairs:
         for meta in pair:
             by_shard[meta['_shard']].append(meta)
+    tasks = [(shard, records, goals[goals['replay_id'].isin({m['replay_id'] for m in records})],
+              by_replay, artifacts, seed, smoke, spacing, scratch, design)
+             for shard, records in sorted(by_shard.items())]
     chunks, counts = [], Counter()
-    for shard, records in sorted(by_shard.items()):
-        with tempfile.TemporaryDirectory(prefix='p4-arrays-', dir=scratch or artifacts) as scratch_dir:
-            arrays = None
-            if not smoke:
-                directory = Path(unpack_shard(shard, Path(scratch_dir)))
-                arrays = {k: np.load(directory/(k+'.npy'), mmap_mode='r') for k in REQUIRED}
-            for meta in records:
-                # This guard is before read_slice/mmap, in addition to inventory.
-                if meta['season'] not in ALLOWED_SEASONS or meta['split'] not in ('train', 'val'):
-                    raise ValueError('Forbidden split before compact read')
-                a = read_slice(meta) if smoke else {
-                    k: v[int(meta['start']):int(meta['stop'])] for k, v in arrays.items()}
-                rid = meta['replay_id']
-                replay = dict(by_replay[rid], replay_id=rid)
-                gg = goal_groups.get(rid, goals.iloc[:0])
-                frame, diag = anchors_for_replay(meta, a, gg, replay, seed, spacing)
-                if len(frame):
-                    chunks.append(frame)
-                counts.update(diag)
-            del arrays
+    for frames, diag in parallel_tasks(anchor_shard, tasks, workers):
+        chunks.extend(frames)
+        counts.update(diag)
     result = pd.concat(chunks, ignore_index=True) if chunks else pd.DataFrame()
     return result, dict(counts)
 
@@ -279,11 +386,76 @@ def freeze_thresholds(df):
                     'middle_or_unsupported_omitted': int(result['treatment'].isna().sum())}
 
 
-def feature_matrix(df, train_mask):
+def freeze_initiation(df, delta=DEFAULT_DELTA, control='third', include_early=False, frozen=None):
+    """Freeze median eligibility using TRAIN baseline states, never movement/outcomes.
+
+    Delta values are prespecified measurement constants, frozen before validation;
+    no goal/outcome is used to select them. Training support is recorded for each.
+    """
+    if frozen is None:
+        train = df[df['split'] == 'train']
+        table = {}
+        for ball_bin in range(len(BALL_EDGES)-1):
+            part = train[train['ball_bin'] == ball_bin]
+            entry = {'rows': len(part), 'series': part['series_id'].nunique(), 'supported': False}
+            if len(part) >= 6 and part['series_id'].nunique() >= 2:
+                weights = 1/part.groupby('series_id')['series_id'].transform('size').to_numpy()
+                order = np.argsort(part['last_man_y_own'].to_numpy(), kind='stable')
+                xx, ww = part['last_man_y_own'].to_numpy()[order], weights[order]
+                entry.update(supported=True, median=float(np.interp(.5, (np.cumsum(ww)-.5*ww)/ww.sum(), xx)))
+            table[str(ball_bin)] = entry
+    else:
+        table = frozen['bins']
+    result = df.copy()
+    eligible = np.zeros(len(df), bool)
+    supported = np.zeros(len(df), bool)
+    for key, entry in table.items():
+        if entry['supported']:
+            bb = (df['ball_bin'] == int(key)).to_numpy()
+            supported |= bb
+            eligible |= bb & (df['last_man_y_own'].to_numpy() < entry['median']) & df['baseline_goal_side'].to_numpy(bool)
+    cutoff = delta/3 if control == 'third' else 0.
+    movement = df['displacement_including_early' if include_early else 'displacement_1s'].to_numpy(float)
+    observed = np.isfinite(movement)
+    allowed = eligible & (include_early | ~df['early_goal'].to_numpy(bool))
+    result['baseline_eligible'] = eligible
+    result['followup_extra_seconds'] = INITIATION_WINDOW if include_early else 0.
+    result['treatment'] = np.nan
+    result.loc[allowed & observed & (movement < cutoff), 'treatment'] = 0
+    result.loc[allowed & observed & (movement >= delta), 'treatment'] = 1
+    if include_early:
+        for label in LABELS:
+            result[label] = df['inclusive_'+label]
+        for horizon in HORIZONS:
+            result['goal_id'+str(horizon)] = df['inclusive_goal_id'+str(horizon)]
+    counts = {'baseline_eligible': int(eligible.sum()), 'unsupported_baseline_bin': int((~supported).sum()),
+              'not_goal_side': int((~df['baseline_goal_side']).sum()),
+              'early_goal_baseline_eligible': int((eligible & df['early_goal'].to_numpy(bool)).sum()),
+              'early_goal_excluded': 0 if include_early else int((eligible & df['early_goal'].to_numpy(bool)).sum()),
+              'unknown_exposure': int((allowed & ~observed).sum()),
+              'ambiguous_middle': int((allowed & observed & (movement >= cutoff) & (movement < delta)).sum()),
+              'control': int((result['treatment'] == 0).sum()), 'advance': int((result['treatment'] == 1).sum())}
+    counts['by_split'] = {split: {'eligible': int((eligible & df['split'].eq(split).to_numpy()).sum()),
+                                      'arms': result.loc[df['split'] == split, 'treatment'].value_counts().to_dict()}
+                          for split in ('train', 'val')}
+    return result, {'fit_split': 'train', 'fit_seasons': list(TRAIN_SEASONS), 'bins': table,
+                    'weighting': 'equal series within ball bin among all baseline candidate states; goal-side eligibility applied separately',
+                    'delta_uu': delta, 'control_displacement_below_uu': cutoff,
+                    'threshold_selection': 'prespecified before validation/outcome access; TRAIN baseline median and TRAIN arm support; no outcome optimization',
+                    'include_early_goals': include_early, 'counts': counts}
+
+
+def feature_matrix(df, train_mask, design='state'):
     regions = sorted(set(df.loc[train_mask, 'region']))
-    names = list(NUMERIC_FEATURES) + [f'region={region}' for region in regions]
-    x = np.column_stack([df[NUMERIC_FEATURES].to_numpy(dtype=np.float32)] +
-                        [(df['region'] == region).to_numpy(dtype=np.float32) for region in regions])
+    numeric = NUMERIC_FEATURES + (['last_man_y_own', 'last_man_behind_ball'] if design == 'initiation' else [])
+    names = list(numeric) + [f'region={region}' for region in regions]
+    columns = [df[numeric].to_numpy(dtype=np.float32)] + [
+        (df['region'] == region).to_numpy(dtype=np.float32) for region in regions]
+    if design == 'initiation':
+        identities = sorted(set(df.loc[train_mask, 'last_man_id']))
+        names.extend(f'last_man_id={identity}' for identity in identities)
+        columns.extend((df['last_man_id'] == identity).to_numpy(dtype=np.float32) for identity in identities)
+    x = np.column_stack(columns)
     if not np.isfinite(x).all():
         raise ValueError('Nonfinite baseline controls; no silent covariate imputation')
     return x, names, regions
@@ -348,11 +520,11 @@ def fit_predict(train, target, x, a, df, seed, iterations):
     return pred, diag
 
 
-def nuisance_predictions(df, folds=3, seed=42, iterations=80):
+def nuisance_predictions(df, folds=3, seed=42, iterations=80, design='state', workers=1):
     train_mask = (df['split'] == 'train').to_numpy()
     train = np.flatnonzero(train_mask)
     val = np.flatnonzero(~train_mask)
-    x, feature_names, regions = feature_matrix(df, train_mask)
+    x, feature_names, regions = feature_matrix(df, train_mask, design)
     a = df['treatment'].to_numpy(int)
     pred = np.full((len(df), 25), np.nan)
     series = sorted(df.iloc[train]['series_id'].unique(), key=lambda s: stable_hash(f'{seed}:{s}:fold'))
@@ -364,6 +536,10 @@ def nuisance_predictions(df, folds=3, seed=42, iterations=80):
                 'hyperparameters': {'learning_rate': .06, 'max_leaf_nodes': 15, 'max_depth': 4,
                                     'min_samples_leaf': 30, 'l2_regularization': 5., 'early_stopping': False},
                 'fits': [], 'validation_rows_used_in_fit': 0}
+    tasks, destinations = [], []
+    if design == 'initiation':
+        known = set(df.loc[train_mask, 'last_man_id'])
+        manifest['unknown_validation_last_man_id_rows'] = int((~df.loc[~train_mask, 'last_man_id'].isin(known)).sum())
     if folds >= 2:
         assignment = {s: i % folds for i, s in enumerate(series)}
         row_fold = df['series_id'].map(assignment).fillna(-1).to_numpy(int)
@@ -372,16 +548,19 @@ def nuisance_predictions(df, folds=3, seed=42, iterations=80):
             heldout = np.flatnonzero(train_mask & (row_fold == fold))
             fit = np.flatnonzero(train_mask & (row_fold != fold))
             assert not set(df.iloc[fit]['series_id']) & set(df.iloc[heldout]['series_id'])
-            pp, diag = fit_predict(fit, heldout, x, a, df, seed+fold*100, iterations)
-            pred[heldout] = pp
-            manifest['fits'].append(dict(diag, fold=fold, target='train_oof'))
+            tasks.append((fit, heldout, x, a, df, seed+fold*100, iterations))
+            destinations.append((heldout, {'fold': fold, 'target': 'train_oof'}))
     else:
         manifest['train_oof_failure'] = 'fewer than two training series'
     if len(val):
         assert not set(df.iloc[train]['series_id']) & set(df.iloc[val]['series_id'])
-        pp, diag = fit_predict(train, val, x, a, df, seed+10000, iterations)
-        pred[val] = pp
-        manifest['fits'].append(dict(diag, target='val'))
+        tasks.append((train, val, x, a, df, seed+10000, iterations))
+        destinations.append((val, {'target': 'val'}))
+    if tasks:
+        for (pp, diag), (indices, context) in zip(parallel_tasks(fit_predict, tasks, min(workers, len(tasks)),
+                    max(1, workers//len(tasks))), destinations):
+            pred[indices] = pp
+            manifest['fits'].append(dict(diag, **context))
     return pred, x, manifest
 
 
@@ -420,7 +599,7 @@ def risk_ratio_summary(r0, r1, draws0, draws1):
     good = (draws0 > 0) & (draws0 <= 1) & (draws1 > 0) & (draws1 <= 1)
     rr = r1/r0
     out = {'rr': rr, 'e_value': e_value(rr), 'valid_bootstrap_replicates': int(good.sum()),
-           'interpretation': 'RR sensitivity descriptor only; cannot cure structural positivity failure'}
+           'interpretation': 'RR sensitivity descriptor only; cannot establish exchangeability or cure failed overlap'}
     if len(draws0) >= 20 and good.all():
         ci = np.quantile(draws1[good]/draws0[good], [.025, .975])
         nearest = 1. if ci[0] <= 1 <= ci[1] else (ci[0] if ci[0] > 1 else ci[1])
@@ -459,10 +638,11 @@ def balance_diagnostics(x, a, e, series, names):
                         'after': standardized(moments[1][2][j]-moments[0][2][j])})
     values = [abs(r['after']) for r in records if r['after'] is not None]
     return {'arms': summaries, 'covariates': records, 'max_abs_smd_after': max(values, default=None),
-            'balanced_below_0_1': bool(values and max(values) < .1)}
+            'undefined_smd_count': sum(r['after'] is None for r in records),
+            'balanced_below_0_1': bool(values and max(values) < OVERLAP_GATES['maximum_smd'] and all(r['after'] is not None for r in records))}
 
 
-def estimate_contrast(df, pred, x, feature_names, label, trim, repeats, seed):
+def estimate_contrast(df, pred, x, feature_names, label, trim, repeats, seed, design='state'):
     label_index = {'y5': 0, 'y10': 1, 'y15': 2, 'ypast10': 3}[label]
     y = df[label].to_numpy(float)
     a = df['treatment'].to_numpy(int)
@@ -473,8 +653,10 @@ def estimate_contrast(df, pred, x, feature_names, label, trim, repeats, seed):
     result = {'status': 'insufficient_support', 'outcome': label, 'trim': [trim, 1-trim],
               'input_rows': len(df), 'complete_rows': int(complete.sum()), 'retained_rows': int(keep.sum()),
               'trim_fraction': float(1-keep.sum()/max(1, complete.sum())),
-              'causal_identification': False, 'structural_positivity': False,
-              'estimand': 'exploratory model-dependent numerical DR contrast in retained states; no identified intervention or standardized causal association',
+              'causal_identification': False, 'structural_positivity': design == 'initiation',
+              'estimand': ('observational one-second survivor landmark contrast among retained eligible baseline states; advance versus stay/retreat'
+                           if design == 'initiation' else 'exploratory model-dependent numerical DR state contrast; no identified intervention'),
+              'causal_assumptions': 'No unmeasured confounding, consistency of the movement proxy, noninformative landmark selection/measurement/censoring, and independence across series. Observational, not randomized.',
               'numeric_propensity_clip_epsilon': 1e-6,
               'missing_outcome_rows': int(np.isnan(y).sum()),
               'censoring': 'Complete observed labels only; no independent-censoring assumption asserted. Missing-label worst-case risk bounds are descriptive.'}
@@ -530,6 +712,8 @@ def estimate_contrast(df, pred, x, feature_names, label, trim, repeats, seed):
     point, interval, draws = cluster_bootstrap(values, series, repeats, seed)
     names = ['deep_for', 'deep_against', 'advanced_for', 'advanced_against',
              'difference_for', 'difference_against', 'deep_net_gd', 'advanced_net_gd', 'difference_net_gd']
+    if design == 'initiation':
+        names = [name.replace('deep_', 'stay_').replace('advanced_', 'advance_') for name in names]
     result['adjusted'] = {name: {'estimate': point[j], 'ci95': interval[:, j]} for j, name in enumerate(names)}
     result['exposure_weighted_secondary'] = dict(zip(names, values.mean(axis=0)))
     result['naive'] = {'target': 'Each arm averages its arm-present series; arm targets may differ from the common retained-series DR target'}
@@ -549,17 +733,28 @@ def estimate_contrast(df, pred, x, feature_names, label, trim, repeats, seed):
             for code, outcome in enumerate(OUTCOMES, 1):
                 unique[f'{arm}_{outcome}'] = len(set(goal_id[(a == arm) & (y == code)])- {''})
     result['unique_goals_by_arm'] = unique
-    result['feasibility_gates'] = {'at_least_50_series': result['series'] >= 50,
-                                   'at_least_20_series_each_arm': min(result['arm_series'].values()) >= 20,
-                                   'at_least_50_unique_goals_each_arm_outcome': bool(unique) and min(unique.values()) >= 50,
+    result['feasibility_gates'] = {'at_least_50_series': result['series'] >= OVERLAP_GATES['minimum_series'],
+                                   'at_least_20_series_each_arm': min(result['arm_series'].values()) >= OVERLAP_GATES['minimum_arm_series'],
+                                   'at_least_50_unique_goals_each_arm_outcome': bool(unique) and min(unique.values()) >= OVERLAP_GATES['minimum_unique_goals'],
                                    'smd_below_0_1': result['balance'].get('balanced_below_0_1', False),
-                                   'structural_positivity': False}
-    result['status'] = 'computed_association_causal_gate_failed'
+                                   'structural_positivity': design == 'initiation'}
+    balance = result['balance']
+    result['overlap_gates'] = {
+        'extreme_mass_at_most_0_1': result['propensity_before_trim']['equal_series_fraction_outside_0_05_0_95'] <= OVERLAP_GATES['maximum_extreme_mass'],
+        'trim_fraction_at_most_0_2': result['trim_fraction'] <= OVERLAP_GATES['maximum_trim_fraction'],
+        'anchor_ess_at_least_100_each_arm': min(v['anchor_weight_ess'] for v in balance['arms'].values()) >= OVERLAP_GATES['minimum_anchor_ess'],
+        'series_ess_at_least_20_each_arm': min(v['series_weight_ess'] for v in balance['arms'].values()) >= OVERLAP_GATES['minimum_series_ess'],
+        'all_smd_below_0_1': balance['balanced_below_0_1']}
+    result['causal_identification'] = bool(design == 'initiation' and label != 'ypast10' and
+                                          all(result['feasibility_gates'].values()) and all(result['overlap_gates'].values()))
+    result['status'] = ('computed_observational_contrast_overlap_gates_passed_conditional_on_assumptions'
+                        if result['causal_identification'] else 'computed_association_causal_gate_failed')
     if label == 'ypast10':
         result['negative_control'] = {'events': int(np.count_nonzero(y)), 'degenerate': bool(np.count_nonzero(y) == 0),
                                       'caution': 'Behavior may respond to past goals; absence of signal does not validate exchangeability'}
     if label != 'ypast10':
-        horizon = int(label[1:])
+        horizon = int(label[1:]) + (float(d['followup_extra_seconds'].iloc[0]) if 'followup_extra_seconds' in d else 0.)
+        result['followup_duration_seconds'] = horizon
         result['net_gd_per_horizon_second'] = point[8]/horizon
         result['net_gd_per_horizon_second_definition'] = 'delta expected first-goal differential / fixed horizon; not pushed-up exposure seconds'
     return result
@@ -610,25 +805,34 @@ def dose_curve(df, repeats, seed):
     return rows
 
 
-def analyze(df, pred, x, nuisance, repeats, seed):
-    all_results = {}
+def analyze_population(sub, pred, x, nuisance, repeats, seed, design, secondary_repeats):
+    if not len(sub):
+        return {'status': 'no_anchors'}
+    block = {'predictive': predictive_diagnostics(sub, pred), 'contrasts': {}}
+    for label in ('y10', 'y5', 'y15', 'ypast10'):
+        draws = secondary_repeats if label in ('y5', 'y15') else repeats
+        for trim in (0., .05, .1):
+            key = f'{label}/trim_{trim:.2f}'
+            block['contrasts'][key] = estimate_contrast(
+                sub, pred, x, nuisance['feature_names'], label, trim, draws, seed, design)
+            block['contrasts'][key]['bootstrap_repeats'] = draws
+    return block
+
+
+def analyze(df, pred, x, nuisance, repeats, seed, design='state', workers=1, secondary_repeats=None):
+    tasks, keys = [], []
     for split in ('train', 'val'):
-        sm = (df['split'] == split).to_numpy()
-        for population in ('late_trailing', 'late_leading', 'early_trailing', 'early_leading'):
-            mask = sm & (df['population'] == population).to_numpy()
+        populations = ['late_trailing', 'late_leading', 'early_trailing', 'early_leading']
+        if design == 'initiation':
+            populations += ['tied', 'early_play']
+        for population in populations:
+            pp = (df['remaining'] > 60).to_numpy() if population == 'early_play' else (df['population'] == population).to_numpy()
+            mask = (df['split'] == split).to_numpy() & pp
             sub = df.loc[mask].reset_index(drop=True)
-            if not len(sub):
-                all_results[f'{split}/{population}'] = {'status': 'no_anchors'}
-                continue
-            block = {'predictive': predictive_diagnostics(sub, pred[mask]), 'contrasts': {}}
-            for label in ('y10', 'y5', 'y15', 'ypast10'):
-                for trim in (0., .05, .1):
-                    key = f'{label}/trim_{trim:.2f}'
-                    block['contrasts'][key] = estimate_contrast(
-                        sub, pred[mask], x[mask], nuisance['feature_names'], label, trim, repeats,
-                        seed+stable_hash(f'{split}:{population}:{label}') % 100000)
-            all_results[f'{split}/{population}'] = block
-    return all_results
+            keys.append(f'{split}/{population}')
+            tasks.append((sub, pred[mask], x[mask], nuisance, repeats,
+                          seed+stable_hash(f'{split}:{population}') % 100000, design, secondary_repeats or repeats))
+    return dict(zip(keys, parallel_tasks(analyze_population, tasks, workers)))
 
 
 def self_test():
@@ -682,6 +886,8 @@ def self_test():
             pass
         else:
             raise AssertionError('2026/test path guard failed')
+    from .pushup_dr_tests import run_tests
+    run_tests()
     print(json.dumps({'self_test': 'passed', 'checks': ['first-goal endpoints', 'competing identities',
                      'terminal and gap censoring', 'regulation end not censoring', 'series grid',
                      'equal-series bootstrap', 'RR E-value', 'train-only thresholds/regions',
@@ -690,6 +896,11 @@ def self_test():
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--design', choices=('state', 'initiation'), default='state')
+    parser.add_argument('--workers', type=int, default=1)
+    parser.add_argument('--delta', type=float, default=DEFAULT_DELTA)
+    parser.add_argument('--delta-sensitivities', type=float, nargs='*', default=list(DEFAULT_DELTA_SENSITIVITIES))
+    parser.add_argument('--secondary-bootstrap', type=int, default=None, help='5/15-second horizons only; primary stays at --bootstrap')
     parser.add_argument('--compact', type=Path, default=None)
     parser.add_argument('--artifacts', type=Path)
     parser.add_argument('--scratch', type=Path, help='Temporary one-shard unpack/mmap directory')
@@ -712,6 +923,16 @@ def main(argv=None):
         parser.error('--artifacts is required outside --self-test')
     if args.scratch is not None:
         guard_path(args.scratch).mkdir(parents=True, exist_ok=True)
+    if args.workers < 1 or args.delta <= 0 or any(d <= 0 for d in args.delta_sensitivities):
+        parser.error('workers and displacement thresholds must be positive')
+    if args.secondary_bootstrap is not None and args.secondary_bootstrap < 2:
+        parser.error('secondary-bootstrap must be >=2')
+    if args.max_replays is not None and args.max_replays > 10:
+        parser.error('Bounded login smoke is capped at ten replays; omit --max-replays for batch')
+    if args.max_replays is not None and args.workers != 1:
+        parser.error('Login smoke requires --workers 1')
+    if args.design == 'initiation' and args.out == Path('results/pushup_dr.json'):
+        args.out = Path('results/pushup_dr_initiation.json')
     if args.folds < 2 or args.bootstrap < 2 or args.iterations < 1:
         parser.error('folds/bootstrap >=2 and iterations >=1 required')
     started = time.perf_counter()
@@ -733,7 +954,8 @@ def main(argv=None):
     events_seconds = time.perf_counter()-clock
     clock = time.perf_counter()
     anchors, anchor_audit = build_anchors(pairs, goals, replays, artifacts, args.seed,
-                                         smoke=args.max_replays is not None, spacing=args.anchor_spacing, scratch=args.scratch)
+                                         smoke=args.max_replays is not None, spacing=args.anchor_spacing, scratch=args.scratch,
+                                         design=args.design, workers=args.workers)
     anchor_seconds = time.perf_counter()-clock
     code_root = Path(__file__).resolve().parents[2]
     code_hashes = {name: hashlib.sha256((Path(__file__).parent/name).read_bytes()).hexdigest()
@@ -748,9 +970,13 @@ def main(argv=None):
                'input_shard_stat': {str(path): {'bytes': Path(path).stat().st_size, 'mtime_ns': Path(path).stat().st_mtime_ns}
                                     for path in sorted({row['_shard'] for row in selected})}},
                'parameters': vars(args),
-               'analysis': 'P4 C2 state-risk association plus requested numerical DR diagnostics; C3 initiation not identified',
-               'causal_effect_identified': False,
-               'structural_positivity_failure': 'Treatment is a deterministic function of included own player y and ball y. Approximate fitted overlap cannot restore positivity.',
+               'design': args.design,
+               'analysis': ('P4 C2 state-risk association and numerical DR diagnostics' if args.design == 'state' else
+                            'P4 C3 one-second fixed-defender initiation; survivor-selected observational landmark analysis'),
+               'causal_effect_identified': False, 'causal_identification': False,
+               'structural_positivity_failure': ('Treatment is a deterministic function of included own player y and ball y. Approximate fitted overlap cannot restore positivity.' if args.design == 'state' else None),
+               'causal_assumptions': 'Observational: no unmeasured confounding, consistency, noninformative landmark selection/measurement/censoring, and independence across series. Passing overlap gates is necessary, never proof of these assumptions.',
+               'overlap_gate_thresholds': OVERLAP_GATES,
                'live_3v3_definition': 'Six finite position/velocity/boost tracks; known demolished and past-stale tracks excluded. Unknown demolition duration remains unverified; no claim of audited 3v3 availability.',
                'input_compact': str(compact), 'selected_replay_count': len(ids),
                'selected_replay_sha256': hashlib.sha256('\n'.join(ids).encode()).hexdigest(),
@@ -762,51 +988,88 @@ def main(argv=None):
                                'replays': len(replays), 'goals': len(goals)},
                'anchor_grid': {'spacing_seconds': args.anchor_spacing, 'hash_unit': 'series',
                                'state': 'fixed nominal grid snapped down to last compact frame (<=0.15s); actual state time is exposure/eligibility/followup origin',
-                               'population': 'regulation, exact score +/-1, 10-180 seconds remaining'},
-               'outcomes': '(t,t+T] first focal/opponent goal, T=5/10/15; certified game end absorbing; regulation end does not censor; unknown truncation missing; live/reset boundaries do not censor goals',
-               'bootstrap': {'repeats': args.bootstrap, 'unit': 'whole series',
+                               'population': ('regulation, exact score +/-1, 10-180 seconds remaining' if args.design == 'state' else
+                                              'regulation, score -1/0/+1, 10-180 s; goal-side and below TRAIN median L within ball-y bin at t')},
+               'outcomes': ('(t,t+T] first focal/opponent goal, T=5/10/15; certified game end absorbing; regulation end does not censor; unknown truncation missing; live/reset boundaries do not censor goals' if args.design == 'state' else
+                            '(t+1,t+1+T] first goal, T=10 primary 5/15 secondary; primary excludes/counts any goal in (t,t+1]; early-goal sensitivity includes first goal in (t,t+1+T] with movement truncated at pre-goal live frame'),
+               'bootstrap': {'repeats': args.bootstrap, 'secondary_horizon_repeats': args.secondary_bootstrap or args.bootstrap, 'unit': 'whole series',
                               'weighting': 'within-series mean then equal-series mean',
                               'nuisances': 'fixed OOF or external predictions; cluster resampling of influence contributions; no nuisance refit; conditional on training data and frozen thresholds'},
-               'multiplicity': 'Exploratory 2025 development. No confirmatory p-values or promotion to P4 C3; 5/15s, strata and dose are sensitivities.',
+               'multiplicity': 'Exploratory 2025 development; late-trailing 10s primary. No confirmatory p-values; 5/15s, strata, thresholds, strict-retreat and early-goal inclusion are sensitivities.',
                'timing_seconds': {'events': events_seconds, 'anchors': anchor_seconds}}
     metrics = {'replays': len(ids), 'validated_replays': int(replays['validated'].sum()),
                'anchors': len(anchors), 'causal_identification_gate_passed': 0.}
     if len(anchors):
-        anchors, thresholds = freeze_thresholds(anchors)
-        details['thresholds'] = thresholds
-        anchors.to_parquet(artifacts/'anchors.parquet', index=False)
-        extremes = anchors[anchors['treatment'].notna()].reset_index(drop=True)
-        details['dose_curve_val'] = dose_curve(anchors[anchors['split'] == 'val'], args.bootstrap, args.seed)
-        if len(extremes) and (extremes['split'] == 'train').any():
-            clock = time.perf_counter()
-            pred, x, nuisance = nuisance_predictions(extremes, args.folds, args.seed, args.iterations)
-            details['timing_seconds']['nuisances'] = time.perf_counter()-clock
-            details['nuisances'] = nuisance
-            np.savez_compressed(artifacts/'nuisance_predictions.npz', predictions=pred)
-            extremes[['replay_id', 'series_id', 'focal_team', 'anchor_time', 'split', 'population', 'treatment']].to_parquet(
-                artifacts/'prediction_rows.parquet', index=False)
-            clock = time.perf_counter()
-            details['estimates'] = analyze(extremes, pred, x, nuisance, args.bootstrap, args.seed)
-            details['timing_seconds']['inference'] = time.perf_counter()-clock
-            main_result = details['estimates'].get('val/late_trailing', {}).get('contrasts', {}).get('y10/trim_0.05', {})
-            for key in ('difference_for', 'difference_against', 'difference_net_gd'):
-                value = main_result.get('adjusted', {}).get(key, {}).get('estimate')
-                if value is not None and np.isfinite(value):
-                    metrics['exploratory_dr_'+key] = value
-            details['status'] = main_result.get('status', 'insufficient_primary_validation_support')
-        else:
-            details['status'] = 'insufficient_training_extreme_support'
+        variants = [('primary', args.delta, 'third', False)]
+        if args.design == 'initiation':
+            variants += [(f'delta_{delta:g}', delta, 'third', False) for delta in args.delta_sensitivities if delta != args.delta]
+            variants += [('strict_retreat', args.delta, 'retreat', False),
+                         ('including_early_goals', args.delta, 'third', True)]
+        details['sensitivity_analyses'] = {}
+        frozen = None
+        for variant, delta, control, early in variants:
+            if args.design == 'state':
+                assigned, thresholds = freeze_thresholds(anchors)
+            else:
+                assigned, thresholds = freeze_initiation(anchors, delta, control, early, frozen)
+                if frozen is None:
+                    frozen = thresholds
+            report = details if variant == 'primary' else {}
+            report['thresholds'] = thresholds
+            if early:
+                report['exposure_caution'] = ('Sensitivity changes treatment to displacement over the observed pre-goal portion of the 1s window for early goals. '
+                    'It includes early goals as outcomes, never uses reset coordinates, and cannot recover unobserved full-second counterfactual movement. '
+                    'Unknown and ambiguous exposure remains counted, not silently assigned to control.')
+            destination = artifacts if variant == 'primary' else artifacts/variant
+            destination.mkdir(parents=True, exist_ok=True)
+            assigned.to_parquet(destination/'anchors.parquet', index=False)
+            extremes = assigned[assigned['treatment'].notna()].reset_index(drop=True)
+            if args.design == 'state':
+                details['dose_curve_val'] = dose_curve(assigned[assigned['split'] == 'val'], args.bootstrap, args.seed)
+            if len(extremes) and (extremes['split'] == 'train').any():
+                clock = time.perf_counter()
+                pred, x, nuisance = nuisance_predictions(extremes, args.folds, args.seed, args.iterations,
+                                                         args.design, args.workers)
+                nuisance_seconds = time.perf_counter()-clock
+                report['nuisances'] = nuisance
+                np.savez_compressed(destination/'nuisance_predictions.npz', predictions=pred)
+                extremes[['replay_id', 'series_id', 'focal_team', 'anchor_time', 'split', 'population', 'treatment']].to_parquet(
+                    destination/'prediction_rows.parquet', index=False)
+                clock = time.perf_counter()
+                report['estimates'] = analyze(extremes, pred, x, nuisance, args.bootstrap, args.seed,
+                                             args.design, args.workers, args.secondary_bootstrap)
+                inference_seconds = time.perf_counter()-clock
+                for phase, seconds in [('nuisances', nuisance_seconds), ('inference', inference_seconds)]:
+                    details['timing_seconds'][phase] = details['timing_seconds'].get(phase, 0.) + seconds
+                if variant != 'primary':
+                    report['timing_seconds'] = {'nuisances': nuisance_seconds, 'inference': inference_seconds}
+                main_result = report['estimates'].get('val/late_trailing', {}).get('contrasts', {}).get('y10/trim_0.05', {})
+                report['status'] = main_result.get('status', 'insufficient_primary_validation_support')
+                if variant == 'primary':
+                    for key in ('difference_for', 'difference_against', 'difference_net_gd'):
+                        value = main_result.get('adjusted', {}).get(key, {}).get('estimate')
+                        if value is not None and np.isfinite(value):
+                            metrics['exploratory_dr_'+key] = value
+                    identified = bool(main_result.get('causal_identification', False))
+                    details['causal_effect_identified'] = identified
+                    details['causal_identification'] = identified
+                    metrics['causal_identification_gate_passed'] = float(identified)
+            else:
+                report['status'] = 'insufficient_training_treatment_support'
+            if variant != 'primary':
+                details['sensitivity_analyses'][variant] = report
     else:
         details['status'] = 'no_eligible_anchors'
     details['timing_seconds']['total'] = time.perf_counter()-started
-    result = {'method': 'train-frozen HGB / series-cross-fitted AIPW state-contrast audit',
+    result = {'method': 'train-frozen HGB / series-cross-fitted AIPW '+args.design+' audit',
               'task': 'pushup_dr', 'split': 'val', 'is_baseline': False,
               'metrics': metrics, 'details': details, 'updated': now(),
               'notes': ('FEASIBILITY SMOKE ONLY: bounded replay sample, no research conclusion or identified causal effect.'
                         if args.max_replays is not None else
-                        'Exploratory development model-dependent contrasts; structural positivity fails for depth treatment with full geometry controls.')}
+                        ('Exploratory development model-dependent contrasts; structural positivity fails for depth treatment with full geometry controls.' if args.design == 'state' else
+                         'Observational initiation landmark contrasts; no-unmeasured-confounding and noninformative selection assumptions remain unverified even when overlap gates pass.'))}
     atomic_json(guard_path(args.out), result)
-    atomic_json(artifacts/'pushup_dr.json', result)
+    atomic_json(artifacts/('pushup_dr_initiation.json' if args.design == 'initiation' else 'pushup_dr.json'), result)
     print(json.dumps({'status': details['status'], 'metrics': metrics,
                       'timing_seconds': details['timing_seconds'], 'output': str(args.out)}))
     return result
