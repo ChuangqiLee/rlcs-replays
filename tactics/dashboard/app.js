@@ -48,6 +48,14 @@
     if (typeof value === 'string' && /^\d{4}-\d\d-\d\d$/.test(value)) return value;
     return value ? '时间待规范（需时区）' : '—';
   }
+  function ago(value) {
+    const date = dateValue(value); if (!date) return '';
+    const sec = Math.round((Date.now() - date.getTime()) / 1000);
+    if (sec < 0) return '';
+    if (sec < 60) return '刚刚'; if (sec < 3600) return Math.floor(sec/60) + ' 分钟前';
+    if (sec < 86400) return Math.floor(sec/3600) + ' 小时前'; return Math.floor(sec/86400) + ' 天前';
+  }
+  function when(value) { const a = ago(value); return formatTime(value) + (a ? ` <span class="fresh">（${a}）</span>` : ''); }
   function formatLogs(text) {
     return String(text || '').replace(/\b\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:?\d{2})\b/g, value => formatTime(value));
   }
@@ -116,22 +124,27 @@
     const metric = group && (group.metrics.includes(state.resultMetric) && metricStats(group,state.resultMetric).delta != null ? state.resultMetric : group.metrics.find(m => metricStats(group,m).delta != null));
     const best = group ? metricStats(group,metric) : null;
     const dataset = obj(state.data.dataset), totals = obj(dataset.totals);
+    const nextPhase = phases.find(p => p.status === 'not_started');
+    const runJobs = queue.filter(row => ['RUNNING','R','COMPLETING','CG','PENDING','PD'].includes(row.state));
+    const banner = `<div class="now-banner"><section class="card now-main"><div class="now-label">现在 · 当前阶段</div><div class="now-title">${current ? esc(current.id + ' ' + current.name) : '等待阶段状态'} ${current ? badge(current.status) : ''}</div><p>${esc(current && current.conclusion || '暂无阶段说明')}</p><div class="fresh">阶段状态更新于 ${when(phasesData.updated)}</div></section><section class="card now-next"><div class="now-label">下一步</div><div class="now-title">${nextPhase ? esc(nextPhase.id + ' ' + nextPhase.name) : '全部阶段已开始'}</div><p>${esc(nextPhase && nextPhase.conclusion || (nextPhase ? '计划中，尚未开始' : ''))}</p></section><section class="card now-jobs"><div class="now-label">集群作业</div><div class="now-title">${slurmReady ? `${running} 运行 · ${pending} 排队` : '队列暂不可用'}</div>${slurmReady ? (runJobs.length ? runJobs.slice(0,4).map(j => `<div class="job-line">${esc(j.jobid)} ${esc(j.name)} · ${esc(statusNames[j.state] || j.state)} · ${esc(j.time)} / ${esc(j.limit)}</div>`).join('') : '<p class="muted">当前没有作业在跑或排队</p>') : ''}<div class="fresh">队列读取于 ${when(slurm.updated)}</div></section></div>`;
+    const resultRows = resultGroups().flatMap(g => g.rows).filter(r => r.task !== 'stage');
+    const withNumbers = resultRows.filter(r => !r.pendingLabel).length;
     const kpis = kpi('当前研究阶段',current ? esc(current.id) : '—',current ? esc(current.name) : '等待阶段状态','cyan','01') +
       kpi('SLURM 运行 / 等待',slurmReady ? `${running}<span class="unit">/ ${pending}</span>` : '—',slurmReady ? '当前用户的实时作业' : '队列状态暂不可用','','02') +
       kpi('创新点存活 / 剪枝',state.data.ideas && !apiError('ideas') ? `${alive}<span class="unit">/ ${pruned}</span>` : '—','<a href="#/ideas">探索候选算法 ↗</a>','teal','03') +
-      kpi('最佳结果 · Δ 基线',best ? `<span class="${best.delta >= 0 ? 'positive':'negative'}">${signed(best.delta)}</span>` : '—',best ? `${esc(group.task)} / ${esc(group.split)} · ${esc(metric)}<br>本方法 ${number(best.ours)} · 基线 ${number(best.baseline)}` : '等待同任务、同划分对比','amber','04') +
+      kpi('实验结果 已出数 / 计划',`${withNumbers}<span class="unit">/ ${resultRows.length}</span>`,'<a href="#/results">按研究问题查看 ↗</a>','amber','04') +
       kpi('论文完成度',paper == null ? '—' : `${number(Math.round(paper))}<span class="unit">%</span>`,paper == null ? '等待论文章节状态' : '按章节平均进度' + progressBar(paper),'','05');
     const phaseDefaults = ['环境','进度大屏','文献与创新','实验','达标即停','论文'];
     const timeline = `<div class="timeline">${phaseDefaults.map((name,index) => {
       const phase = phases.find(p => p.id === 'P'+index) || {id:'P'+index,name,status:'unknown'};
       return `<div class="phase ${esc(String(phase.status).replace(/[^a-z_]/g,''))}"><div class="phase-node">${esc(phase.id)}</div><div class="phase-name">${esc(phase.name)}</div>${badge(phase.status)}</div>`;
     }).join('')}</div>`;
-    const details = phases.length ? `<div class="phase-details">${phases.filter(p => p.conclusion || active.includes(p)).map(p => `<div><strong>${esc(p.id)} · ${esc(p.name)}</strong><span class="mono muted">　${formatTime(p.started)}${p.finished ? ' → ' + formatTime(p.finished):''}</span><p>${esc(p.conclusion || '暂无阶段结论')}</p></div>`).join('') || '<span class="muted">暂无阶段结论</span>'}</div>` : '<div class="subtle-note">尚未提供阶段状态，P0–P5 等待更新。</div>';
+    const details = phases.length ? `<div class="phase-details">${phases.filter(p => p.conclusion || active.includes(p)).map(p => `<div><strong>${esc(p.id)} · ${esc(p.name)}</strong><span class="mono muted">　${p.started ? formatTime(p.started) : '未开始'}${p.finished ? ' → ' + formatTime(p.finished):''}</span><p>${esc(p.conclusion || '暂无阶段结论')}</p></div>`).join('') || '<span class="muted">暂无阶段结论</span>'}</div>` : '<div class="subtle-note">尚未提供阶段状态，P0–P5 等待更新。</div>';
     const dataBody = numeric(totals.games) ? `<div class="stat-inline"><strong>${number(totals.games)}</strong><span>已解析比赛<br>${number(totals.seasons)} 个赛季 · ${number(dataset.fps)} FPS</span></div><div class="metric-pair"><span class="muted">帧总量</span><strong>${number(millions(totals.frames))} M</strong></div><div class="metric-pair"><span class="muted">解析失败 / 已删除</span><strong>${number(totals.failed)} / ${number(totals.deleted)}</strong></div><div class="subtle-note">数据截至 ${esc(dataset.as_of || '—')}</div>` : empty('数据集尚未接入','添加数据集状态后显示规模与分布。');
     const logs = Object.entries(recordMap(state.data.logs)).sort((a,b) => (dateValue(b[1].mtime) || 0)-(dateValue(a[1].mtime) || 0));
     const recent = logs.length ? `<div class="small muted" style="margin-bottom:12px">${esc(logs[0][0])} <span class="mono">· ${formatTime(logs[0][1].mtime)}</span></div><pre class="log-preview">${esc(formatLogs(String(logs[0][1].tail || '').split('\n').filter(Boolean).slice(-12).join('\n')))}</pre>` : empty('还没有会话记录','研究会话开始后，最新日志将显示在这里。','≡');
     const research = best ? `<div class="metric-pair"><span class="muted">任务 / 划分</span><strong>${esc(group.task)} / ${esc(group.split)}</strong></div><div class="metric-pair"><span class="muted">最佳基线 · ${esc(metric)}</span><strong>${number(best.baseline)}</strong></div><div class="metric-pair"><span class="muted">本方法最优 · ${esc(metric)}</span><strong class="amber-text">${number(best.ours)}</strong></div><div class="subtle-note">Δ 已按指标方向归一化；正值表示优于基线。</div>` : empty('等待首组实验结果','完成同一任务与划分的基线和方法评估后，即可查看提升。','↗');
-    return `<div class="kpis">${kpis}</div><div class="grid">${card('研究路线 · P0—P5',notice(apiError('phases'))+timeline+details,`<span class="meta">${phases.length ? phases.filter(p=>p.status==='done').length+' / 6 阶段完成':'等待状态'}</span>`,'s8')}${card('数据资产',dataBody,'<a href="#/dataset">查看数据集 ↗</a>','s4')}${card('最近活动',recent,'<a href="#/session">全部日志 ↗</a>','s8')}${card('基线与研究方法',research,'<a href="#/results">实验对比 ↗</a>','s4')}</div>`;
+    return banner + `<div class="kpis">${kpis}</div><div class="grid">${card('研究路线 · P0—P5',notice(apiError('phases'))+timeline+details,`<span class="meta">${phases.length ? phases.filter(p=>p.status==='done').length+' / 6 阶段完成':'等待状态'}</span>`,'s8')}${card('数据资产',dataBody,'<a href="#/dataset">查看数据集 ↗</a>','s4')}${card('最近活动',recent,'<a href="#/session">全部日志 ↗</a>','s8')}${card('基线与研究方法',research,'<a href="#/results">实验对比 ↗</a>','s4')}</div>`;
   }
   function datasetView() {
     const data = obj(state.data.dataset), totals = obj(data.totals), seasons = objectRows(data.seasons), modes = obj(totals.modes);
@@ -180,7 +193,7 @@
     });
     const tableRows = rows.map(row=>`<tr class="${row.is_baseline===false?'ours-row':''}"><td>${esc(row.method)}${row.pendingLabel?` <span class="chip ${row.status==='running'?'running':'pending'}">${row.pendingLabel}</span>`:''}<div class="small muted">${esc(row.notes||'')}</div></td><td>${row.is_baseline===true?'<span class="chip baseline">基线</span>':row.is_baseline===false?'<span class="chip ours">本方法</span>':'<span class="chip">未分类</span>'}</td>${group.metrics.map(m=>{
       const info=metricStats(group,m),value=row.metrics[m],delta=info.baseline==null||!numeric(value)||info.conflict?null:(value-info.baseline)*(info.lower?-1:1);
-      return `<td class="mono ${!info.conflict&&numeric(value)&&value===info.best?'best':''}">${numeric(value)?number(value):'—'}${!info.conflict&&numeric(value)&&value===info.best?' ★':''}<div class="small ${delta>=0?'positive':'negative'}">Δ ${signed(delta)}</div></td>`;
+      return `<td class="mono ${!info.conflict&&numeric(value)&&value===info.best?'best':''}">${numeric(value)?number(value):(row.pendingLabel?'<span class="muted">待产出</span>':'—')}${!info.conflict&&numeric(value)&&value===info.best?' ★':''}${delta==null||info.baseline==null?'':`<div class="small ${delta>=0?'positive':'negative'}">Δ ${signed(delta)}</div>`}</td>`;
     }).join('')}</tr>`);
     state.bind = () => {
       $('result-group').addEventListener('change',event=>{state.resultGroup=event.target.value;render();});
@@ -332,28 +345,28 @@
   }
   function useEcharts(id,options) {
     const element=$(id);if(!element||!window.echarts)return false;
-    try{const chart=window.echarts.init(element,null,{renderer:'canvas'});chart.setOption(Object.assign({backgroundColor:'transparent',color:palette,textStyle:{color:'#8296b3',fontFamily:'sans-serif'},animation:false},options));state.charts.push(chart);return true;}catch(error){element.innerHTML='';return false;}
+    try{const chart=window.echarts.init(element,null,{renderer:'canvas'});chart.setOption(Object.assign({backgroundColor:'transparent',color:palette,textStyle:{color:'#a3b3ca',fontFamily:'sans-serif'},animation:false},options));state.charts.push(chart);return true;}catch(error){element.innerHTML='';return false;}
   }
-  const axisStyle={axisLine:{lineStyle:{color:'#24466e'}},axisTick:{show:false},axisLabel:{color:'#8296b3',fontSize:10},splitLine:{lineStyle:{color:'#16263f'}}};
+  const axisStyle={axisLine:{lineStyle:{color:'#24466e'}},axisTick:{show:false},axisLabel:{color:'#a3b3ca',fontSize:12},splitLine:{lineStyle:{color:'#16263f'}}};
   function barChart(id,items,label) {
     const element=$(id);if(!element)return;
     const data=items.filter(item=>numeric(item.value));
     if(!data.length){element.innerHTML=empty('没有数值数据','等待指标写入。');return;}
-    if(useEcharts(id,{tooltip:{trigger:'axis',renderMode:'richText',axisPointer:{type:'shadow'}},grid:{left:56,right:18,top:25,bottom:64},xAxis:Object.assign({},axisStyle,{type:'category',data:data.map(item=>item.name),axisLabel:{color:'#8296b3',fontSize:10,interval:0,rotate:data.length>7?25:0,width:90,overflow:'truncate'}}),yAxis:Object.assign({},axisStyle,{type:'value',name:label,nameTextStyle:{fontSize:10}}),series:[{type:'bar',barMaxWidth:48,data:data.map(item=>({value:item.value,itemStyle:{color:item.color||'#22d3ee',borderRadius:[3,3,0,0]}}))}]}))return;
+    if(useEcharts(id,{tooltip:{trigger:'axis',renderMode:'richText',axisPointer:{type:'shadow'}},grid:{left:56,right:18,top:25,bottom:64},xAxis:Object.assign({},axisStyle,{type:'category',data:data.map(item=>item.name),axisLabel:{color:'#a3b3ca',fontSize:12,interval:0,rotate:data.length>7?25:0,width:90,overflow:'truncate'}}),yAxis:Object.assign({},axisStyle,{type:'value',name:label,nameTextStyle:{fontSize:12}}),series:[{type:'bar',barMaxWidth:48,data:data.map(item=>({value:item.value,itemStyle:{color:item.color||'#22d3ee',borderRadius:[3,3,0,0]}}))}]}))return;
     const width=720,height=280,left=70,right=20,top=25,bottom=58,plotW=width-left-right,plotH=height-top-bottom;
     let min=Math.min(0,...data.map(item=>item.value)),max=Math.max(0,...data.map(item=>item.value));if(max===min)max=min+1;
     const y=value=>top+(max-value)/(max-min)*plotH,zero=y(0),slot=plotW/data.length;
     let svg=`<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(label)}柱状图">`;
-    for(let index=0;index<=4;index++){const value=min+(max-min)*index/4,yp=y(value);svg+=`<path d="M${left} ${yp}H${width-right}" stroke="#16263f"/><text x="${left-10}" y="${yp+4}" text-anchor="end" fill="#8296b3" font-size="10">${esc(number(value))}</text>`;}
-    data.forEach((item,index)=>{const x=left+slot*index+slot*.2,yp=y(item.value),barW=slot*.6;svg+=`<rect x="${x}" y="${Math.min(yp,zero)}" width="${barW}" height="${Math.max(1,Math.abs(zero-yp))}" rx="2" fill="${item.color||'#22d3ee'}"><title>${esc(item.name)}: ${number(item.value)}</title></rect><text x="${x+barW/2}" y="${height-bottom+22}" text-anchor="middle" fill="#8296b3" font-size="10">${esc(String(item.name).length>16?String(item.name).slice(0,15)+'…':item.name)}</text>`;});
+    for(let index=0;index<=4;index++){const value=min+(max-min)*index/4,yp=y(value);svg+=`<path d="M${left} ${yp}H${width-right}" stroke="#16263f"/><text x="${left-10}" y="${yp+4}" text-anchor="end" fill="#a3b3ca" font-size="12">${esc(number(value))}</text>`;}
+    data.forEach((item,index)=>{const x=left+slot*index+slot*.2,yp=y(item.value),barW=slot*.6;svg+=`<rect x="${x}" y="${Math.min(yp,zero)}" width="${barW}" height="${Math.max(1,Math.abs(zero-yp))}" rx="2" fill="${item.color||'#22d3ee'}"><title>${esc(item.name)}: ${number(item.value)}</title></rect><text x="${x+barW/2}" y="${height-bottom+22}" text-anchor="middle" fill="#a3b3ca" font-size="12">${esc(String(item.name).length>16?String(item.name).slice(0,15)+'…':item.name)}</text>`;});
     element.innerHTML=svg+'</svg>';
   }
   function donutChart(id,items) {
     const element=$(id);if(!element)return;
     const total=items.reduce((sum,item)=>sum+(numeric(item.value)?item.value:0),0);
-    if(useEcharts(id,{tooltip:{trigger:'item',renderMode:'richText'},title:{text:number(total),subtext:'已解析比赛',left:'center',top:'36%',textStyle:{color:'#d7e3f4',fontSize:22,fontFamily:'monospace'},subtextStyle:{color:'#8296b3',fontSize:10}},series:[{type:'pie',radius:['65%','82%'],center:['50%','48%'],label:{show:false},data:items.map(item=>({name:item.name,value:item.value,itemStyle:{color:item.color}}))}]}))return;
+    if(useEcharts(id,{tooltip:{trigger:'item',renderMode:'richText'},title:{text:number(total),subtext:'已解析比赛',left:'center',top:'36%',textStyle:{color:'#d7e3f4',fontSize:22,fontFamily:'monospace'},subtextStyle:{color:'#a3b3ca',fontSize:12}},series:[{type:'pie',radius:['65%','82%'],center:['50%','48%'],label:{show:false},data:items.map(item=>({name:item.name,value:item.value,itemStyle:{color:item.color}}))}]}))return;
     let offset=0;
-    element.innerHTML=`<svg viewBox="0 0 300 210" role="img" aria-label="模式分布"><circle cx="150" cy="100" r="73" fill="none" stroke="#16263f" stroke-width="19"/>${items.map(item=>{const size=total?item.value/total*100:0,shape=`<circle cx="150" cy="100" r="73" pathLength="100" fill="none" stroke="${item.color}" stroke-width="19" stroke-dasharray="${size} ${100-size}" stroke-dashoffset="${-offset}" transform="rotate(-90 150 100)"><title>${esc(item.name)}: ${number(item.value)}</title></circle>`;offset+=size;return shape;}).join('')}<text x="150" y="101" text-anchor="middle" fill="#d7e3f4" font-family="monospace" font-size="25">${number(total)}</text><text x="150" y="122" text-anchor="middle" fill="#8296b3" font-size="11">已解析比赛</text></svg>`;
+    element.innerHTML=`<svg viewBox="0 0 300 210" role="img" aria-label="模式分布"><circle cx="150" cy="100" r="73" fill="none" stroke="#16263f" stroke-width="19"/>${items.map(item=>{const size=total?item.value/total*100:0,shape=`<circle cx="150" cy="100" r="73" pathLength="100" fill="none" stroke="${item.color}" stroke-width="19" stroke-dasharray="${size} ${100-size}" stroke-dashoffset="${-offset}" transform="rotate(-90 150 100)"><title>${esc(item.name)}: ${number(item.value)}</title></circle>`;offset+=size;return shape;}).join('')}<text x="150" y="101" text-anchor="middle" fill="#d7e3f4" font-family="monospace" font-size="25">${number(total)}</text><text x="150" y="122" text-anchor="middle" fill="#a3b3ca" font-size="11">已解析比赛</text></svg>`;
   }
   function lineChart(id,series,axis,metric) {
     const element=$(id);if(!element)return;
@@ -361,7 +374,7 @@
     if(useEcharts(id,{tooltip:{trigger:'axis',renderMode:'richText',axisPointer:{label:{formatter:params=>axis==='time'?formatTime(params.value):number(params.value)}},formatter:params=>{
       const rows=Array.isArray(params)?params:[params];const first=rows[0];if(!first)return '';
       return (axis==='time'?formatTime(first.value[0]):axis+' '+number(first.value[0]))+'\n'+rows.map(row=>row.seriesName+': '+number(row.value[1])).join('\n');
-    }},grid:{left:65,right:22,top:25,bottom:70},xAxis:Object.assign({},axisStyle,{type:axis==='time'?'time':'value',axisLabel:{color:'#8296b3',fontSize:10,formatter:xFormat}}),yAxis:Object.assign({},axisStyle,{type:'value',scale:true,name:metric}),dataZoom:[{type:'inside'},{type:'slider',height:15,bottom:10,borderColor:'#24466e',textStyle:{color:'#8296b3'},labelFormatter:xFormat}],series:series.map(s=>({name:s.name,type:'line',data:s.data,showSymbol:s.data.length<30,symbolSize:5,lineStyle:{width:2,color:s.color},itemStyle:{color:s.color},connectNulls:false}))}))return;
+    }},grid:{left:65,right:22,top:25,bottom:70},xAxis:Object.assign({},axisStyle,{type:axis==='time'?'time':'value',axisLabel:{color:'#a3b3ca',fontSize:12,formatter:xFormat}}),yAxis:Object.assign({},axisStyle,{type:'value',scale:true,name:metric}),dataZoom:[{type:'inside'},{type:'slider',height:15,bottom:10,borderColor:'#24466e',textStyle:{color:'#a3b3ca'},labelFormatter:xFormat}],series:series.map(s=>({name:s.name,type:'line',data:s.data,showSymbol:s.data.length<30,symbolSize:5,lineStyle:{width:2,color:s.color},itemStyle:{color:s.color},connectNulls:false}))}))return;
     const points=series.flatMap(s=>s.data),width=800,height=370,left=72,right=20,top=22,bottom=52;
     const bounds=points.reduce((box,p)=>[Math.min(box[0],p[0]),Math.max(box[1],p[0]),Math.min(box[2],p[1]),Math.max(box[3],p[1])],[Infinity,-Infinity,Infinity,-Infinity]);
     let [minX,maxX,minY,maxY]=bounds;
@@ -369,7 +382,7 @@
     const padding=(maxY-minY)*.08;minY-=padding;maxY+=padding;
     const x=value=>left+(value-minX)/(maxX-minX)*(width-left-right),y=value=>top+(maxY-value)/(maxY-minY)*(height-top-bottom);
     let svg=`<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(metric)}训练曲线">`;
-    for(let index=0;index<=4;index++){const value=minY+(maxY-minY)*index/4,yp=y(value),xv=minX+(maxX-minX)*index/4;svg+=`<path d="M${left} ${yp}H${width-right}" stroke="#16263f"/><text x="${left-9}" y="${yp+3}" fill="#8296b3" font-size="10" text-anchor="end">${number(value)}</text><text x="${x(xv)}" y="${height-25}" fill="#8296b3" font-size="10" text-anchor="middle">${esc(xFormat(xv))}</text>`;}
+    for(let index=0;index<=4;index++){const value=minY+(maxY-minY)*index/4,yp=y(value),xv=minX+(maxX-minX)*index/4;svg+=`<path d="M${left} ${yp}H${width-right}" stroke="#16263f"/><text x="${left-9}" y="${yp+3}" fill="#a3b3ca" font-size="12" text-anchor="end">${number(value)}</text><text x="${x(xv)}" y="${height-25}" fill="#a3b3ca" font-size="12" text-anchor="middle">${esc(xFormat(xv))}</text>`;}
     series.forEach(s=>{svg+=`<polyline points="${s.data.map(p=>x(p[0])+','+y(p[1])).join(' ')}" fill="none" stroke="${s.color}" stroke-width="2"><title>${esc(s.name)}</title></polyline>`;const stride=Math.max(1,Math.ceil(s.data.length/150));s.data.filter((p,index)=>index%stride===0||index===s.data.length-1).forEach(p=>{svg+=`<circle cx="${x(p[0])}" cy="${y(p[1])}" r="2.5" fill="${s.color}"><title>${esc(s.name)} · ${esc(axis==='time'?formatTime(p[0]):number(p[0]))} · ${number(p[1])}</title></circle>`;});});
     element.innerHTML=svg+'</svg>';
   }
@@ -399,7 +412,7 @@
   }
   function updateHeader() {
     const host=obj(state.data.host);$('host').textContent=host.host||'—';
-    $('last-update').textContent=formatTime(state.lastUpdate);
+    $('last-update').innerHTML=when(state.lastUpdate);
     const failures=Object.keys(state.errors),partial=failures.length>0;
     $('connection-dot').className='dot '+(partial?'warn':'ok');$('connection').textContent=partial?'部分数据中断':'服务已连接';
     $('api-notice').hidden=!partial;$('api-notice').textContent=failures.map(name=>state.errors[name]).join(' ');
@@ -416,5 +429,9 @@
   window.addEventListener('resize',()=>state.charts.forEach(chart=>chart.resize()));
   document.querySelectorAll('script[src*="cdnjs"]').forEach(script=>script.addEventListener('load',()=>render()));
   const tick=()=>{$('clock').textContent=clockFormatter.format(new Date())+' CET';};
-  tick();setInterval(tick,1000);setInterval(refresh,30000);route();refresh();
+  let nextAt=Date.now()+30000;
+  const tick2=()=>{tick();const left=Math.max(0,Math.round((nextAt-Date.now())/1000));const el=$('countdown');if(el)el.textContent=document.hidden?'已暂停':left+' 秒后刷新';if(!document.hidden&&Date.now()>=nextAt){nextAt=Date.now()+30000;refresh();}};
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden){nextAt=Date.now()+30000;refresh();}});
+  $('refresh').addEventListener('click',()=>{nextAt=Date.now()+30000;});
+  tick();setInterval(tick2,1000);route();refresh();
 })();
