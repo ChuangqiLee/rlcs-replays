@@ -435,6 +435,7 @@ def grammar_test(path, k, split, args, column='token'):
         row['q_scope'] = 'within-vocabulary only; use results/exploratory.json pooled family for claims'
     return {'status': 'ok', 'n_series': int(valid.sum()), 'n_sequences': len(evaluation),
             'predictive_gain_bits': obs, 'null_gain_bits': float(np.mean(finite_null)),
+            'null_gain_bits_draws': finite_null.tolist(),
             'excess_gain_bits': float(excess.mean()), 'ci95': np.quantile(draws, [.025, .975]).tolist(),
             'p_value': p, 'motifs': motif_results,
             'null': 'Train-fit smoothed jump chain + empirical state dwell; distribution-preserving, not exact transition counts; empirical training dwells include boundary-censored runs and final simulated dwell is censored at original length',

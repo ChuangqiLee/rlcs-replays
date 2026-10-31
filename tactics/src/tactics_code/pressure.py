@@ -120,7 +120,7 @@ def series_context_summary(observations):
 def regression_design(frame):
     """Protect the confirmatory coefficient; drop only redundant nuisance terms."""
     data = frame.copy()
-    data["trailing"] = (data.score_diff == -1).astype(float)
+    data["trailing"] = (data.score_diff < 0).astype(float)
     data["late_trailing"] = data.late * data.trailing
     names = ["intercept", "late", "trailing", "late_trailing"]
     cols = [np.ones(len(data)), data.late.to_numpy(float), data.trailing.to_numpy(float),
@@ -196,9 +196,9 @@ def mixed_effect_sensitivity(data, x, names, response, max_rows=20000):
         return {"status": "failed", "reason": str(exc)[:400]}
 
 
-def fit_pressure(summary, split="val", n_bootstrap=2000, seed=42, regression="auto"):
+def fit_pressure(summary, split="val", n_bootstrap=2000, seed=42, regression="auto", score_margin=1):
     selected = summary.loc[(summary.split == split) & summary.series_id.notna()
-                           & (summary.overtime == 0) & summary.score_diff.isin([-1, 1])
+                           & (summary.overtime == 0) & summary.score_diff.isin([-score_margin, score_margin])
                            & (summary.remaining > 0) & (summary.remaining <= 180)].copy()
     if selected.empty:
         return {"status": "insufficient_data", "reason": "no known-score regulation observations in the declared contrast", "models": {}}
@@ -237,7 +237,7 @@ def fit_pressure(summary, split="val", n_bootstrap=2000, seed=42, regression="au
             models[response] = {"status": "insufficient_data", "reason": str(exc)}
     return {"status": "fit" if models.get("uncovered", {}).get("status") == "fit" else "insufficient_data",
             "cell_series": support, "models": models,
-            "estimand": "[late-earlier, trailing by one]-[late-earlier, leading by one]",
+            "estimand": f"[late-earlier, trailing by {score_margin}]-[late-earlier, leading by {score_margin}]",
             "primary_uncertainty": "Converged crossed MixedLM with Wald uncertainty when available; otherwise series-clustered OLS and whole-series bootstrap. OLS bootstrap accompanying MixedLM is a separately labelled sensitivity.",
             "limitations": ["observational association, not causal or psychological pressure",
                             "opponent historical strength unavailable; not silently imputed",
@@ -252,6 +252,8 @@ def main(argv=None):
     parser.add_argument("--split", choices=["val", "test"], default="val")
     parser.add_argument("--bootstrap", type=int, default=2000)
     parser.add_argument("--late-threshold", type=float, default=60)
+    parser.add_argument("--score-margin", type=int, choices=[1, 2], default=1,
+                        help="Exact symmetric score contrast: -margin vs +margin (ties excluded)")
     parser.add_argument("--regression", choices=["auto", "ols"], default="auto")
     args = parser.parse_args(argv)
     if args.bootstrap < 0 or not 0 < args.late_threshold < 180:
@@ -283,7 +285,10 @@ def _run(args, run):
                                              "remaining", "frame_weight", *MEASURES])
     summary = series_context_summary(observations)
     summary.to_parquet(folder / "observations.parquet", index=False)
-    details = fit_pressure(summary, args.split, args.bootstrap, args.seed, args.regression)
+    details = fit_pressure(summary, args.split, args.bootstrap, args.seed, args.regression, args.score_margin)
+    details["pressure_definition"] = {"late_seconds": args.late_threshold, "score_margin": args.score_margin,
+                                      "score_policy": "exact symmetric margins; ties excluded",
+                                      "regulation_seconds": [0, 180]}
     metrics = {"context_rows": len(summary), "series": int(summary.series_id.nunique())}
     primary = details.get("models", {}).get("uncovered", {})
     if primary.get("status") == "fit":
