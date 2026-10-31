@@ -1,0 +1,31 @@
+{
+ "method": "PCA+k-means 指纹",
+ "is_baseline": true,
+ "task": "RQ4 风格归属与 meta 演化",
+ "split": "train 2021-22/22-23/2024 · val 2025 · test 2026",
+ "split_detail": {
+  "train": [
+   "RLCS 2021-22",
+   "RLCS 22-23",
+   "RLCS 2024"
+  ],
+  "val": [
+   "RLCS 2025"
+  ],
+  "test": [
+   "RLCS 2026"
+  ],
+  "unit": "series"
+ },
+ "status": "planned",
+ "metrics": {
+  "fingerprint_persistence_auc": null,
+  "within_vs_between_dist_ratio": null,
+  "transfer_retention": null
+ },
+ "lower_is_better": [
+  "within_vs_between_dist_ratio"
+ ],
+ "notes": "计划中（指标待实验产出，未填任何数值）。",
+ "source": "tactics/docs/P2_design.md §6–7"
+}

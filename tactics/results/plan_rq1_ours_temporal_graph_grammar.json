@@ -1,0 +1,33 @@
+{
+ "method": "时序图编码器+冻结词表+序列挖掘（本文）",
+ "is_baseline": false,
+ "task": "RQ1 轮转语法",
+ "split": "train 2021-22/22-23/2024 · val 2025 · test 2026",
+ "split_detail": {
+  "train": [
+   "RLCS 2021-22",
+   "RLCS 22-23",
+   "RLCS 2024"
+  ],
+  "val": [
+   "RLCS 2025"
+  ],
+  "test": [
+   "RLCS 2026"
+  ],
+  "unit": "series"
+ },
+ "status": "planned",
+ "metrics": {
+  "higher_order_excess": null,
+  "seed_stability_ari": null,
+  "masked_recon_mse": null,
+  "future_pred_ade": null
+ },
+ "lower_is_better": [
+  "masked_recon_mse",
+  "future_pred_ade"
+ ],
+ "notes": "计划中（指标待实验产出，未填任何数值）。与一阶半马尔可夫零模型比较高阶结构超额量。",
+ "source": "tactics/docs/P2_design.md §6–7"
+}

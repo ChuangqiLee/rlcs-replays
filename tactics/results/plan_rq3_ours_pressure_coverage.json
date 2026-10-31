@@ -1,0 +1,31 @@
+{
+ "method": "冻结词表+连续几何的层次回归（本文）",
+ "is_baseline": false,
+ "task": "RQ3 压力下职责再分配",
+ "split": "train 2021-22/22-23/2024 · val 2025 · test 2026",
+ "split_detail": {
+  "train": [
+   "RLCS 2021-22",
+   "RLCS 22-23",
+   "RLCS 2024"
+  ],
+  "val": [
+   "RLCS 2025"
+  ],
+  "test": [
+   "RLCS 2026"
+  ],
+  "unit": "series"
+ },
+ "status": "planned",
+ "metrics": {
+  "late_trailing_interaction": null,
+  "uncovered_fraction_delta": null,
+  "ci_width": null
+ },
+ "lower_is_better": [
+  "ci_width"
+ ],
+ "notes": "计划中（指标待实验产出，未填任何数值）。主对比 [末段−早段,落后1]−[末段−早段,领先1]。",
+ "source": "tactics/docs/P2_design.md §6–7"
+}
