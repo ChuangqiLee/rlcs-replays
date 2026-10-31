@@ -18,7 +18,7 @@ export OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 OMP_NUM_THREADS=1
 unset PACK
 source "$TACT/slurm/env.sh"
 set -u
-OUT="$TACT/artifacts/cases-$SLURM_JOB_ID"
+OUT="$HOME/workspace/rlcs-replays/analysis/cases-$SLURM_JOB_ID"
 mkdir -p "$OUT"
 git rev-parse HEAD > "$OUT/source_commit.txt"
 python scripts/cases/extract_cases.py --repo "$TACT" \
