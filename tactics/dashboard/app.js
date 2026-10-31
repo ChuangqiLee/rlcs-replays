@@ -76,7 +76,9 @@
       const records = Array.isArray(value) ? value : Array.isArray(obj(value).results) ? value.results : [value];
       records.forEach((record, index) => {
         const row = obj(record);
-        if (!row.method || !Object.keys(obj(row.metrics)).some(key => numeric(row.metrics[key]))) return;
+        if (!row.method) return;
+        const hasValue = Object.keys(obj(row.metrics)).some(key => numeric(row.metrics[key]));
+        if (!hasValue) row.pendingLabel = row.status === 'running' ? '运行中' : '计划中';
         const task = String(row.task || '未指定任务'), split = String(row.split || '未指定划分');
         const key = JSON.stringify([task, split]);
         if (!groups.has(key)) groups.set(key, {key,task,split,rows:[],metrics:[],lower:new Set(),conflicts:new Set()});
@@ -84,7 +86,7 @@
       });
     });
     groups.forEach(group => {
-      group.metrics = [...new Set(group.rows.flatMap(row => Object.keys(obj(row.metrics)).filter(key => numeric(row.metrics[key]))))].sort();
+      group.metrics = [...new Set(group.rows.flatMap(row => Object.keys(obj(row.metrics)).filter(key => numeric(row.metrics[key]) || row.pendingLabel)))].sort();
       group.metrics.forEach(metric => {
         const directions = new Set(group.rows.filter(row => numeric(row.metrics[metric])).map(row => arr(row.lower_is_better).includes(metric)));
         if (directions.has(true)) group.lower.add(metric);
@@ -176,9 +178,9 @@
       if (!numeric(av)) return 1; if (!numeric(bv)) return -1;
       return stats.lower?av-bv:bv-av;
     });
-    const tableRows = rows.map(row=>`<tr class="${row.is_baseline===false?'ours-row':''}"><td>${esc(row.method)}<div class="small muted">${esc(row.notes||'')}</div></td><td>${row.is_baseline===true?'<span class="chip baseline">基线</span>':row.is_baseline===false?'<span class="chip ours">本方法</span>':'<span class="chip">未分类</span>'}</td>${group.metrics.map(m=>{
+    const tableRows = rows.map(row=>`<tr class="${row.is_baseline===false?'ours-row':''}"><td>${esc(row.method)}${row.pendingLabel?` <span class="chip ${row.status==='running'?'running':'pending'}">${row.pendingLabel}</span>`:''}<div class="small muted">${esc(row.notes||'')}</div></td><td>${row.is_baseline===true?'<span class="chip baseline">基线</span>':row.is_baseline===false?'<span class="chip ours">本方法</span>':'<span class="chip">未分类</span>'}</td>${group.metrics.map(m=>{
       const info=metricStats(group,m),value=row.metrics[m],delta=info.baseline==null||!numeric(value)||info.conflict?null:(value-info.baseline)*(info.lower?-1:1);
-      return `<td class="mono ${!info.conflict&&numeric(value)&&value===info.best?'best':''}">${number(value)}${!info.conflict&&numeric(value)&&value===info.best?' ★':''}<div class="small ${delta>=0?'positive':'negative'}">Δ ${signed(delta)}</div></td>`;
+      return `<td class="mono ${!info.conflict&&numeric(value)&&value===info.best?'best':''}">${numeric(value)?number(value):'—'}${!info.conflict&&numeric(value)&&value===info.best?' ★':''}<div class="small ${delta>=0?'positive':'negative'}">Δ ${signed(delta)}</div></td>`;
     }).join('')}</tr>`);
     state.bind = () => {
       $('result-group').addEventListener('change',event=>{state.resultGroup=event.target.value;render();});
