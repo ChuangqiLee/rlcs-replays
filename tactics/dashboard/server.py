@@ -3,6 +3,7 @@
 import csv
 import datetime
 import io
+import glob
 import json
 import math
 import os
@@ -11,13 +12,15 @@ import subprocess
 import sys
 import threading
 import time
-from concurrent.futures import ThreadPoolExecutor
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from socketserver import ThreadingMixIn
 from urllib.parse import unquote, urlsplit
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.dirname(HERE)  # Install as tactics/dashboard/server.py.
+ROOT = os.path.abspath(os.path.expanduser(os.environ.get("DASH_DATA_ROOT", os.path.dirname(HERE))))
+# Optional, explicitly selected local reference data for review. Never downloaded.
+REFERENCE_ROOT = os.path.abspath(os.path.expanduser(os.environ["DASH_REFERENCE_ROOT"])) if os.environ.get("DASH_REFERENCE_ROOT") else None
+PROJECT_ROOT = os.path.normpath(os.path.expanduser(os.environ.get("DASH_PROJECT_ROOT", "~/workspace/rlcs-replays")))
 PORT = 18765
 LOG_TAIL_BYTES = 20 * 1024
 MAX_JSON_BYTES = 16 * 1024 * 1024
@@ -29,7 +32,7 @@ JOBS_CACHE_SECONDS = 60
 _JOBS_LOCK = threading.Lock()
 _JOBS_CACHE = {"at": 0, "data": None}
 UTC = datetime.timezone.utc
-JOB_FIELDS = "JobID,JobName,Partition,State,Elapsed,Timelimit,AllocCPUS,ReqMem,MaxRSS,AllocTRES,NodeList,Start,End"
+JOB_FIELDS = "JobID,JobName,Partition,State,Elapsed,Timelimit,AllocCPUS,ReqMem,MaxRSS,AllocTRES,NodeList,Start,End,WorkDir"
 # Explicit model-name mappings only. Ampere/Pascal are families, not models.
 GPU_PARTITION_MODELS = {"a100": "A100", "h100": "H100", "h200": "H200", "a40": "A40", "v100": "V100"}
 FAILED_JOB_STATES = {"FAILED", "CANCELLED", "TIMEOUT", "NODE_FAIL", "OUT_OF_MEMORY", "BOOT_FAIL", "DEADLINE", "PREEMPTED", "REVOKED"}
@@ -106,16 +109,8 @@ def chicago_to_utc(local):
     return (local - datetime.timedelta(hours=offset)).replace(tzinfo=UTC)
 
 
-def amsterdam_time(utc):
-    """EU DST: last March Sunday 01:00 UTC through last October Sunday 01:00."""
-    start = sunday(utc.year, 3, 25).replace(hour=1, tzinfo=UTC)
-    end = sunday(utc.year, 10, 25).replace(hour=1, tzinfo=UTC)
-    offset = 2 if start <= utc < end else 1
-    return utc.astimezone(datetime.timezone(datetime.timedelta(hours=offset)))
-
-
 def job_time(value, source_timezone="America/Chicago"):
-    """UTC sacct or Chicago fallback -> Amsterdam ISO using explicit DST rules.
+    """UTC sacct or Chicago fallback -> fixed CET (UTC+1).
 
     Ambiguous/nonexistent Chicago wall times have no unique instant: return null.
     Explicit offsets can disambiguate repeated hours.
@@ -132,7 +127,7 @@ def job_time(value, source_timezone="America/Chicago"):
                 parsed = chicago_to_utc(parsed)
             else:
                 return None
-        return amsterdam_time(parsed.astimezone(UTC)).isoformat()
+        return parsed.astimezone(datetime.timezone(datetime.timedelta(hours=1))).isoformat()
     except (ValueError, OverflowError):
         return None
 
@@ -165,7 +160,7 @@ def gpu_allocation(tres, partition):
 def node_gpu_evidence():
     """Per-node GPU model verified by nvidia-smi in earlier probe jobs (status/gpu_models.json)."""
     try:
-        with open(os.path.join(ROOT, "status", "gpu_models.json"), encoding="utf-8") as handle:
+        with open(data_path("status", "gpu_models.json"), encoding="utf-8") as handle:
             data = json.load(handle)
         return data.get("nodes", {}) if isinstance(data, dict) else {}
     except (OSError, ValueError):
@@ -187,7 +182,7 @@ def parse_jobs(raw, source_timezone="America/Chicago"):
         item = {key: known(row.get(field)) for key, field in {
             "jobid": "JobID", "name": "JobName", "partition": "Partition", "state": "State",
             "elapsed": "Elapsed", "timelimit": "Timelimit", "req_mem": "ReqMem", "max_rss": "MaxRSS",
-            "alloc_tres": "AllocTRES", "nodes": "NodeList"}.items()}
+            "alloc_tres": "AllocTRES", "nodes": "NodeList", "workdir": "WorkDir"}.items()}
         gpu_count, model, model_source = gpu_allocation(item["alloc_tres"], item["partition"])
         if gpu_count and not model and item.get("nodes"):
             evidence = node_gpu_evidence().get(item["nodes"])
@@ -226,6 +221,20 @@ def job_summary(rows, available=True):
                 gpu_missing_jobs=gpu_missing if available else None, total=len(rows) if available else None)
 
 
+def project_job(workdir):
+    """Remote WorkDir is lexical evidence; never resolve it against local symlinks."""
+    if not known(workdir):
+        return False
+    if workdir == "~" or workdir.startswith("~/"):
+        workdir = os.path.expanduser(workdir)
+    if not os.path.isabs(workdir):
+        return False
+    try:
+        return os.path.commonpath([PROJECT_ROOT, os.path.normpath(workdir)]) == PROJECT_ROOT
+    except ValueError:
+        return False
+
+
 def jobs():
     with _JOBS_LOCK:
         if _JOBS_CACHE["data"] is not None and time.monotonic() - _JOBS_CACHE["at"] < JOBS_CACHE_SECONDS:
@@ -236,7 +245,7 @@ def jobs():
         rows, source, cache_file_updated = [], None, None
         source_timezone = None
         try:
-            if os.environ.get("DASH_OFFLINE") == "1":
+            if os.environ.get("DASH_OFFLINE", "1") != "0":
                 raise OSError("DASH_OFFLINE=1")
             if not user:
                 raise OSError("USER is not set")
@@ -258,16 +267,19 @@ def jobs():
             except (OSError, ValueError, UnicodeError) as fallback:
                 error += "；本地作业缓存不可用"
                 error_en += "; local job cache unavailable: " + str(fallback)[:200]
-        data = {"jobs": rows, "summary": job_summary(rows, source is not None), "source": source,
+        excluded = len(rows)
+        rows = [row for row in rows if project_job(row.get("workdir"))]
+        excluded -= len(rows)
+        data = {"excluded_jobs": excluded if source is not None else None, "project_root": PROJECT_ROOT, "jobs": rows, "summary": job_summary(rows, source is not None), "source": source,
                 "error": error, "error_zh": error, "error_en": error_en, "updated": timestamp(),
-                "since": since, "source_timezone": source_timezone, "timezone": "Europe/Amsterdam",
+                "since": since, "source_timezone": source_timezone, "timezone": "CET",
                 "cache_seconds": JOBS_CACHE_SECONDS, "cache_file_updated": cache_file_updated}
         _JOBS_CACHE.update(at=time.monotonic(), data=data)
         return data
 
 
 def timestamp(epoch=None):
-    """Always include an offset; the browser converts to Europe/Amsterdam."""
+    """Always include an offset; the browser displays fixed CET (UTC+1)."""
     epoch = time.time() if epoch is None else epoch
     return datetime.datetime.fromtimestamp(epoch, datetime.timezone.utc).isoformat()
 
@@ -288,8 +300,8 @@ def data_path(*parts):
     return path
 
 
-def read_json(path):
-    if not inside(path, ROOT):
+def read_json(path, root=None):
+    if not inside(path, root or ROOT):
         raise ValueError("路径超出数据目录")
     with open(path, "rb") as source:
         raw = source.read(MAX_JSON_BYTES + 1)
@@ -345,9 +357,9 @@ def results():
     return output
 
 
-def metrics(path):
+def metrics(path, root=None):
     """Stream JSONL, retaining each split's first/last and a bounded sample."""
-    if not inside(path, ROOT):
+    if not inside(path, root or ROOT):
         raise ValueError("路径超出数据目录")
     groups = {}
     skipped = 0
@@ -385,22 +397,29 @@ def metrics(path):
 
 def runs():
     output = {}
-    for directory in entries("runs", directories=True):
+    directories = []
+    roots = [ROOT] + ([REFERENCE_ROOT] if REFERENCE_ROOT and REFERENCE_ROOT != ROOT else [])
+    for root in roots:
+        for pattern in ("runs/*/metrics.jsonl", "robust/*/runs/*/metrics.jsonl", "artifacts/*/runs/*/metrics.jsonl"):
+            for path in sorted(glob.glob(os.path.join(root, pattern))):
+                if inside(path, root):
+                    directories.append((root, os.path.dirname(path)))
+    for root, directory in directories:
         metric_path = os.path.join(directory, "metrics.jsonl")
-        if not os.path.isfile(metric_path) or not inside(metric_path, ROOT):
+        if not os.path.isfile(metric_path) or not inside(metric_path, root):
             continue
         run = {"meta": {}, "rows": [], "warnings": []}
         meta_path = os.path.join(directory, "meta.json")
         if os.path.exists(meta_path):
             try:
-                meta = read_json(meta_path)
+                meta = read_json(meta_path, root)
                 if not isinstance(meta, dict):
                     raise ValueError("meta.json 顶层必须是对象")
                 run["meta"] = meta
             except (OSError, ValueError, UnicodeError) as exc:
                 run["warnings"].append("meta.json 暂不可用：{}".format(exc))
         try:
-            rows, total, skipped = metrics(metric_path)
+            rows, total, skipped = metrics(metric_path, root)
             run.update(rows=rows, total_rows=total, sampled=len(rows) < total, skipped_lines=skipped)
             if skipped:
                 run["warnings"].append("已跳过 {} 行不完整或无效指标".format(skipped))
@@ -408,7 +427,15 @@ def runs():
                 run["warnings"].append("曲线已按 split 抽样；保留起点和最新点")
         except (OSError, ValueError) as exc:
             run["warnings"].append("metrics.jsonl 暂不可用：{}".format(exc))
-        output[os.path.basename(directory)] = run
+        key = os.path.relpath(directory, root)
+        # Preserve legacy IDs for runs/*, qualify nested runs to avoid collisions.
+        if key.startswith("runs" + os.sep):
+            key = os.path.basename(directory)
+        if root != ROOT:
+            key = "reference/" + key
+        run["source"] = os.path.relpath(metric_path, root)
+        run["reference"] = root != ROOT
+        output[key] = run
     return output
 
 
@@ -465,7 +492,7 @@ def literature():
 
 
 def command(args):
-    if os.environ.get("DASH_OFFLINE") == "1":
+    if os.environ.get("DASH_OFFLINE", "1") != "0":
         return "", "DASH_OFFLINE=1: Slurm disabled / 已禁用 Slurm"
     try:
         env = dict(os.environ)
@@ -523,29 +550,42 @@ def parse_history(raw):
 
 
 def slurm():
-    # Coalesce overlapping browser requests and keep the command rate bounded.
-    with _SLURM_LOCK:
-        now = time.monotonic()
-        if _SLURM_CACHE["data"] is not None and now - _SLURM_CACHE["at"] < SLURM_CACHE_SECONDS:
-            return _SLURM_CACHE["data"]
-        user = os.environ.get("USER", "").strip()
-        queue_raw = history_raw = ""
-        queue_error = history_error = "USER 环境变量未设置" if not user else None
-        if user:
-            queue_args = ["squeue", "-u", user, "-h", "-o", "%i|%P|%j|%T|%M|%l|%D|%R"]
-            history_args = ["sacct", "-u", user, "-S", (datetime.datetime.now(UTC) - datetime.timedelta(days=2)).strftime("%Y-%m-%dT%H:%M:%S"),
-                            "--format=JobID,JobName%30,State,Elapsed,End", "-P", "-n"]
-            with ThreadPoolExecutor(max_workers=2) as executor:
-                queue_future = executor.submit(command, queue_args)
-                history_future = executor.submit(command, history_args)
-                queue_raw, queue_error = queue_future.result()
-                history_raw, history_error = history_future.result()
-        data = {
-            "queue": parse_queue(queue_raw), "history": parse_history(history_raw),
-            "queue_error": queue_error, "history_error": history_error, "updated": timestamp()
-        }
-        _SLURM_CACHE.update(at=time.monotonic(), data=data)
-        return data
+    """Legacy routes share the exact same WorkDir-filtered evidence as /api/jobs."""
+    data = jobs()
+    return {"queue": [dict(row, time=row["elapsed"], limit=row["timelimit"], reason=None)
+                      for row in data["jobs"] if row["state_code"] in ("RUNNING", "PENDING", "COMPLETING")],
+            "history": data["jobs"], "queue_error": data["error"], "history_error": data["error"],
+            "updated": data["updated"], "source": data["source"]}
+
+
+def paper_root():
+    if os.path.isdir(data_path("paper")) or not REFERENCE_ROOT:
+        return ROOT
+    return REFERENCE_ROOT
+
+
+def paper_pdf_path():
+    root = paper_root()
+    path = os.path.join(root, "paper", "main.pdf")
+    if not inside(path, os.path.join(root, "paper")):
+        raise ValueError("PDF outside paper directory")
+    return path
+
+
+def paper():
+    try:
+        from .paper_stats import scan
+    except ImportError:
+        from paper_stats import scan
+    result = status_file("paper", {})
+    result.pop("error", None)
+    result.pop("error_zh", None)
+    result.pop("error_en", None)
+    root = paper_root()
+    result.update(scan(root))
+    result["reference"] = root != ROOT
+    result["source"] = "paper/main.tex"
+    return result
 
 
 def host():
@@ -559,7 +599,8 @@ API = {
     "/api/ideas": lambda: status_file("ideas", {"updated": None, "ideas": []}),
     "/api/jobs": jobs,
     "/api/highlights": lambda: status_file("highlights", {"cards": []}),
-    "/api/paper": lambda: status_file("paper", {"updated": None, "sections": [], "figures": []}),
+    "/api/paper": paper,
+    "/api/job_purposes": lambda: status_file("job_purposes", {"purposes": {}}),
     "/api/results": results,
     "/api/runs": runs,
     "/api/logs": logs,
@@ -598,6 +639,8 @@ class Handler(BaseHTTPRequestHandler):
         self.send_response(code)
         self.send_header("Content-Type", content_type)
         self.send_header("Content-Length", str(len(payload)))
+        if content_type == "application/pdf":
+            self.send_header("Content-Disposition", 'inline; filename="main.pdf"')
         self.send_header("Cache-Control", "no-store")
         self.send_header("X-Content-Type-Options", "nosniff")
         self.send_header("Referrer-Policy", "no-referrer")
@@ -626,6 +669,16 @@ class Handler(BaseHTTPRequestHandler):
                 return self.send(200, body, "application/json; charset=utf-8")
             except Exception:
                 return self.send(500, '{"error":"数据暂不可用，请稍后重试"}', "application/json; charset=utf-8")
+        if path == "/paper.pdf":
+            try:
+                filename = paper_pdf_path()
+                with open(filename, "rb") as source:
+                    if source.read(5) != b"%PDF-":
+                        raise ValueError("invalid PDF")
+                    source.seek(0)
+                    return self.send(200, source.read(), "application/pdf")
+            except (OSError, ValueError):
+                return self.send(404, "论文 PDF 暂不可用 / Paper PDF unavailable", "text/plain; charset=utf-8")
         if path in STATIC:
             filename, content_type = STATIC[path]
             filename = os.path.join(HERE, filename)

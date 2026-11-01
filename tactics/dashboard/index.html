@@ -4,16 +4,16 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="RLCS research dashboard / RLCS 研究仪表盘">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; object-src 'none'; base-uri 'none'">
-  <title>RLCS · 研究仪表盘 / Research dashboard</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; object-src 'none'; frame-src 'self'; base-uri 'none'">
+  <title>RLCS</title>
   <link rel="stylesheet" href="style.css">
   <script defer src="app.js"></script>
 </head>
 <body>
-  <a class="skip" href="#main" id="skip">跳转到内容 / Skip to content</a>
+  <a class="skip" href="#main" id="skip"></a>
   <aside class="sidebar">
     <div class="brand"><div class="brand-mark">R</div><strong>RLCS</strong><p id="brand-sub"></p></div>
-    <nav id="navigation" aria-label="导航 / Navigation"></nav>
+    <nav id="navigation" aria-label="RLCS"></nav>
     <p class="sidebar-note" id="sidebar-note"></p>
   </aside>
   <div class="workspace">
@@ -21,7 +21,7 @@
     <main id="main" tabindex="-1">
       <div class="page-heading"><div><p class="eyebrow" id="eyebrow"></p><h1 id="page-title"></h1><p id="page-description"></p></div><p class="sync" id="sync"></p></div>
       <div id="api-notice" class="notice" role="status" hidden></div>
-      <div id="view"><p>正在读取研究状态 / Loading research status…</p></div>
+      <div id="view"></div>
       <noscript>请启用 JavaScript / Please enable JavaScript.</noscript>
     </main>
     <footer id="footer"></footer>
