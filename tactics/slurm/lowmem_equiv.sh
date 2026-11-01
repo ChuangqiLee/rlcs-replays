@@ -46,7 +46,7 @@ for task in p4 p6; do
         flags=()
         if [[ "$variant" == candidate ]]; then flags+=(--lowmem); fi
         /usr/bin/time -v -o "$run/resource.txt" "${LOWMEM_PYTHON:-python}" \
-            -m "tactics_code.$module" "${flags[@]}" \
+            -m "tactics_code.$module" ${flags[@]+"${flags[@]}"} \
             --workers "${SLURM_CPUS_PER_TASK:-4}" --compact "$MEDIUM_COMPACT" \
             --data-root "$MEDIUM_DATA_ROOT" --state-map "$MEDIUM_STATE_MAP" \
             --scratch "$work" --artifacts "$run" --out "$run/result.json"
