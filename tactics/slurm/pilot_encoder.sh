@@ -20,9 +20,11 @@ set -eo pipefail
 # setup and staging, so their remaining operational budget cannot reset.
 export PILOT_START_EPOCH="$(date +%s)"
 VARIANT="${VARIANT:-v1}"
+PILOT_MODULE=pilot_encoder
 case "$VARIANT" in
     v1|v2) ;;
-    *) printf 'VARIANT must be v1 or v2, got %s\n' "$VARIANT" >&2; exit 2 ;;
+    v3|v4) PILOT_MODULE=pilot_encoder.run_adapted ;;
+    *) printf 'VARIANT must be v1, v2, v3 or v4, got %s\n' "$VARIANT" >&2; exit 2 ;;
 esac
 PILOT_TACT="${PILOT_TACT:-$SLURM_SUBMIT_DIR}"
 cd "$PILOT_TACT"
@@ -49,12 +51,12 @@ python -B -c 'import torch; assert torch.cuda.is_available(), "A CUDA GPU is req
 # optional decode-exclusion metadata copy;
 # no recursive directory copy, raw replay access, or 2026 discovery occurs.
 PILOT_EXIT_STATUS=0
-python -B -m pilot_encoder \
+python -B -m "$PILOT_MODULE" \
     --variant "$VARIANT" --compact "$PILOT_SOURCE" \
     --stage-to "$PILOT_SCRATCH/compact" \
     --out "$PILOT_SCRATCH/pilot_encoder_${VARIANT}.json" || PILOT_EXIT_STATUS=$?
 if [ "$PILOT_EXIT_STATUS" -eq 0 ]; then
-    python -B -m pilot_encoder \
+    python -B -m "$PILOT_MODULE" \
         --variant "$VARIANT" --device cuda \
         --compact "$PILOT_SCRATCH/compact" --source-compact "$PILOT_SOURCE" \
         --checkpoint-dir "$PILOT_SCRATCH/checkpoints" \
