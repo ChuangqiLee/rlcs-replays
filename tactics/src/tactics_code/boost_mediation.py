@@ -13,6 +13,7 @@ import hashlib
 import json
 from pathlib import Path
 import shutil
+import sys
 import tempfile
 import time
 import zipfile
@@ -29,6 +30,10 @@ BOOTSTRAP, SEED = 2000, 42
 BOOST_DELAY, HORIZON, MAX_GAP = 3., 20., .160001
 METRICS = ('a', 'b', 'a*b', 'direct', 'total', 'proportion')
 BOOST_COLUMNS = [f'{team}{i}_boost' for team in ('own', 'opp') for i in range(3)]
+
+
+def _lowmem_log(stage, **dimensions):
+    print(json.dumps({'lowmem_stage': stage, **dimensions}), file=sys.stderr, flush=True)
 
 
 def check_records(records):
@@ -233,7 +238,7 @@ def _coefficients(moment, q):
                      product/total if abs(total) > 1e-10 else np.nan])
 
 
-def _cr1(moments, q, n, point):
+def _cr1(moments, q, n, point, *, lowmem=False):
     """Joint series sandwich for a,b,direct,total; delta method for products."""
     g = len(moments)
     total = moments.sum(axis=0)
@@ -244,7 +249,12 @@ def _cr1(moments, q, n, point):
         h = total[np.ix_(columns, columns)]
         inverse = _solve_psd(h, np.eye(len(columns)))
         beta = inverse @ total[columns, outcome]
-        score = moments[:, columns, outcome] - np.einsum('gij,j->gi', moments[:, columns][:, :, columns], beta)
+        # Both model designs are contiguous prefixes. A view avoids two G*q*q
+        # advanced-index copies while retaining the same score contraction.
+        block = (moments[:, :len(columns), :len(columns)] if lowmem else
+                 moments[:, columns][:, :, columns])
+        score = moments[:, columns, outcome] - np.einsum('gij,j->gi', block, beta)
+        del block
         factor = np.sqrt(g/(g-1) * (n-1)/(n-len(columns)))
         scores.append((score @ inverse[:, columns.index(target)]) * factor)
     covariance = np.cov(np.asarray(scores), bias=True) * g
@@ -257,7 +267,7 @@ def _cr1(moments, q, n, point):
     return np.sqrt(np.maximum(variance, 0))
 
 
-def fit_decomposition(indicator, boost, outcome, controls, series, *, repeats=BOOTSTRAP, seed=SEED):
+def fit_decomposition(indicator, boost, outcome, controls, series, *, repeats=BOOTSTRAP, seed=SEED, lowmem=False):
     """Equal-series weighted OLS/LPM with paired whole-series refits and CR1.
 
     Each draw samples G complete clusters with replacement. An occurrence keeps
@@ -271,7 +281,9 @@ def fit_decomposition(indicator, boost, outcome, controls, series, *, repeats=BO
     n = len(a)
     if x.ndim != 2 or len(x) != n or len(m) != n or len(y) != n or len(series) != n:
         raise ValueError('Inconsistent model dimensions')
-    if not np.isfinite(np.column_stack([a, m, y, x])).all() or not np.isin(a, [0, 1]).all():
+    finite = (all(np.isfinite(value).all() for value in (a, m, y, x)) if lowmem else
+              np.isfinite(np.column_stack([a, m, y, x])).all())
+    if not finite or not np.isin(a, [0, 1]).all():
         raise ValueError('Finite complete cases and binary indicator required')
     if not np.isin(y, [0, 1]).all():
         raise ValueError('Concede outcome must be binary')
@@ -281,7 +293,14 @@ def fit_decomposition(indicator, boost, outcome, controls, series, *, repeats=BO
         raise ValueError('Multiple series and positive bootstrap repetitions required')
     # QR removes only redundant nuisance columns. It never drops A or M.
     c = np.column_stack([np.ones(n), x])
-    _, r, pivots = linalg.qr(c, mode='economic', pivoting=True, check_finite=False)
+    if lowmem:
+        _lowmem_log('qr', rows=n, controls=x.shape[1], design_bytes=c.nbytes)
+        # raw uses the identical pivoted GEQP3 factorization as economic, but
+        # skips explicit Q. mode='r' would still return an n-by-p padded R.
+        reflectors, r, pivots = linalg.qr(c, mode='raw', pivoting=True, check_finite=False)
+        del reflectors
+    else:
+        _, r, pivots = linalg.qr(c, mode='economic', pivoting=True, check_finite=False)
     rank = int(np.count_nonzero(np.abs(np.diag(r)) > np.abs(r[0, 0])*1e-10))
     keep = np.sort(pivots[:rank])
     c = c[:, keep]
@@ -289,18 +308,27 @@ def fit_decomposition(indicator, boost, outcome, controls, series, *, repeats=BO
     if n <= q+2:
         raise ValueError('Insufficient residual degrees of freedom')
     z = np.column_stack([c, a, m, y])
+    if lowmem:
+        del c
+        _lowmem_log('moments', rows=n, series=g, rank=q,
+                    moments_bytes=8*g*z.shape[1]**2, design_bytes=z.nbytes)
     moments = np.empty((g, z.shape[1], z.shape[1]))
     for i in range(g):
         part = z[codes == i]
         moments[i] = (part.T @ part)/len(part)
+    if lowmem:
+        del z, part
     point = _coefficients(moments.sum(axis=0), q)
-    se = _cr1(moments, q, n, point)
+    se = _cr1(moments, q, n, point, lowmem=lowmem)
     preparation_seconds = time.perf_counter()-started
     rng = np.random.default_rng(seed)
     draws = np.full((repeats, len(METRICS)), np.nan)
     failures = Counter()
     clock = time.perf_counter()
     flat = moments.reshape(g, -1)
+    if lowmem:
+        _lowmem_log('bootstrap', repeats=repeats, series=g, moments_bytes=moments.nbytes,
+                    draws_bytes=draws.nbytes)
     for rep in range(repeats):
         counts = np.bincount(rng.integers(g, size=g), minlength=g)
         moment = (counts @ flat).reshape(moments.shape[1:])
@@ -336,19 +364,31 @@ def fit_decomposition(indicator, boost, outcome, controls, series, *, repeats=BO
                                'total': time.perf_counter()-started}}, draws
 
 
-def analyze(anchors, population='all'):
+def analyze(anchors, population='all', *, lowmem=False):
     validate_frame(anchors)
     scale, scale_audit = freeze_boost_scale(anchors)
     normalized = normalize_boost(anchors, scale)
     assigned, thresholds = dr.freeze_initiation(normalized, delta=dr.DEFAULT_DELTA, control='third', include_early=False)
+    if lowmem:
+        del normalized
     # Freeze using ALL baseline candidates before future-boost/outcome exclusions.
     train_mask = assigned['split'].eq('train').to_numpy()
-    x, names, regions = possession.feature_matrix(assigned, train_mask)
+    if lowmem:
+        from tactics_code import lowmem as lowmem_ops
+        x, names, regions = lowmem_ops.possession_feature_matrix(assigned, train_mask)
+        _lowmem_log('features', rows=len(x), columns=x.shape[1], dtype=str(x.dtype), bytes=x.nbytes)
+    else:
+        x, names, regions = possession.feature_matrix(assigned, train_mask)
     if not train_mask.any():
         raise ValueError('Training observations required')
-    center, spread = x[train_mask].mean(axis=0, dtype=float), x[train_mask].std(axis=0, dtype=float)
+    if lowmem:
+        center, spread = lowmem_ops.training_moments(x, train_mask)
+        _lowmem_log('training_moments', rows=int(train_mask.sum()), columns=x.shape[1])
+    else:
+        center, spread = x[train_mask].mean(axis=0, dtype=float), x[train_mask].std(axis=0, dtype=float)
     spread = np.where(spread > 1e-10, spread, 1.)
-    x = (x-center)/spread
+    if not lowmem:
+        x = (x-center)/spread
     mask = assigned['split'].eq('val').to_numpy()
     if population != 'all':
         mask = mask & assigned['population'].eq(population).to_numpy()
@@ -361,8 +401,16 @@ def analyze(anchors, population='all'):
     rows = assigned.loc[mask].copy()
     if rows.empty:
         raise ValueError('No complete validation rows; no decomposition reported')
+    if lowmem:
+        controls = lowmem_ops.standardized_rows(x, mask, center, spread)
+        del x
+        _lowmem_log('complete_case_controls', rows=len(controls), columns=controls.shape[1],
+                    dtype=str(controls.dtype), bytes=controls.nbytes)
+    else:
+        controls = x[mask]
     with threadpool_limits(limits=1):
-        result, draws = fit_decomposition(rows['treatment'], rows['boost_t3'], rows['concede20'], x[mask], rows['series_id'])
+        result, draws = fit_decomposition(rows['treatment'], rows['boost_t3'], rows['concede20'], controls,
+                                         rows['series_id'], lowmem=lowmem)
     result.update(split='val', season=dr.VAL_SEASON, population=population, thresholds=thresholds,
                   boost_scale=scale_audit, feature_names=names, training_region_levels=regions,
                   covariate_center_train=center, covariate_scale_train=spread,
@@ -418,6 +466,7 @@ def main(argv=None):
     parser.add_argument('--out', type=Path)
     parser.add_argument('--scratch', type=Path)
     parser.add_argument('--workers', type=int, default=1)
+    parser.add_argument('--lowmem', action='store_true', help='Equivalent allocation-saving analysis path')
     parser.add_argument('--max-replays', type=int)
     parser.add_argument('--population', choices=('all', 'late_trailing'), default='all')
     args = parser.parse_args(argv)
@@ -452,22 +501,27 @@ def main(argv=None):
     timing = {'inventory': time.perf_counter()-started}
     dr.atomic_json(args.artifacts/'selected_replays.json', selected)
     clock = time.perf_counter()
+    print('phase=events start', file=sys.stderr, flush=True)
     goals, replays = dr.build_events(selected, args.artifacts, data_root=args.data_root, state_map_path=args.state_map)
     timing['events'] = time.perf_counter()-clock
     clock = time.perf_counter()
+    print('phase=anchors start', file=sys.stderr, flush=True)
     anchors, audit = build_anchors(pairs, goals, replays, args.artifacts,
                                    args.max_replays is not None, args.scratch, args.workers)
     timing['anchors'] = time.perf_counter()-clock
     if anchors.empty:
         raise ValueError('No eligible anchors')
     clock = time.perf_counter()
-    result, assigned, draws = analyze(anchors, args.population)
+    print('phase=analysis start', file=sys.stderr, flush=True)
+    result, assigned, draws = analyze(anchors, args.population, lowmem=args.lowmem)
     timing['analysis'] = time.perf_counter()-clock
     assigned.to_parquet(args.artifacts/'anchors.parquet', index=False)
     np.save(args.artifacts/'bootstrap_draws.npy', draws, allow_pickle=False)
     sources = [Path(__file__), Path(dr.__file__), Path(possession.__file__),
                Path(dr.__file__).with_name('events.py'), Path(dr.__file__).with_name('screen.py'),
                Path(dr.__file__).with_name('data.py'), Path(dr.__file__).with_name('extract.py')]
+    if args.lowmem:
+        sources.append(Path(__file__).with_name('lowmem.py'))
     result.update(task='P6.4', label=LABEL, smoke_only=args.max_replays is not None,
                   test_2026_opened=False, inventory=inventory, anchor_audit=audit,
                   source_sha256={p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in sources},

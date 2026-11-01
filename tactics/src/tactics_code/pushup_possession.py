@@ -12,6 +12,7 @@ import json
 from pathlib import Path
 import shutil
 import subprocess
+import sys
 import tempfile
 import time
 import zipfile
@@ -153,7 +154,7 @@ def feature_matrix(df, train_mask):
         'ball_vy_attack', 'ball_in_opp_half'], regions
 
 
-def nuisance_predictions(df, workers=1):
+def nuisance_predictions(df, workers=1, lowmem=False):
     """Same series-fold scheduler as dr; reuse its fitter without extra outcomes.
 
     dr.nuisance_predictions hardcodes its feature factory and four outcomes.
@@ -164,9 +165,16 @@ def nuisance_predictions(df, workers=1):
         raise ValueError('Only train/val nuisance rows allowed')
     train_mask = df['split'].eq('train').to_numpy()
     train, val = np.flatnonzero(train_mask), np.flatnonzero(~train_mask)
-    x, names, regions = feature_matrix(df, train_mask)
+    if lowmem:
+        from .lowmem import possession_feature_matrix
+        x, names, regions = possession_feature_matrix(df, train_mask)
+        print(json.dumps({'phase': 'p4_features', 'rows': len(df), 'columns': x.shape[1],
+                          'x_bytes': x.nbytes, 'fit_workers': 1, 'fit_threads': 1}),
+              file=sys.stderr, flush=True)
+    else:
+        x, names, regions = feature_matrix(df, train_mask)
     a = df['treatment'].to_numpy(int)
-    fit_frame = df.copy()
+    fit_frame = df[['split', 'series_id', 'y10']].copy() if lowmem else df.copy()
     for label in ('y5', 'y15', 'ypast10'):
         fit_frame[label] = np.nan
     series = sorted(df.iloc[train]['series_id'].unique(), key=lambda s: dr.stable_hash(f'{SEED}:{s}:fold'))
@@ -196,7 +204,8 @@ def nuisance_predictions(df, workers=1):
         tasks.append((train, val, x, a, fit_frame, SEED+10000, ITERATIONS))
         destinations.append((val, {'target': 'val'}))
     for (pp, diag), (indices, context) in zip(dr.parallel_tasks(
-            dr.fit_predict, tasks, min(workers, len(tasks)), max(1, workers//len(tasks))), destinations):
+            dr.fit_predict, tasks, 1 if lowmem else min(workers, len(tasks)),
+            1 if lowmem else max(1, workers//len(tasks))), destinations):
         pred[indices] = pp
         manifest['fits'].append(dict(diag, **context))
     return pred, x, manifest
@@ -321,6 +330,8 @@ def main(argv=None):
     parser.add_argument('--state-map', type=Path, default=Path('state_map_rlcs.json'))
     parser.add_argument('--max-replays', type=int)
     parser.add_argument('--workers', type=int, default=1)
+    parser.add_argument('--lowmem', action='store_true',
+                        help='Same estimator; allocate features once and run nuisance fits serially')
     args = parser.parse_args(argv)
     if args.workers < 1:
         parser.error('workers must be positive')
@@ -346,10 +357,12 @@ def main(argv=None):
     dr.atomic_json(artifacts/'selected_replays.json', ids)
     timing = {'inventory': time.perf_counter()-started}
     clock = time.perf_counter()
+    print('phase=events start', file=sys.stderr, flush=True)
     goals, replays = dr.build_events(selected, artifacts, data_root=dr.guard_path(args.data_root),
                                      state_map_path=dr.guard_path(args.state_map))
     timing['events'] = time.perf_counter()-clock
     clock = time.perf_counter()
+    print('phase=anchors start', file=sys.stderr, flush=True)
     anchors, audit = build_anchors(pairs, goals, replays, artifacts, args.max_replays is not None,
                                    args.scratch, args.workers)
     timing['anchors'] = time.perf_counter()-clock
@@ -357,17 +370,23 @@ def main(argv=None):
         raise ValueError('No eligible anchors; no analysis result written')
     velocity_tertiles = freeze_velocity_tertiles(anchors)
     assigned, thresholds = dr.freeze_initiation(anchors, delta=500., control='third', include_early=False)
+    if args.lowmem:
+        del anchors
     assigned.to_parquet(artifacts/'anchors.parquet', index=False)
     extremes = assigned[assigned['treatment'].notna()].reset_index(drop=True)
+    if args.lowmem:
+        del assigned
     if extremes.empty:
         raise ValueError('No observed primary treatment arms')
     clock = time.perf_counter()
-    pred, x, nuisance = nuisance_predictions(extremes, args.workers)
+    print('phase=nuisances start', file=sys.stderr, flush=True)
+    pred, x, nuisance = nuisance_predictions(extremes, args.workers, args.lowmem)
     timing['nuisances'] = time.perf_counter()-clock
     np.savez_compressed(artifacts/'nuisance_predictions.npz', predictions=pred)
     extremes[['replay_id', 'series_id', 'focal_team', 'anchor_time', 'split', 'population',
               'possession_stratum', 'treatment']].to_parquet(artifacts/'prediction_rows.parquet', index=False)
     clock = time.perf_counter()
+    print('phase=inference start', file=sys.stderr, flush=True)
     estimates, urgency = analyze(extremes, pred, x, nuisance['feature_names'])
     timing['inference'] = time.perf_counter()-clock
     smoke = args.max_replays is not None
@@ -375,6 +394,8 @@ def main(argv=None):
     source = Path(__file__).parent
     hashes = {name: hashlib.sha256((source/name).read_bytes()).hexdigest() for name in
               ('pushup_possession.py', 'pushup_dr.py', 'events.py', 'screen.py', 'data.py', 'extract.py', 'pressure.py')}
+    if args.lowmem:
+        hashes['lowmem.py'] = hashlib.sha256((source/'lowmem.py').read_bytes()).hexdigest()
     head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
     timing['total'] = time.perf_counter()-started
     result = {'task': 'pushup_possession', 'method': 'possession-conditioned train-frozen HGB / AIPW initiation',
