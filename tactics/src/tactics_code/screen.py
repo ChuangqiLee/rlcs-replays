@@ -144,12 +144,20 @@ def explicit_region(meta):
     return None
 
 
+EXCLUDED_DECODE = set()
+
+
 def metadata_inventory(root):
     root = guard_path(root)
     extraction = json.loads(guard_path(root / "extraction.json").read_text())
     if extraction.get("state_map", {}).get("state_decoding") != "per_replay_decoded":
         raise ValueError("Extraction must use per-replay state decoding")
     records, headers, files = [], {}, []
+    excl_path = root / "decode_exclusions.json"
+    exclusions = {}
+    if excl_path.exists():
+        exclusions = {k: sorted(v) for k, v in json.loads(guard_path(excl_path).read_text())["excluded"].items()}
+    EXCLUDED_DECODE.clear()
     for season in ALLOWED_SEASONS:
         # Explicit season directory, never recursive root discovery.
         directory = guard_path(root / season)
@@ -176,6 +184,13 @@ def metadata_inventory(root):
                 if row["split"] not in {"train", "val"}:
                     raise ValueError("NEVER read split 2026 (test)")
                 diag = parsed_json(row.get("state_decoding_details"), {})
+                rid = row.get("replay_id")
+                if rid in exclusions:
+                    # Upstream-listed exclusion: must match the recorded failure exactly; check is not relaxed.
+                    if row.get("state_decoding") != "per_replay_decoded" or sorted(diag.get("failures", [])) != exclusions[rid]:
+                        raise ValueError(f"Exclusion mismatch: {rid}")
+                    EXCLUDED_DECODE.add(rid)
+                    continue
                 if row.get("state_decoding") != "per_replay_decoded" or diag.get("failures", [True]):
                     raise ValueError(f"Unverified state decode: {row.get('replay_id')}")
                 if float(row["fps"]) != 10:
