@@ -47,6 +47,8 @@ source, dest = map(guard_path, sys.argv[1:])
 _, audit = inventory(source)
 dest.mkdir()
 paths = [guard_path(source/'extraction.json')]
+if (source/'decode_exclusions.json').exists():
+    paths.append(guard_path(source/'decode_exclusions.json'))
 for shard in sorted(audit['schema']):
     paths.extend([guard_path(shard), guard_path(Path(shard).with_suffix('.parquet'))])
 for path in paths:
