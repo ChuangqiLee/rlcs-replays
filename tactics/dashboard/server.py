@@ -245,7 +245,7 @@ def jobs():
         rows, source, cache_file_updated = [], None, None
         source_timezone = None
         try:
-            if os.environ.get("DASH_OFFLINE", "1") != "0":
+            if os.environ.get("DASH_OFFLINE", "0") != "0":
                 raise OSError("DASH_OFFLINE=1")
             if not user:
                 raise OSError("USER is not set")
@@ -492,7 +492,7 @@ def literature():
 
 
 def command(args):
-    if os.environ.get("DASH_OFFLINE", "1") != "0":
+    if os.environ.get("DASH_OFFLINE", "0") != "0":
         return "", "DASH_OFFLINE=1: Slurm disabled / 已禁用 Slurm"
     try:
         env = dict(os.environ)
