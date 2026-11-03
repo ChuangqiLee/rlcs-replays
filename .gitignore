@@ -30,3 +30,15 @@ tactics/refs/*.pdf
 analysis/
 tactics/results/prereg-full.q9X1KJYu/p64.islKXwrm/artifacts/selected_replays.json
 tactics/results/pushup_dr_initiation.json
+
+# kept on cluster, not published
+tactics/paper*/
+tactics/results/
+tactics/fullres/
+tactics/docs/
+tactics/figures/
+tactics/status/
+tactics/refs/
+tactics/robust/
+tactics/PROGRESS.md
+tactics/dashboard/CHANGES_dash.md
