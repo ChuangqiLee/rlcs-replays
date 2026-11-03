@@ -42,3 +42,5 @@ tactics/refs/
 tactics/robust/
 tactics/PROGRESS.md
 tactics/dashboard/CHANGES_dash.md
+tactics/dashboard/
+tactics/slurm/

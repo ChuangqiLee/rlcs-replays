@@ -15,11 +15,10 @@ about the game, and grew into a research paper (target: *IEEE Transactions on Ga
 |---|---|
 | `scripts/` | Download (Kaggle mirror, ballchasing.com API) and replay parsing with [subtr-actor](https://github.com/rlrml/subtr-actor) |
 | `tactics/src/` | Analysis code: feature extraction, score-state analyses, tactic tokens, player-fingerprint retrieval, deep-learning experiments (`ai_experiments/`, `pilot_encoder/`) |
-| `tactics/slurm/` | SLURM job scripts used on the UAB Cheaha cluster |
+
 | `tactics/docs/` | Pre-registrations, implementation notes and result write-ups |
 | `tactics/results/` | Aggregated result files (JSON) behind the paper's numbers |
 | `tactics/paper*/` | LaTeX source, figure scripts and figures of the paper and its supplement |
-| `tactics/dashboard/` | Bilingual (EN/中文) progress dashboard |
 
 ## Research questions
 
@@ -57,8 +56,6 @@ bash scripts/download_kaggle.sh
 python scripts/ballchasing.py
 sbatch scripts/parse_slurm.sh
 ```
-
-Analysis and paper jobs are under `tactics/slurm/`; see `tactics/PROGRESS.md` for the current state.
 
 ## Citation
 
