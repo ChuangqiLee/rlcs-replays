@@ -16,6 +16,7 @@ import torch
 from tactics_code.screen import ALLOWED_SEASONS, TRAIN_SEASONS
 from tactics_code.style_retrieval import check_rows
 
+from .diagnostics import batch_diagnostics
 from .models import make_model, supervised_contrastive_loss
 
 
@@ -130,7 +131,7 @@ def train_model(x, masks, window_games, games: pd.DataFrame, config: dict,
                               config.get('windows_per_identity', 4), seed)
     model = make_model(config['variant'], x.shape[-1], tiny=bool(config.get('tiny', False))).to(device)
     optimizer = torch.optim.AdamW(model.parameters(), lr=3e-4, weight_decay=1e-4)
-    history, step_seconds = [], []
+    history, step_seconds, diagnostics = [], [], []
     completed_epochs, steps, windows_seen = 0, 0, 0
     stopped_for_budget = False
     _sync(device)
@@ -139,7 +140,7 @@ def train_model(x, masks, window_games, games: pd.DataFrame, config: dict,
         epoch_start = time.perf_counter()
         losses = []
         model.train()
-        for _ in range(sampler.steps_per_epoch):
+        for step_in_epoch in range(sampler.steps_per_epoch):
             elapsed = time.perf_counter() - started
             next_step_allowance = max(step_seconds[-20:], default=0.0) * 1.25
             if elapsed + next_step_allowance >= budget:
@@ -157,9 +158,29 @@ def train_model(x, masks, window_games, games: pd.DataFrame, config: dict,
             loss = supervised_contrastive_loss(embedding, batch_labels, temperature=0.1)
             if not bool(torch.isfinite(loss)):
                 raise FloatingPointError('Nonfinite supervised contrastive loss')
+            # Observe fixed steps only; never consume sampler/model RNG or select a model.
+            observe = step_in_epoch in (0, sampler.steps_per_epoch - 1)
+            if observe:
+                snapshot = batch_diagnostics(embedding, batch_labels, batch_x, batch_mask)
+                snapshot.update(epoch=epoch + 1, optimizer_step=steps + 1,
+                                loss=float(loss.detach()),
+                                learning_rates=[group['lr'] for group in optimizer.param_groups])
+                output_before = model.output.weight.detach().clone()
             loss.backward()
-            torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+            grad_norm = torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0,
+                                                       error_if_nonfinite=True)
+            if observe:
+                snapshot['gradient_norm_pre_clip'] = float(grad_norm)
+                input_weight = (model.input.weight if hasattr(model, 'input')
+                                else model.encoder.weight_ih_l0)
+                snapshot['input_weight_gradient_norm_after_clip'] = (
+                    None if input_weight.grad is None else float(input_weight.grad.norm()))
             optimizer.step()
+            if observe:
+                snapshot['output_weight_step_delta_l2'] = float(
+                    (model.output.weight.detach() - output_before).norm())
+                diagnostics.append(snapshot)
+                print(json.dumps({'training_diagnostic': snapshot}, allow_nan=False), flush=True)
             losses.append(float(loss.detach().cpu()))
             _sync(device)
             step_seconds.append(time.perf_counter() - step_start)
@@ -201,6 +222,8 @@ def train_model(x, masks, window_games, games: pd.DataFrame, config: dict,
         'projected_requested_fit_seconds': float(np.mean(step_seconds) * sampler.steps_per_epoch * epochs),
         'checkpoint': str(checkpoint_path), 'checkpoint_seconds': time.perf_counter() - save_start,
         'history': history, 'selection': 'last iterate; no early stopping',
+        'diagnostics': diagnostics,
+        'diagnostic_sampling': 'first and planned last step per epoch, if reached; train forward',
         'optimizer': {'name': 'AdamW', 'learning_rate': 3e-4, 'weight_decay': 1e-4,
                       'gradient_clip_norm': 1.0, 'temperature': 0.1},
     }

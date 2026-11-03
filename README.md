@@ -1,89 +1,65 @@
-# RLCS replays → per-frame data
+# Tactics in Professional Rocket League (RLCS)
 
-Official RLCS replays (uploaded to ballchasing.com by "RLCS Referee") parsed into per-frame ball and
-player coordinates with [subtr-actor](https://github.com/rlrml/subtr-actor).
+How do the best Rocket League teams in the world actually play? This repository turns five seasons of
+official **Rocket League Championship Series (RLCS)** replays into per-frame trajectories and studies
+team tactics, score-state behaviour and individual player style at scale.
 
-## Environment
+Rocket League is "car football": two teams of three rocket-powered cars try to hit an oversized ball
+into the opposing goal. Every professional match is recorded as a replay file, which gives a complete,
+frame-by-frame record of where every car and the ball were. The project started purely out of curiosity
+about the game, and grew into a research paper (target: *IEEE Transactions on Games*).
 
-The home filesystem (GPFS) is very slow at creating many small files, so the heavy packages come
-from the cluster module `SciPy-bundle/2023.11-gfbf-2023b` (Python 3.11.5, numpy, pandas, scipy,
-requests) and `.venv` only adds what is in `requirements.txt`.
+## What is in here
 
-```bash
-bash setup_env.sh   # once: build .venv
-source env.sh       # every shell: load module + activate .venv
-```
-
-Put the ballchasing API key in `.env` (never committed):
-
-```
-BALLCHASING_API_KEY=...
-```
-
-## Data sources
-
-| Season | Source |
+| Path | Contents |
 |---|---|
-| RLCS 2021-22 | Kaggle mirror `rolvarild/rocket-league-championship-series-replays` |
-| RLCS 22-23, 2024 | Kaggle mirror, plus any replays of the official ballchasing groups missing from it |
-| RLCS 2025, 2026 | ballchasing API (official groups `rlcs-2025-7ielfd7uhx`, `rlcs-2026-d3chsz8nje`) |
+| `scripts/` | Download (Kaggle mirror, ballchasing.com API) and replay parsing with [subtr-actor](https://github.com/rlrml/subtr-actor) |
+| `tactics/src/` | Analysis code: feature extraction, score-state analyses, tactic tokens, player-fingerprint retrieval, deep-learning experiments (`ai_experiments/`, `pilot_encoder/`) |
+| `tactics/slurm/` | SLURM job scripts used on the UAB Cheaha cluster |
+| `tactics/docs/` | Pre-registrations, implementation notes and result write-ups |
+| `tactics/results/` | Aggregated result files (JSON) behind the paper's numbers |
+| `tactics/paper*/` | LaTeX source, figure scripts and figures of the paper and its supplement |
+| `tactics/dashboard/` | Bilingual (EN/中文) progress dashboard |
 
-The Kaggle datasets carry no licence statement; use them for research only, do not redistribute
-the raw files, and cite the dataset and ballchasing.com.
+## Research questions
 
-## Pipeline
+1. **Score state** — do teams position and pressure differently when leading, tied or trailing?
+2. **Structure** — what recurring spatial patterns ("tactic tokens") describe team play, and how do they change across seasons?
+3. **Player style** — does each pro player leave a recognisable movement fingerprint that can be retrieved from trajectories alone?
+4. **Deep learning** — can learned trajectory encoders beat hand-crafted features for these tasks?
 
-Each step is resumable; re-running continues where it stopped. Long steps run in `tmux`
-(`tmux ls`, `tmux attach -t <name>`).
+All results are reported as associations from observational data, with confidence intervals; negative
+and boundary results are kept in the supplement.
+
+## Data
+
+| Season | Parsed games | Frames (30 fps) |
+|---|---|---|
+| RLCS 2021-22 | 11,699 | 139.9 M |
+| RLCS 22-23 | 15,410 | 184.3 M |
+| RLCS 2024 | 7,307 | 87.5 M |
+| RLCS 2025 | 7,081 | 85.1 M |
+| RLCS 2026 | 7,762 | 94.3 M |
+| **Total** | **49,259** | **591.2 M** |
+
+Replays come from the public Kaggle mirror `rolvarild/rocket-league-championship-series-replays` and the
+official RLCS groups on [ballchasing.com](https://ballchasing.com). **Raw replays and frame data are not
+included in this repository** (about 210 GB); re-create them with the scripts below. The Kaggle data carry
+no licence statement, so use them for research only and cite the dataset and ballchasing.com.
+
+## Reproducing
 
 ```bash
-# 1. Kaggle mirror: ~70 GB zip, extracts only the three seasons above
-tmux new -d -s kaggle "bash scripts/download_kaggle.sh 2>&1 | tee -a logs/kaggle.log"
-
-# 2. Walk the official group trees -> data/manifest/{groups,replays}.jsonl
-tmux new -d -s crawl "bash scripts/run_forever.sh crawl"
-
-# 3. Download the replays not in the Kaggle mirror -> data/raw/ballchasing/<season>/batch-*.tar
-#    (staged on the login node's /local, packed to GPFS every 500 replays; batch-*.ids.json lists
-#    each shard's replays and marks it complete). Run it on one login node; restart it there.
-tmux new -d -s download "bash scripts/run_forever.sh download"
-
-python scripts/ballchasing.py status   # progress per season
-
-# 4. Parse to Parquet (30 fps) on a compute node -> data/frames/fps30/<season>/part-*.parquet
-sbatch scripts/parse_slurm.sh   # re-submit after more downloads; parsed replays are skipped
+bash setup_env.sh            # once: build .venv (cluster module SciPy-bundle/2023.11)
+source env.sh                # every shell
+echo "BALLCHASING_API_KEY=..." > .env   # never committed
+bash scripts/download_kaggle.sh
+python scripts/ballchasing.py
+sbatch scripts/parse_slurm.sh
 ```
 
-Rate limits follow https://ballchasing.com/doc/api per endpoint and Patreon tier. The tier is read
-from `GET /api/` every 5 minutes, so a tier upgrade speeds up running jobs without a restart.
-Hourly call counts are stored in `data/state/` so restarts don't exceed them. `run_forever.sh`
-restarts a crashed job after 60 s and stops on success or on a fatal error (rejected API key, or
-the same job already running); failures are logged in `logs/` and `data/state/download_failed.jsonl`.
+Analysis and paper jobs are under `tactics/slurm/`; see `tactics/PROGRESS.md` for the current state.
 
-## Frame data
+## Citation
 
-GPFS stalls when many files are created in one directory, so replays are stored in shards of
-about 200 games:
-
-- `part-<run>-<k>.parquet`: frames, one row per frame (30 fps) and one row group per replay.
-  Columns `replay_id`, `frame`, then float32 features:
-  - Ball: position, rotation, linear and angular velocity (x/y/z); `current time`, `frame time`,
-    `seconds remaining`, `game state`, `ball has been hit`
-  - Players `p0 … p5`: position, rotation, linear and angular velocity,
-    `boost level (raw replay units)`, `dodge/jump/double jump active`, `any_jump_active`,
-    `player demolished by`. NaN for games with fewer than 6 players.
-- `part-<run>-<k>.index.parquet`: one row per replay: `status` (`ok`/`failed` with `error`),
-  `n_players`, `n_frames`, `players` (JSON, in column order) and `replay_meta` (JSON header metadata).
-
-Players are ordered team 0 (blue) then team 1 (orange); this was checked against kickoff positions.
-The order of players within a team follows the replay header.
-
-```python
-import glob, json, pyarrow.dataset as ds
-base = "data/frames/fps30"
-index = ds.dataset(glob.glob(f"{base}/*/*.index.parquet")).to_table().to_pandas()
-frames = ds.dataset([p for p in glob.glob(f"{base}/*/*.parquet") if not p.endswith(".index.parquet")])
-rid = index.query("status == 'ok'").replay_id.iloc[0]
-df = frames.to_table(filter=ds.field("replay_id") == rid).to_pandas()
-players = json.loads(index.set_index("replay_id").loc[rid, "players"])
-```
+Paper in preparation. Please cite this repository, the RLCS replay dataset and ballchasing.com if you use the code.
