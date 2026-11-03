@@ -244,6 +244,7 @@ main {
   color:var(--text)
 }
 .kpi-foot {
+  overflow-wrap:anywhere;
   font-size:15px;
   color:var(--muted)
 }

@@ -33,6 +33,9 @@ export TACT="$PILOT_TACT"
 source "$PILOT_TACT/slurm/env.sh"
 set -u
 export PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
+# Must be set before either Python process initializes CUDA. Other warning-only
+# deterministic kernels can still differ; seed 42 is not a bitwise guarantee.
+export CUBLAS_WORKSPACE_CONFIG=:4096:8
 # Preserve module-provided dependency paths while exposing the local packages.
 export PYTHONPATH="$PILOT_TACT/src${PYTHONPATH:+:$PYTHONPATH}"
 export OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1
@@ -42,6 +45,12 @@ PILOT_SOURCE="${PILOT_COMPACT:-$PILOT_TACT/artifacts/p3-small-41104745-s42-w6-f1
 PILOT_SCRATCH="$TMPDIR/pilot-encoder-$SLURM_JOB_ID-$VARIANT"
 mkdir "$PILOT_SCRATCH"
 mkdir -p "$PILOT_TACT/results"
+# Preserve the original preregistered results and every subsequent job's report.
+PILOT_RESULT="$PILOT_TACT/results/pilot_encoder_${VARIANT}_${SLURM_JOB_ID}.json"
+if [ -e "$PILOT_RESULT" ] || [ -L "$PILOT_RESULT" ]; then
+    printf 'Refusing to overwrite result: %s\n' "$PILOT_RESULT" >&2
+    exit 2
+fi
 printf 'Source commit: '
 git rev-parse HEAD
 printf 'Variant: %s\nCompact source: %s\n' "$VARIANT" "$PILOT_SOURCE"
@@ -65,7 +74,8 @@ fi
 # Preserve structured failure/budget reports as well as successful results.
 # A staging failure cannot launch training; its report is copied below.
 if [ -f "$PILOT_SCRATCH/pilot_encoder_${VARIANT}.json" ]; then
-    cp "$PILOT_SCRATCH/pilot_encoder_${VARIANT}.json" \
-        "$PILOT_TACT/results/pilot_encoder_${VARIANT}.json"
+    (set -o noclobber
+     cat "$PILOT_SCRATCH/pilot_encoder_${VARIANT}.json" > "$PILOT_RESULT")
+    printf 'Preserved result: %s\n' "$PILOT_RESULT"
 fi
 exit "$PILOT_EXIT_STATUS"

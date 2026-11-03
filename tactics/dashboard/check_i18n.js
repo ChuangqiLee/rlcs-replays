@@ -10,7 +10,8 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 const {execFileSync} = require('node:child_process');
-const root = path.resolve(__dirname, '..');
+const codeRoot = path.resolve(__dirname, '..');
+const root = path.resolve(process.env.DASH_DATA_ROOT || codeRoot);
 const cjk = /[\u3000-\u9fff\uff00-\uffef]/;
 const decode = text => String(text).replace(/&(#x[\da-f]+|#\d+|amp|lt|gt|quot|apos|nbsp);/gi, (_, x) =>
   x[0] === '#' ? String.fromCodePoint(parseInt(x.slice(x[1].toLowerCase()==='x'?2:1),x[1].toLowerCase()==='x'?16:10)) :
@@ -69,7 +70,7 @@ from dashboard import server
 with open('dashx/sacct_dash.psv', encoding='utf-8') as handle:
     rows=server.parse_jobs(handle.read())
 print(json.dumps(server.json_safe(dict(jobs=dict(jobs=rows,summary=server.job_summary(rows),source='dashx/sacct_dash.psv',updated='2026-10-31T23:47:00+00:00'),paper=server.paper(),runs=server.runs(),logs=server.logs(),literature=server.literature(),progress=server.progress())),ensure_ascii=False))
-`],{cwd:root,encoding:'utf8',env:{...process.env,DASH_OFFLINE:'1',PYTHONDONTWRITEBYTECODE:'1'},maxBuffer:64*1024*1024}));
+`],{cwd:codeRoot,encoding:'utf8',env:{...process.env,DASH_DATA_ROOT:root,DASH_OFFLINE:'1',PYTHONDONTWRITEBYTECODE:'1'},maxBuffer:64*1024*1024}));
 Object.assign(data,auxiliary,{host:{host:'snapshot',time:'2026-10-31T23:47:00+00:00'}});
 assert.ok(data.jobs.jobs.length,'Real PSV must contain jobs');
 api.state.data=data;api.state.last=data.host.time;api.state.next=Infinity;

@@ -20,3 +20,13 @@ tactics/envs/
 tactics/artifacts/
 tactics/status/*.lock
 tactics/refs/*.pdf
+
+# macOS metadata / sync leftovers / backups / logs
+._*
+.DS_Store
+.sync_del
+*.pre_ai_backup
+*.log
+analysis/
+tactics/results/prereg-full.q9X1KJYu/p64.islKXwrm/artifacts/selected_replays.json
+tactics/results/pushup_dr_initiation.json

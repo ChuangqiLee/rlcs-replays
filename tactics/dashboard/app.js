@@ -572,7 +572,7 @@
     "en": "boost path a*b +0.00095 [0.00059,0.00132]; does not explain association; descriptive"
   },
   "IEEE Transactions on Games": {
-    "zh": "IEEE 游戏汇刊",
+    "zh": "IEEE Transactions on Games",
     "en": "IEEE Transactions on Games"
   },
   "Introduction": {
@@ -989,7 +989,7 @@
   },
   "进度大屏": {
     "zh": "进度大屏",
-    "en": "Progress dashboard"
+    "en": "Research dashboard"
   },
   "进度大屏上线：login006 127.0.0.1:18765，10 个页面，tmux 看门狗自动拉起": {
     "zh": "进度大屏上线：login006 127.0.0.1:18765，10 个页面，tmux 看门狗自动拉起",
@@ -997,7 +997,7 @@
   },
   "文献与创新": {
     "zh": "文献与创新",
-    "en": "Literature and ideas"
+    "en": "Literature and research design"
   },
   "设计完成：7 个研究问题（轮转语法/压力下补位/风格指纹为主），8 篇白名单文献 + 3 个数据来源已核实": {
     "zh": "设计完成：7 个研究问题（轮转语法/压力下补位/风格指纹为主），8 篇白名单文献 + 3 个数据来源已核实",
@@ -1013,7 +1013,7 @@
   },
   "发现收敛": {
     "zh": "发现收敛",
-    "en": "Consolidating findings"
+    "en": "Finding consolidation"
   },
   "校正指标确认：末段落后一球时真正最后一人(最靠己方球门者)比领先时靠前 458uu(CI 390-529, p=1.5e-31, 358 系列赛, 作业 41104851)。前压双重稳健分析 41104850 运行中(状态设计因正性失败仅作描述，启动前压设计为主)；快筛并行 41104877/78/79": {
     "zh": "校正指标确认：末段落后一球时真正最后一人(最靠己方球门者)比领先时靠前 458uu(CI 390-529, p=1.5e-31, 358 系列赛, 作业 41104851)。前压双重稳健分析 41104850 运行中(状态设计因正性失败仅作描述，启动前压设计为主)；快筛并行 41104877/78/79",
@@ -1021,7 +1021,7 @@
   },
   "论文": {
     "zh": "论文",
-    "en": "Paper"
+    "en": "Manuscript"
   },
   "P6.4": {
     "zh": "P6.4",
@@ -2548,7 +2548,7 @@
     "en": "ballchasing.com"
   },
   "Rocket League replay hosting, visualization, and statistics service": {
-    "zh": "火箭联盟回放托管、可视化与统计服务",
+    "zh": "Rocket League 回放托管、可视化与统计服务",
     "en": "Rocket League replay hosting, visualization, and statistics service"
   },
   "Doubly Robust Estimation in Missing Data and Causal Inference Models": {
@@ -2556,19 +2556,19 @@
     "en": "Doubly Robust Estimation in Missing Data and Causal Inference Models"
   },
   "Biometrics": {
-    "zh": "生物统计学",
+    "zh": "《生物统计学》",
     "en": "Biometrics"
   },
   "Controlling the False Discovery Rate: A Practical and Powerful Approach to Multiple Testing": {
-    "zh": "控制错误发现率：多重检验的一种实用而有力的方法",
+    "zh": "控制错误发现率：一种实用且有效的多重检验方法",
     "en": "Controlling the False Discovery Rate: A Practical and Powerful Approach to Multiple Testing"
   },
   "Journal of the Royal Statistical Society. Series B (Methodological)": {
-    "zh": "皇家统计学会杂志 B 辑（方法论）",
+    "zh": "《皇家统计学会学报 B 辑（方法论）》",
     "en": "Journal of the Royal Statistical Society. Series B (Methodological)"
   },
   "Rocket League Championship Series 2021-2022": {
-    "zh": "火箭联盟冠军系列赛 2021–2022",
+    "zh": "Rocket League 冠军系列赛 2021–2022",
     "en": "Rocket League Championship Series 2021-2022"
   },
   "Kaggle dataset": {
@@ -2576,7 +2576,7 @@
     "en": "Kaggle dataset"
   },
   "Coordinated Multi-Agent Imitation Learning": {
-    "zh": "协同多智能体模仿学习",
+    "zh": "协调式多智能体模仿学习",
     "en": "Coordinated Multi-Agent Imitation Learning"
   },
   "Proceedings of the 34th International Conference on Machine Learning": {
@@ -2592,7 +2592,7 @@
     "en": "2013 IEEE Conference on Computer Vision and Pattern Recognition"
   },
   "A Behavioral Pattern Mining Approach to Model Player Skills in Rocket League": {
-    "zh": "基于行为模式挖掘的火箭联盟玩家技能建模",
+    "zh": "通过行为模式挖掘建模 Rocket League 玩家技能",
     "en": "A Behavioral Pattern Mining Approach to Model Player Skills in Rocket League"
   },
   "2020 IEEE Conference on Games (CoG)": {
@@ -2604,15 +2604,15 @@
     "en": "A Model for High-Order Markov Chains"
   },
   "Estimation of Regression Coefficients When Some Regressors are not Always Observed": {
-    "zh": "部分回归变量并非总能观测时的回归系数估计",
+    "zh": "部分回归变量并非始终可观测时的回归系数估计",
     "en": "Estimation of Regression Coefficients When Some Regressors are not Always Observed"
   },
   "Journal of the American Statistical Association": {
-    "zh": "美国统计学会杂志",
+    "zh": "《美国统计学会杂志》",
     "en": "Journal of the American Statistical Association"
   },
   "Temporal Graph Networks for Deep Learning on Dynamic Graphs": {
-    "zh": "动态图库深度学习的时序图网络",
+    "zh": "用于动态图深度学习的时间图网络",
     "en": "Temporal Graph Networks for Deep Learning on Dynamic Graphs"
   },
   "arXiv preprint arXiv:2006.10637": {
@@ -2624,7 +2624,7 @@
     "en": "subtr-actor"
   },
   "Software repository": {
-    "zh": "软件仓库",
+    "zh": "软件代码仓库",
     "en": "Software repository"
   },
   "Analyzing the Differences between Professional and Amateur Esports through Win Probability": {
@@ -2640,7 +2640,7 @@
     "en": "Deep Sets"
   },
   "Advances in Neural Information Processing Systems": {
-    "zh": "神经信息处理系统进展",
+    "zh": "《神经信息处理系统进展》",
     "en": "Advances in Neural Information Processing Systems"
   },
   "## P1 进度大屏 — 2026-10-31 14:55 CET（已上线）": {
@@ -2694,6 +2694,958 @@
   "- 下一步：结果出来后写入论文“谁压/值不值”；收敛分析，不新增方向；论文结构、图、引用核实、编译 PDF；大屏由独立 Codex 修复，待逐页截图验收。": {
     "zh": "- 下一步：结果出来后写入论文“谁压/值不值”；收敛分析，不新增方向；论文结构、图、引用核实、编译 PDF；大屏由独立 Codex 修复，待逐页截图验收。",
     "en": "- Next: incorporate results into the paper sections on who pushes up and whether it is worthwhile; consolidate analyses without adding directions; complete paper structure, figures, citation checks and PDF compilation. A separate Codex session is fixing the dashboard, pending screenshot acceptance for every page."
+  },
+  "Spatio-Temporal Analysis of Team Sports": {
+    "zh": "团队运动的时空分析",
+    "en": "Spatio-Temporal Analysis of Team Sports"
+  },
+  "ACM Computing Surveys": {
+    "zh": "《ACM 计算综述》",
+    "en": "ACM Computing Surveys"
+  },
+  "Discovering Team Structures in Soccer from Spatiotemporal Data": {
+    "zh": "从时空数据中发现足球团队结构",
+    "en": "Discovering Team Structures in Soccer from Spatiotemporal Data"
+  },
+  "IEEE Transactions on Knowledge and Data Engineering": {
+    "zh": "《IEEE 知识与数据工程汇刊》",
+    "en": "IEEE Transactions on Knowledge and Data Engineering"
+  },
+  "Visual analysis of pressure in football": {
+    "zh": "足球比赛中施压行为的可视分析",
+    "en": "Visual analysis of pressure in football"
+  },
+  "Data Mining and Knowledge Discovery": {
+    "zh": "《数据挖掘与知识发现》",
+    "en": "Data Mining and Knowledge Discovery"
+  },
+  "Data-driven detection of counterpressing in professional football: A supervised machine learning task based on synchronized positional and event data with expert-based feature extraction": {
+    "zh": "职业足球中反抢行为的数据驱动检测：基于同步位置与事件数据及专家特征提取的监督式机器学习任务",
+    "en": "Data-driven detection of counterpressing in professional football: A supervised machine learning task based on synchronized positional and event data with expert-based feature extraction"
+  },
+  "Beyond Expected Goals": {
+    "zh": "超越预期进球",
+    "en": "Beyond Expected Goals"
+  },
+  "MIT Sloan Sports Analytics Conference": {
+    "zh": "麻省理工学院斯隆体育分析会议",
+    "en": "MIT Sloan Sports Analytics Conference"
+  },
+  "Actions Speak Louder than Goals: Valuing Player Actions in Soccer": {
+    "zh": "行动胜于进球：评估足球球员动作的价值",
+    "en": "Actions Speak Louder than Goals: Valuing Player Actions in Soccer"
+  },
+  "Proceedings of the 25th ACM SIGKDD International Conference on Knowledge Discovery & Data Mining": {
+    "zh": "第 25 届 ACM SIGKDD 知识发现与数据挖掘国际会议论文集",
+    "en": "Proceedings of the 25th ACM SIGKDD International Conference on Knowledge Discovery & Data Mining"
+  },
+  "Valuing Player Actions in Counter-Strike: Global Offensive": {
+    "zh": "评估 Counter-Strike: Global Offensive 中玩家动作的价值",
+    "en": "Valuing Player Actions in Counter-Strike: Global Offensive"
+  },
+  "2020 IEEE International Conference on Big Data (Big Data)": {
+    "zh": "2020 年 IEEE 大数据国际会议",
+    "en": "2020 IEEE International Conference on Big Data (Big Data)"
+  },
+  "TAGNet: Temporal Attention Graph Network for Defensive Tactical Pattern Recognition in Professional Counter-Strike 2": {
+    "zh": "TAGNet：用于职业 Counter-Strike 2 防守战术模式识别的时间注意力图网络",
+    "en": "TAGNet: Temporal Attention Graph Network for Defensive Tactical Pattern Recognition in Professional Counter-Strike 2"
+  },
+  "Bayesian Clustering of Player Styles for Multiplayer Games": {
+    "zh": "多人游戏中玩家风格的贝叶斯聚类",
+    "en": "Bayesian Clustering of Player Styles for Multiplayer Games"
+  },
+  "Proceedings of the AAAI Conference on Artificial Intelligence and Interactive Digital Entertainment": {
+    "zh": "AAAI 人工智能与交互数字娱乐会议论文集",
+    "en": "Proceedings of the AAAI Conference on Artificial Intelligence and Interactive Digital Entertainment"
+  },
+  "TS2Vec: Towards Universal Representation of Time Series": {
+    "zh": "TS2Vec：迈向通用时间序列表征",
+    "en": "TS2Vec: Towards Universal Representation of Time Series"
+  },
+  "Proceedings of the AAAI Conference on Artificial Intelligence": {
+    "zh": "AAAI 人工智能会议论文集",
+    "en": "Proceedings of the AAAI Conference on Artificial Intelligence"
+  },
+  "A Multiresolution Stochastic Process Model for Predicting Basketball Possession Outcomes": {
+    "zh": "用于预测篮球控球回合结果的多分辨率随机过程模型",
+    "en": "A Multiresolution Stochastic Process Model for Predicting Basketball Possession Outcomes"
+  },
+  "A framework for the fine-grained evaluation of the instantaneous expected value of soccer possessions": {
+    "zh": "细粒度评估足球控球瞬时预期价值的框架",
+    "en": "A framework for the fine-grained evaluation of the instantaneous expected value of soccer possessions"
+  },
+  "Machine Learning": {
+    "zh": "《机器学习》",
+    "en": "Machine Learning"
+  },
+  "Using Big Data to Emulate a Target Trial When a Randomized Trial Is Not Available": {
+    "zh": "无法开展随机试验时利用大数据模拟目标试验",
+    "en": "Using Big Data to Emulate a Target Trial When a Randomized Trial Is Not Available"
+  },
+  "American Journal of Epidemiology": {
+    "zh": "《美国流行病学杂志》",
+    "en": "American Journal of Epidemiology"
+  },
+  "SoccerStories: A Kick-off for Visual Soccer Analysis": {
+    "zh": "SoccerStories：足球可视分析的开端",
+    "en": "SoccerStories: A Kick-off for Visual Soccer Analysis"
+  },
+  "IEEE Transactions on Visualization and Computer Graphics": {
+    "zh": "《IEEE 可视化与计算机图形学汇刊》",
+    "en": "IEEE Transactions on Visualization and Computer Graphics"
+  },
+  "Bring It to the Pitch: Combining Video and Movement Data to Enhance Team Sport Analysis": {
+    "zh": "走进球场：结合视频与运动数据增强团队运动分析",
+    "en": "Bring It to the Pitch: Combining Video and Movement Data to Enhance Team Sport Analysis"
+  },
+  "Visualizing the Spatio-Temporal Evolution of Gameplay using Storyline Visualization: A Study with League of Legends": {
+    "zh": "利用故事线可视化呈现游戏过程的时空演变：以英雄联盟为例",
+    "en": "Visualizing the Spatio-Temporal Evolution of Gameplay using Storyline Visualization: A Study with League of Legends"
+  },
+  "Proceedings of the ACM on Human-Computer Interaction": {
+    "zh": "ACM 人机交互论文集",
+    "en": "Proceedings of the ACM on Human-Computer Interaction"
+  },
+  "Identifying Team Style in Soccer Using Formations Learned from Spatiotemporal Tracking Data": {
+    "zh": "利用从时空跟踪数据中学习的阵型识别足球团队风格",
+    "en": "Identifying Team Style in Soccer Using Formations Learned from Spatiotemporal Tracking Data"
+  },
+  "2014 IEEE International Conference on Data Mining Workshop": {
+    "zh": "2014 年 IEEE 数据挖掘国际会议研讨会",
+    "en": "2014 IEEE International Conference on Data Mining Workshop"
+  },
+  "Strategies for Pulling the Goalie in Hockey": {
+    "zh": "冰球比赛撤下守门员的策略",
+    "en": "Strategies for Pulling the Goalie in Hockey"
+  },
+  "The American Statistician": {
+    "zh": "《美国统计学家》",
+    "en": "The American Statistician"
+  },
+  "Behavior under social pressure: Empty Italian stadiums and referee bias": {
+    "zh": "社会压力下的行为：意大利空场比赛与裁判偏差",
+    "en": "Behavior under social pressure: Empty Italian stadiums and referee bias"
+  },
+  "Economics Letters": {
+    "zh": "《经济学快报》",
+    "en": "Economics Letters"
+  },
+  "Causal effects of an absent crowd on performances and refereeing decisions during Covid-19": {
+    "zh": "新冠疫情期间观众缺席对比赛表现与裁判判罚的因果影响",
+    "en": "Causal effects of an absent crowd on performances and refereeing decisions during Covid-19"
+  },
+  "The central role of the propensity score in observational studies for causal effects": {
+    "zh": "倾向评分在因果效应观察性研究中的核心作用",
+    "en": "The central role of the propensity score in observational studies for causal effects"
+  },
+  "Biometrika": {
+    "zh": "《生物统计》",
+    "en": "Biometrika"
+  },
+  "Extracted full-data paper results": {
+    "zh": "论文全量结果摘录",
+    "en": "Extracted full-data paper results"
+  },
+  "Existing research outputs are copied at their original precision without recalculating statistics. A raw fit status is not a passed test; q values retain the JSON values, reported in the paper at the permutation resolution floor.": {
+    "zh": "仅摘录既有研究输出，保留原始精度，不重新计算统计量。原始拟合状态不等同于通过检验；q 值保留 JSON 原值，论文按置换分辨率下限报告。",
+    "en": "Existing research outputs are copied at their original precision without recalculating statistics. A raw fit status is not a passed test; q values retain the JSON values, reported in the paper at the permutation resolution floor."
+  },
+  "RQ4 full-data adjacent-season habit stability": {
+    "zh": "RQ4 全量相邻赛季习惯稳定性",
+    "en": "RQ4 full-data adjacent-season habit stability"
+  },
+  "Development seasons: 2021–22 through 2025": {
+    "zh": "开发季：2021–22 至 2025",
+    "en": "Development seasons: 2021–22 through 2025"
+  },
+  "paper2/fullres/results/rq4_habits_full/rq4_habits.json": {
+    "zh": "paper2/fullres/results/rq4_habits_full/rq4_habits.json",
+    "en": "paper2/fullres/results/rq4_habits_full/rq4_habits.json"
+  },
+  "P6.3 full-data roster push-up stability": {
+    "zh": "P6.3 全量阵容前压稳定性",
+    "en": "P6.3 full-data roster push-up stability"
+  },
+  "Training seasons versus 2025 validation": {
+    "zh": "训练季与 2025 验证季",
+    "en": "Training seasons versus 2025 validation"
+  },
+  "The source output marks finding=false. Eligible-roster support is insufficient; the paper retains this analysis in the supplement without claiming a stability finding.": {
+    "zh": "原始输出标记 finding=false；合格阵容支持不足，论文仅保留在补充材料，不能作为稳定性发现。",
+    "en": "The source output marks finding=false. Eligible-roster support is insufficient; the paper retains this analysis in the supplement without claiming a stability finding."
+  },
+  "day1/results/pushup_heterogeneity.json": {
+    "zh": "day1/results/pushup_heterogeneity.json",
+    "en": "day1/results/pushup_heterogeneity.json"
+  },
+  "Roster random slopes: training seasons → 2025": {
+    "zh": "阵容随机斜率：训练季 → 2025",
+    "en": "Roster random slopes: training seasons → 2025"
+  },
+  "Last-man share · 21-22 → 22-23": {
+    "zh": "最后一人占比 · 21-22 → 22-23",
+    "en": "Last-man share · 21-22 → 22-23"
+  },
+  "Last-man · 21-22→22-23": {
+    "zh": "最后一人 · 21-22→22-23",
+    "en": "Last-man · 21-22→22-23"
+  },
+  "Own-goal depth · 21-22 → 22-23": {
+    "zh": "距己方球门深度 · 21-22 → 22-23",
+    "en": "Own-goal depth · 21-22 → 22-23"
+  },
+  "Own-goal · 21-22→22-23": {
+    "zh": "球门深度 · 21-22→22-23",
+    "en": "Own-goal · 21-22→22-23"
+  },
+  "Own-third depth · 21-22 → 22-23": {
+    "zh": "本方后场三分之一区域内深度 · 21-22 → 22-23",
+    "en": "Own-third depth · 21-22 → 22-23"
+  },
+  "Own-third · 21-22→22-23": {
+    "zh": "后场深度 · 21-22→22-23",
+    "en": "Own-third · 21-22→22-23"
+  },
+  "Mean boost · 21-22 → 22-23": {
+    "zh": "平均加速资源 · 21-22 → 22-23",
+    "en": "Mean boost · 21-22 → 22-23"
+  },
+  "Mean boost · 21-22→22-23": {
+    "zh": "平均加速资源 · 21-22→22-23",
+    "en": "Mean boost · 21-22→22-23"
+  },
+  "Supersonic share · 21-22 → 22-23": {
+    "zh": "超音速占比 · 21-22 → 22-23",
+    "en": "Supersonic share · 21-22 → 22-23"
+  },
+  "Supersonic · 21-22→22-23": {
+    "zh": "超音速占比 · 21-22→22-23",
+    "en": "Supersonic · 21-22→22-23"
+  },
+  "Ball-proximity share · 21-22 → 22-23": {
+    "zh": "近球占比 · 21-22 → 22-23",
+    "en": "Ball-proximity share · 21-22 → 22-23"
+  },
+  "Ball proximity · 21-22→22-23": {
+    "zh": "近球占比 · 21-22→22-23",
+    "en": "Ball proximity · 21-22→22-23"
+  },
+  "Aerial share · 21-22 → 22-23": {
+    "zh": "空中占比 · 21-22 → 22-23",
+    "en": "Aerial share · 21-22 → 22-23"
+  },
+  "Aerial · 21-22→22-23": {
+    "zh": "空中占比 · 21-22→22-23",
+    "en": "Aerial · 21-22→22-23"
+  },
+  "Rotation-back speed · 21-22 → 22-23": {
+    "zh": "回防速度 · 21-22 → 22-23",
+    "en": "Rotation-back speed · 21-22 → 22-23"
+  },
+  "Rotation back · 21-22→22-23": {
+    "zh": "回防速度 · 21-22→22-23",
+    "en": "Rotation back · 21-22→22-23"
+  },
+  "Last-man share · 22-23 → 2024": {
+    "zh": "最后一人占比 · 22-23 → 2024",
+    "en": "Last-man share · 22-23 → 2024"
+  },
+  "Last-man · 22-23→2024": {
+    "zh": "最后一人 · 22-23→2024",
+    "en": "Last-man · 22-23→2024"
+  },
+  "Own-goal depth · 22-23 → 2024": {
+    "zh": "距己方球门深度 · 22-23 → 2024",
+    "en": "Own-goal depth · 22-23 → 2024"
+  },
+  "Own-goal · 22-23→2024": {
+    "zh": "球门深度 · 22-23→2024",
+    "en": "Own-goal · 22-23→2024"
+  },
+  "Own-third depth · 22-23 → 2024": {
+    "zh": "本方后场三分之一区域内深度 · 22-23 → 2024",
+    "en": "Own-third depth · 22-23 → 2024"
+  },
+  "Own-third · 22-23→2024": {
+    "zh": "后场深度 · 22-23→2024",
+    "en": "Own-third · 22-23→2024"
+  },
+  "Mean boost · 22-23 → 2024": {
+    "zh": "平均加速资源 · 22-23 → 2024",
+    "en": "Mean boost · 22-23 → 2024"
+  },
+  "Mean boost · 22-23→2024": {
+    "zh": "平均加速资源 · 22-23→2024",
+    "en": "Mean boost · 22-23→2024"
+  },
+  "Supersonic share · 22-23 → 2024": {
+    "zh": "超音速占比 · 22-23 → 2024",
+    "en": "Supersonic share · 22-23 → 2024"
+  },
+  "Supersonic · 22-23→2024": {
+    "zh": "超音速占比 · 22-23→2024",
+    "en": "Supersonic · 22-23→2024"
+  },
+  "Ball-proximity share · 22-23 → 2024": {
+    "zh": "近球占比 · 22-23 → 2024",
+    "en": "Ball-proximity share · 22-23 → 2024"
+  },
+  "Ball proximity · 22-23→2024": {
+    "zh": "近球占比 · 22-23→2024",
+    "en": "Ball proximity · 22-23→2024"
+  },
+  "Aerial share · 22-23 → 2024": {
+    "zh": "空中占比 · 22-23 → 2024",
+    "en": "Aerial share · 22-23 → 2024"
+  },
+  "Aerial · 22-23→2024": {
+    "zh": "空中占比 · 22-23→2024",
+    "en": "Aerial · 22-23→2024"
+  },
+  "Rotation-back speed · 22-23 → 2024": {
+    "zh": "回防速度 · 22-23 → 2024",
+    "en": "Rotation-back speed · 22-23 → 2024"
+  },
+  "Rotation back · 22-23→2024": {
+    "zh": "回防速度 · 22-23→2024",
+    "en": "Rotation back · 22-23→2024"
+  },
+  "Last-man share · 2024 → 2025": {
+    "zh": "最后一人占比 · 2024 → 2025",
+    "en": "Last-man share · 2024 → 2025"
+  },
+  "Last-man · 2024→2025": {
+    "zh": "最后一人 · 2024→2025",
+    "en": "Last-man · 2024→2025"
+  },
+  "Own-goal depth · 2024 → 2025": {
+    "zh": "距己方球门深度 · 2024 → 2025",
+    "en": "Own-goal depth · 2024 → 2025"
+  },
+  "Own-goal · 2024→2025": {
+    "zh": "球门深度 · 2024→2025",
+    "en": "Own-goal · 2024→2025"
+  },
+  "Own-third depth · 2024 → 2025": {
+    "zh": "本方后场三分之一区域内深度 · 2024 → 2025",
+    "en": "Own-third depth · 2024 → 2025"
+  },
+  "Own-third · 2024→2025": {
+    "zh": "后场深度 · 2024→2025",
+    "en": "Own-third · 2024→2025"
+  },
+  "Mean boost · 2024 → 2025": {
+    "zh": "平均加速资源 · 2024 → 2025",
+    "en": "Mean boost · 2024 → 2025"
+  },
+  "Mean boost · 2024→2025": {
+    "zh": "平均加速资源 · 2024→2025",
+    "en": "Mean boost · 2024→2025"
+  },
+  "Supersonic share · 2024 → 2025": {
+    "zh": "超音速占比 · 2024 → 2025",
+    "en": "Supersonic share · 2024 → 2025"
+  },
+  "Supersonic · 2024→2025": {
+    "zh": "超音速占比 · 2024→2025",
+    "en": "Supersonic · 2024→2025"
+  },
+  "Ball-proximity share · 2024 → 2025": {
+    "zh": "近球占比 · 2024 → 2025",
+    "en": "Ball-proximity share · 2024 → 2025"
+  },
+  "Ball proximity · 2024→2025": {
+    "zh": "近球占比 · 2024→2025",
+    "en": "Ball proximity · 2024→2025"
+  },
+  "Aerial share · 2024 → 2025": {
+    "zh": "空中占比 · 2024 → 2025",
+    "en": "Aerial share · 2024 → 2025"
+  },
+  "Aerial · 2024→2025": {
+    "zh": "空中占比 · 2024→2025",
+    "en": "Aerial · 2024→2025"
+  },
+  "Rotation-back speed · 2024 → 2025": {
+    "zh": "回防速度 · 2024 → 2025",
+    "en": "Rotation-back speed · 2024 → 2025"
+  },
+  "Rotation back · 2024→2025": {
+    "zh": "回防速度 · 2024→2025",
+    "en": "Rotation back · 2024→2025"
+  },
+  "## 2026-11-01 03:15 CET 更新": {
+    "zh": "## 2026-11-01 03:15 CET 更新",
+    "en": "## 2026-11-01 03:15 CET update"
+  },
+  "- P6.3 全量（41105126）COMPLETED：bootstrap 2000/2000（fit 20000），输出 results/pushup_heterogeneity.json。roster 跨赛季稳定性比较仅 n=4 单元（rho=-0.80），不足以作为发现，写入补充材料。": {
+    "zh": "- P6.3 全量（41105126）COMPLETED：bootstrap 2000/2000（fit 20000），输出 results/pushup_heterogeneity.json。roster 跨赛季稳定性比较仅 n=4 单元（rho=-0.80），不足以作为发现，写入补充材料。",
+    "en": "- Full-scale P6.3 (41105126) COMPLETED: bootstrap 2000/2000 (fit 20000); output: results/pushup_heterogeneity.json. The across-season roster stability comparison has only n=4 units (rho=-0.80), insufficient to support a finding; included in the supplement."
+  },
+  "- RQ4 全量（41105127）COMPLETED：results/rq4_habits_full；n=461 player-season 对，示例 rho 0.531/0.638/0.664/0.759，24 个相邻赛季相关全部为正（rho 0.45–0.84，BH q<0.05），已写入论文正文。": {
+    "zh": "- RQ4 全量（41105127）COMPLETED：results/rq4_habits_full；n=461 player-season 对，示例 rho 0.531/0.638/0.664/0.759，24 个相邻赛季相关全部为正（rho 0.45–0.84，BH q<0.05），已写入论文正文。",
+    "en": "- Full-scale RQ4 (41105127) COMPLETED: results/rq4_habits_full; n=461 player-season pairs, example rho values 0.531/0.638/0.664/0.759. All 24 adjacent-season correlations are positive (rho 0.45–0.84, BH q<0.05); incorporated into the main manuscript."
+  },
+  "- P4 全量（41105136@64G, 41105156@192G）与 P6.4 全量（41105139, 41105157）均 OUT_OF_MEMORY（约 23 min），未再重提；论文使用 medium 结果并在补充注明。": {
+    "zh": "- P4 全量（41105136@64G, 41105156@192G）与 P6.4 全量（41105139, 41105157）均 OUT_OF_MEMORY（约 23 min），未再重提；论文使用 medium 结果并在补充注明。",
+    "en": "- Full-scale P4 (41105136@64G, 41105156@192G) and full-scale P6.4 (41105139, 41105157) all ended OUT_OF_MEMORY (approximately 23 min); no further resubmissions. The paper uses medium-sample results and notes this in the supplement."
+  },
+  "- 论文：重写版（Codex 提交 7f9cd5a，Mac 快照）正文 7 页 + 补充 8 页；正在按统一风格（STIX 字体、Okabe-Ito、IEEE 尺寸）重做全部数据图。": {
+    "zh": "- 论文：重写版（Codex 提交 7f9cd5a，Mac 快照）正文 7 页 + 补充 8 页；正在按统一风格（STIX 字体、Okabe-Ito、IEEE 尺寸）重做全部数据图。",
+    "en": "- Paper: the rewritten version (Codex commit 7f9cd5a, Mac snapshot) has 7 main-text pages + 8 supplement pages. All data figures are being redrawn in a consistent style (STIX fonts, Okabe-Ito palette, IEEE dimensions)."
+  },
+  "- 空间可视化抽取：41105169、41105180 因输出路径守卫失败（目录名含 2026 / 非允许路径），41105191 已用 paper/figscripts/data/viz/full 重提。": {
+    "zh": "- 空间可视化抽取：41105169、41105180 因输出路径守卫失败（目录名含 2026 / 非允许路径），41105191 已用 paper/figscripts/data/viz/full 重提。",
+    "en": "- Spatial visualization extraction: 41105169 and 41105180 failed the output-path guard (directory name contains 2026 / path is not allowed); resubmitted as 41105191 with paper/figscripts/data/viz/full."
+  },
+  "## 2026-11-01 04:35 CET 更新": {
+    "zh": "## 2026-11-01 04:35 CET 更新",
+    "en": "## 2026-11-01 04:35 CET update"
+  },
+  "- 论文图第二轮（Codex fc1f46d）：Fig.1/2 合并为脚本矢量框架+场地示意（L(t)、D(t)、g(t)、非开球者终点）；Fig.3 单栏；Fig.4 分隔线、空心标记、压缩高度；Fig.5 单色单栏三标记；Fig.6 场地轮廓、等比例、共用灰度时间条；全部 Times 字体、Okabe-Ito 固定含义、原尺寸 include。正文 7 页 + 补充 9 页。": {
+    "zh": "- 论文图第二轮（Codex fc1f46d）：Fig.1/2 合并为脚本矢量框架+场地示意（L(t)、D(t)、g(t)、非开球者终点）；Fig.3 单栏；Fig.4 分隔线、空心标记、压缩高度；Fig.5 单色单栏三标记；Fig.6 场地轮廓、等比例、共用灰度时间条；全部 Times 字体、Okabe-Ito 固定含义、原尺寸 include。正文 7 页 + 补充 9 页。",
+    "en": "- Second figure revision (Codex fc1f46d): Fig.1/2 merged into a scripted vector framework and pitch schematic (L(t), D(t), g(t), non-kicker endpoints); Fig.3 uses one column; Fig.4 has separators, hollow markers and reduced height; Fig.5 uses one color, one column and three markers; Fig.6 has pitch outlines, equal aspect ratio and a shared grayscale time bar. Times fonts throughout, fixed Okabe-Ito color meanings, figures included at native size. Main text: 7 pages + supplement: 9 pages."
+  },
+  "- 已提交 41109756（paper-curves）：开发季 compact 上按既定 L(t) 定义计算剩余时间×比分状态的平均深度曲线与 bootstrap CI，用于替换 Fig.3；仅扫描 rlcs-21-22..rlcs-2025。": {
+    "zh": "- 已提交 41109756（paper-curves）：开发季 compact 上按既定 L(t) 定义计算剩余时间×比分状态的平均深度曲线与 bootstrap CI，用于替换 Fig.3；仅扫描 rlcs-21-22..rlcs-2025。",
+    "en": "- Submitted 41109756 (paper-curves): compute mean-depth curves and bootstrap CI by time remaining and score state from development-season compact data, using the established L(t) definition, to replace Fig.3; scan only rlcs-21-22..rlcs-2025."
+  },
+  "- P4/P6.4 全量两次 OOM，未重提，论文用 medium。": {
+    "zh": "- P4/P6.4 全量两次 OOM，未重提，论文用 medium。",
+    "en": "- Full-scale P4/P6.4 each ran out of memory twice; no resubmissions. The paper uses medium-sample results."
+  },
+  "## 2026-11-01 05:05 CET 更新": {
+    "zh": "## 2026-11-01 05:05 CET 更新",
+    "en": "## 2026-11-01 05:05 CET update"
+  },
+  "- 41109756（paper-curves）COMPLETED（15 min）：四个开发季 165 个 shard、2000 次 bootstrap 核验通过。Fig.3 改为 2025 验证季剩余时间 vs 平均深度 L(t) 的 leading/tied/trailing 曲线（95% series bootstrap 带，60 s late window），轴内标注调整交互 +453.4 [420.3, 485.2] uu；原六项估计移至补充 S7。Codex 提交 e47f417。正文 7 页 + 补充 9 页。": {
+    "zh": "- 41109756（paper-curves）COMPLETED（15 min）：四个开发季 165 个 shard、2000 次 bootstrap 核验通过。Fig.3 改为 2025 验证季剩余时间 vs 平均深度 L(t) 的 leading/tied/trailing 曲线（95% series bootstrap 带，60 s late window），轴内标注调整交互 +453.4 [420.3, 485.2] uu；原六项估计移至补充 S7。Codex 提交 e47f417。正文 7 页 + 补充 9 页。",
+    "en": "- 41109756 (paper-curves) COMPLETED (15 min): verification passed for 165 shards across four development seasons and 2000 bootstrap replicates. Fig.3 now shows leading/tied/trailing mean-depth L(t) curves against time remaining for the 2025 validation season (95% series-bootstrap bands, 60 s late window), with the adjusted interaction +453.4 [420.3, 485.2] uu annotated inside the axes. The original six estimates moved to supplement S7. Codex commit e47f417. Main text: 7 pages + supplement: 9 pages."
+  },
+  "## 2026-11-01 05:35 CET 更新": {
+    "zh": "## 2026-11-01 05:35 CET 更新",
+    "en": "## 2026-11-01 05:35 CET update"
+  },
+  "- 最终润色与第三轮图审阅（Codex 177e94f、2fa3904）：Fig.1 重做为 pipeline + (a)(b)(c) 三问题示意 teaser；Fig.2 曲线删图内小标题并入图注；Fig.3 kickoff 数值移至右侧列；Fig.5 图例紧凑、习惯名与表 III 一致；Fig.6 场地轮廓+比例尺；全文千位分隔符 55 处修复、newtx 字体统一；全文润色，数字与结论强度不变。正文 7 页 + 补充 9 页，逐页渲染检查通过。": {
+    "zh": "- 最终润色与第三轮图审阅（Codex 177e94f、2fa3904）：Fig.1 重做为 pipeline + (a)(b)(c) 三问题示意 teaser；Fig.2 曲线删图内小标题并入图注；Fig.3 kickoff 数值移至右侧列；Fig.5 图例紧凑、习惯名与表 III 一致；Fig.6 场地轮廓+比例尺；全文千位分隔符 55 处修复、newtx 字体统一；全文润色，数字与结论强度不变。正文 7 页 + 补充 9 页，逐页渲染检查通过。",
+    "en": "- Final polish and third figure review (Codex 177e94f, 2fa3904): Fig.1 rebuilt as a pipeline and (a)(b)(c) schematic teaser for the three questions; Fig.2 internal curve subtitle moved to the caption; Fig.3 kickoff values moved to a right-hand column; Fig.5 legend tightened and habit names aligned with Table III; Fig.6 has pitch outlines and a scale bar. Fixed 55 thousands separators throughout and standardized newtx fonts; polished the manuscript without changing numbers or the strength of conclusions. Main text: 7 pages + supplement: 9 pages; rendered pages passed review."
+  },
+  "## 2026-11-01 06:30 CET 更新": {
+    "zh": "## 2026-11-01 06:30 CET 更新",
+    "en": "## 2026-11-01 06:30 CET update"
+  },
+  "- 第四轮图审（Codex 4ac4366）：Fig.1 teaser 放大场地元素、g(t)/球/非开球者固定色、(c) 实色区分保持/交换排名、删统计术语；Fig.3 开球森林图 pooled 实心/分箱空心、表头对齐；Fig.4 图例上方一行、偏移对称；Fig.5 队友轨迹加深、统一比例尺与单一时间编码；全部图字体改为 TeX Gyre Termes（pdffonts 核查）。正文 7 页 + 补充 9 页，数字与结论不变。": {
+    "zh": "- 第四轮图审（Codex 4ac4366）：Fig.1 teaser 放大场地元素、g(t)/球/非开球者固定色、(c) 实色区分保持/交换排名、删统计术语；Fig.3 开球森林图 pooled 实心/分箱空心、表头对齐；Fig.4 图例上方一行、偏移对称；Fig.5 队友轨迹加深、统一比例尺与单一时间编码；全部图字体改为 TeX Gyre Termes（pdffonts 核查）。正文 7 页 + 补充 9 页，数字与结论不变。",
+    "en": "- Fourth figure review (Codex 4ac4366): Fig.1 teaser uses larger pitch elements, fixed colors for g(t)/ball/non-kickers, solid colors distinguishing retained/swapped ranks in (c), and no statistical terminology; Fig.3 kickoff forest plot uses filled pooled markers and hollow bin markers, with aligned headers; Fig.4 legend is a single row above the plot, with symmetric offsets; Fig.5 teammate trajectories are darker, with a consistent scale bar and a single time encoding. All figure fonts changed to TeX Gyre Termes (checked with pdffonts). Main text: 7 pages + supplement: 9 pages; numbers and conclusions unchanged."
+  },
+  "## 2026-11-01 06:45 CET 更新": {
+    "zh": "## 2026-11-01 06:45 CET 更新",
+    "en": "## 2026-11-01 06:45 CET update"
+  },
+  "- 收尾小修（Codex 343fe61）：Fig.3 开球森林图与数值列留白压缩；Fig.5 恢复球终点圆圈并入图例。正文 7 页 + 补充 9 页，16 页已人工逐页检查。": {
+    "zh": "- 收尾小修（Codex 343fe61）：Fig.3 开球森林图与数值列留白压缩；Fig.5 恢复球终点圆圈并入图例。正文 7 页 + 补充 9 页，16 页已人工逐页检查。",
+    "en": "- Final small fixes (Codex 343fe61): reduced whitespace between the Fig.3 kickoff forest plot and its value column; restored ball-endpoint circles in Fig.5 and added them to the legend. Main text: 7 pages + supplement: 9 pages; all 16 pages manually reviewed."
+  },
+  "## 2026-11-01 06:55 CET 更新": {
+    "zh": "## 2026-11-01 06:55 CET 更新",
+    "en": "## 2026-11-01 06:55 CET update"
+  },
+  "- 补充材料修补（Codex 6e56b34）：习惯名全文统一为表 III 名称（S1/S5 等）；S9 热图提高打印对比度（颜色标尺变换写入图注，数据不变）。": {
+    "zh": "- 补充材料修补（Codex 6e56b34）：习惯名全文统一为表 III 名称（S1/S5 等）；S9 热图提高打印对比度（颜色标尺变换写入图注，数据不变）。",
+    "en": "- Supplement fixes (Codex 6e56b34): habit names standardized throughout to match Table III (S1/S5, etc.); improved print contrast in the S9 heatmap (color-scale transformation documented in the caption; data unchanged)."
+  },
+  "## 2026-11-01 07:45 CET 更新": {
+    "zh": "## 2026-11-01 07:45 CET 更新",
+    "en": "## 2026-11-01 07:45 CET update"
+  },
+  "- 08:00 汇报基线：tag baseline-0800 = bace727（已推送）。": {
+    "zh": "- 08:00 汇报基线：tag baseline-0800 = bace727（已推送）。",
+    "en": "- Baseline for the 08:00 report: tag baseline-0800 = bace727 (pushed)."
+  },
+  "- 第五轮图审（Codex 1e7cd66、5d55fb9）：Fig.5 共同包围盒裁剪、单一灰度时间编码、比例尺、球终点圆圈；Fig.3 数值列对齐与 Pooled 分隔；Fig.4 marker 图例、n 移入图注、偏移加大；Fig.1 元素放大与线宽统一；q 值按 JSON 统一为 q < 0.0005（全部 24 个 q=1/2001，为 2000 次置换的下限）；结果段限定集中到 Limitations，无因果词。正文 7 页 + 补充 9 页，人工逐页检查。": {
+    "zh": "- 第五轮图审（Codex 1e7cd66、5d55fb9）：Fig.5 共同包围盒裁剪、单一灰度时间编码、比例尺、球终点圆圈；Fig.3 数值列对齐与 Pooled 分隔；Fig.4 marker 图例、n 移入图注、偏移加大；Fig.1 元素放大与线宽统一；q 值按 JSON 统一为 q < 0.0005（全部 24 个 q=1/2001，为 2000 次置换的下限）；结果段限定集中到 Limitations，无因果词。正文 7 页 + 补充 9 页，人工逐页检查。",
+    "en": "- Fifth figure review (Codex 1e7cd66, 5d55fb9): Fig.5 uses a common bounding-box crop, a single grayscale time encoding, a scale bar and ball-endpoint circles; Fig.3 value column aligned and Pooled separated; Fig.4 has a marker legend, n moved to the caption and larger offsets; Fig.1 elements enlarged and line widths standardized. q values harmonized with JSON as q < 0.0005 (all 24 q=1/2001, the floor from 2000 permutations); qualifications from the Results section consolidated in Limitations, with no causal wording. Main text: 7 pages + supplement: 9 pages; all pages manually reviewed."
+  },
+  "发现已收敛：全量前压交互 +453.4 uu [420.3,485.2]；RQ4 的 24 个相邻赛季相关均为正（ρ 0.45–0.84）。P6.3 阵容稳定性仅 n=4、ρ=-0.80，不作为发现。P4 全量 41105136/41105156 与 P6.4 全量 41105139/41105157 各两次 OOM，未重提；论文使用 medium 结果。控球条件化后净进球差 +0.086 [0.020,0.177]，因果门控仍失败，仅作关联。": {
+    "zh": "发现已收敛：全量前压交互 +453.4 uu [420.3,485.2]；RQ4 的 24 个相邻赛季相关均为正（ρ 0.45–0.84）。P6.3 阵容稳定性仅 n=4、ρ=-0.80，不作为发现。P4 全量 41105136/41105156 与 P6.4 全量 41105139/41105157 各两次 OOM，未重提；论文使用 medium 结果。控球条件化后净进球差 +0.086 [0.020,0.177]，因果门控仍失败，仅作关联。",
+    "en": "Findings consolidated: the full-sample push-up interaction is +453.4 uu [420.3,485.2]; all 24 adjacent-season RQ4 correlations are positive (ρ 0.45–0.84). P6.3 roster stability has only n=4 and ρ=-0.80, so it is not a finding. Full P4 jobs 41105136/41105156 and full P6.4 jobs 41105139/41105157 each ended OOM twice and were not resubmitted; the paper uses medium results. Possession-conditioned net goal difference is +0.086 [0.020,0.177], with failed causal gates; interpretation remains associational."
+  },
+  "finished 为 PROGRESS 首次记录分析收敛的时间；图文修订继续归入论文阶段。": {
+    "zh": "finished 为 PROGRESS 首次记录分析收敛的时间；图文修订继续归入论文阶段。",
+    "en": "The finished timestamp is the first PROGRESS entry documenting analysis consolidation; subsequent figure and text revisions belong to the manuscript phase."
+  },
+  "面向 IEEE Transactions on Games；正文 7 页、补充 9 页，图文已逐页检查，论文仍在修订中。最新集群提交 2d041a4，本地论文源 HEAD 7c3e20c。q 值诚实性修正：24 个 RQ4 BH q 均处于 2,000 次置换下限，正文与图注写 q≤1/2001≈0.0005，摘要写 BH q<0.001。P4/P6.4 全量各两次 OOM 后使用 medium，补充材料注明限制；不作因果结论。": {
+    "zh": "面向 IEEE Transactions on Games；正文 7 页、补充 9 页，图文已逐页检查，论文仍在修订中。最新集群提交 2d041a4，本地论文源 HEAD 7c3e20c。q 值诚实性修正：24 个 RQ4 BH q 均处于 2,000 次置换下限，正文与图注写 q≤1/2001≈0.0005，摘要写 BH q<0.001。P4/P6.4 全量各两次 OOM 后使用 medium，补充材料注明限制；不作因果结论。",
+    "en": "Prepared for IEEE Transactions on Games; 7 main-text pages and 9 supplementary pages have been reviewed page by page, and manuscript revision is in progress. Latest cluster commit: 2d041a4; local manuscript-source HEAD: 7c3e20c. The q-value honesty correction states that all 24 RQ4 BH q values are at the floor of 2,000 permutations: q≤1/2001≈0.0005 in the text and caption, and BH q<0.001 in the abstract. After two OOM failures each, full P4/P6.4 use medium results with limitations recorded in the supplement; no causal claims are made."
+  },
+  "started 取 PROGRESS 首个明确带时间的论文记录（2026-10-31 21:00 CET），并非另行估计的实际开工时刻。": {
+    "zh": "started 取 PROGRESS 首个明确带时间的论文记录（2026-10-31 21:00 CET），并非另行估计的实际开工时刻。",
+    "en": "The started timestamp uses the first explicitly timed manuscript entry in PROGRESS (2026-10-31 21:00 CET), rather than an inferred actual start time."
+  },
+  "PROGRESS.md: 2026-11-01 03:15 CET, 05:05 CET; 2026-10-31 22:55 CET": {
+    "zh": "PROGRESS.md: 2026-11-01 03:15 CET, 05:05 CET; 2026-10-31 22:55 CET",
+    "en": "PROGRESS.md: 2026-11-01 03:15 CET, 05:05 CET; 2026-10-31 22:55 CET"
+  },
+  "PROGRESS.md: 2026-10-31 21:00 CET; 2026-11-01 06:45 CET, 07:51 CET; paper2/paper/main.tex; user-supplied cluster commit 2d041a4": {
+    "zh": "PROGRESS.md: 2026-10-31 21:00 CET; 2026-11-01 06:45 CET, 07:51 CET; paper2/paper/main.tex; user-supplied cluster commit 2d041a4",
+    "en": "PROGRESS.md: 2026-10-31 21:00 CET; 2026-11-01 06:45 CET, 07:51 CET; paper2/paper/main.tex; user-supplied cluster commit 2d041a4"
+  },
+  "全量末位前压交互（uu）": {
+    "zh": "全量末位前压交互（uu）",
+    "en": "Full-sample last-man push-up interaction (uu)"
+  },
+  "前压交互的验证系列赛": {
+    "zh": "前压交互的验证系列赛",
+    "en": "Validation series for the push-up interaction"
+  },
+  "全量开球 K1：落后−领先（uu）": {
+    "zh": "全量开球 K1：落后−领先（uu）",
+    "en": "Full kickoff K1: trailing−leading (uu)"
+  },
+  "相邻赛季习惯相关数": {
+    "zh": "相邻赛季习惯相关数",
+    "en": "Adjacent-season habit correlations"
+  },
+  "全量习惯稳定性 Spearman ρ 范围": {
+    "zh": "全量习惯稳定性 Spearman ρ 范围",
+    "en": "Full-sample habit stability: Spearman ρ range"
+  },
+  "全部 BH q 位于置换下限": {
+    "zh": "全部 BH q 位于置换下限",
+    "en": "All BH q values at the permutation floor"
+  },
+  "0.45–0.84": {
+    "zh": "0.45–0.84",
+    "en": "0.45–0.84"
+  },
+  "≤1/2001": {
+    "zh": "≤1/2001",
+    "en": "≤1/2001"
+  },
+  "paper2/fullres/results/prereg-full.q9X1KJYu/p6-variants.wq3lqisF/p6_variants.json # contrasts.p6_1_trailing_minus_leading_interaction; paper2/paper/main.tex abstract": {
+    "zh": "paper2/fullres/results/prereg-full.q9X1KJYu/p6-variants.wq3lqisF/p6_variants.json # contrasts.p6_1_trailing_minus_leading_interaction; paper2/paper/main.tex abstract",
+    "en": "paper2/fullres/results/prereg-full.q9X1KJYu/p6-variants.wq3lqisF/p6_variants.json # contrasts.p6_1_trailing_minus_leading_interaction; paper2/paper/main.tex abstract"
+  },
+  "paper2/fullres/results/prereg-full.q9X1KJYu/p6-variants.wq3lqisF/p6_variants.json # contrasts.p6_1_trailing_minus_leading_interaction.n_series": {
+    "zh": "paper2/fullres/results/prereg-full.q9X1KJYu/p6-variants.wq3lqisF/p6_variants.json # contrasts.p6_1_trailing_minus_leading_interaction.n_series",
+    "en": "paper2/fullres/results/prereg-full.q9X1KJYu/p6-variants.wq3lqisF/p6_variants.json # contrasts.p6_1_trailing_minus_leading_interaction.n_series"
+  },
+  "paper2/fullres/results/prereg-full.q9X1KJYu/p62.8NxjjUNm/results/p6_kickoff.json # K1.pooled; paper2/paper/main.tex abstract": {
+    "zh": "paper2/fullres/results/prereg-full.q9X1KJYu/p62.8NxjjUNm/results/p6_kickoff.json # K1.pooled; paper2/paper/main.tex abstract",
+    "en": "paper2/fullres/results/prereg-full.q9X1KJYu/p62.8NxjjUNm/results/p6_kickoff.json # K1.pooled; paper2/paper/main.tex abstract"
+  },
+  "paper2/paper/sections/results_who.tex; paper2/fullres/results/rq4_habits_full/rq4_habits.json # transitions[*].habits[*].overall": {
+    "zh": "paper2/paper/sections/results_who.tex; paper2/fullres/results/rq4_habits_full/rq4_habits.json # transitions[*].habits[*].overall",
+    "en": "paper2/paper/sections/results_who.tex; paper2/fullres/results/rq4_habits_full/rq4_habits.json # transitions[*].habits[*].overall"
+  },
+  "paper2/paper/sections/results_who.tex; paper2/fullres/results/rq4_habits_full/rq4_habits.json # transitions[*].habits[*].overall.rho": {
+    "zh": "paper2/paper/sections/results_who.tex; paper2/fullres/results/rq4_habits_full/rq4_habits.json # transitions[*].habits[*].overall.rho",
+    "en": "paper2/paper/sections/results_who.tex; paper2/fullres/results/rq4_habits_full/rq4_habits.json # transitions[*].habits[*].overall.rho"
+  },
+  "paper2/paper/sections/results_who.tex; paper2/fullres/results/rq4_habits_full/rq4_habits.json # transitions[*].habits[*].overall.q_value": {
+    "zh": "paper2/paper/sections/results_who.tex; paper2/fullres/results/rq4_habits_full/rq4_habits.json # transitions[*].habits[*].overall.q_value",
+    "en": "paper2/paper/sections/results_who.tex; paper2/fullres/results/rq4_habits_full/rq4_habits.json # transitions[*].habits[*].overall.q_value"
+  },
+  "已从论文主线剪枝：中样本学习词表 excess 0.0028 [0.0022,0.0033]，手工为 0.0085；校正后的留出预测增益为学习 -0.0016、手工 +0.0009 bit/跳。未支持学习语法优于手工表示的主张。": {
+    "zh": "已从论文主线剪枝：中样本学习词表 excess 0.0028 [0.0022,0.0033]，手工为 0.0085；校正后的留出预测增益为学习 -0.0016、手工 +0.0009 bit/跳。未支持学习语法优于手工表示的主张。",
+    "en": "Pruned from the manuscript focus: medium-sample learned-vocabulary excess is 0.0028 [0.0022,0.0033], versus 0.0085 for handcrafted tokens. Corrected held-out predictive gains are -0.0016 and +0.0009 bits/jump, respectively. These results do not support a claim that learned grammar outperforms handcrafted representations."
+  },
+  "原始交接缺口方向未作为独立正文发现。相关的 P5 轮转延迟分析测量门控失败，完整结果仅保留在补充审计中；不能据此声称风险机制已得到验证。": {
+    "zh": "原始交接缺口方向未作为独立正文发现。相关的 P5 轮转延迟分析测量门控失败，完整结果仅保留在补充审计中；不能据此声称风险机制已得到验证。",
+    "en": "The original handoff-gap direction is not retained as a separate main-text finding. The related P5 rotation-latency analysis fails its measurement gate and is retained only for supplementary audit; it does not establish a risk mechanism."
+  },
+  "注册的无覆盖比例主检验未通过 Holm（原始 p=0.049，Holm 0.099）。论文采用的是另行审计后的末位前压关联：全量交互 +453.4 uu [420.3,485.2]、1,499 个系列赛，详见 P6.1；不能把该结果当作原主检验通过。": {
+    "zh": "注册的无覆盖比例主检验未通过 Holm（原始 p=0.049，Holm 0.099）。论文采用的是另行审计后的末位前压关联：全量交互 +453.4 uu [420.3,485.2]、1,499 个系列赛，详见 P6.1；不能把该结果当作原主检验通过。",
+    "en": "The registered uncovered-fraction primary test fails Holm adjustment (raw p=0.049, Holm 0.099). The paper instead reports the separately audited last-man positioning association: full-sample interaction +453.4 uu [420.3,485.2] across 1,499 series, detailed under P6.1; this does not turn the original primary test into a pass."
+  },
+  "论文保留可解释习惯的相邻赛季秩稳定性：全量 40,683 个开发 replay，24 个相关均为正，ρ 0.45–0.84，BH q≤1/2001（2,000 次置换下限）。换队友后的保留率仍不可估，不作身份可识别性或因果持久性结论。": {
+    "zh": "论文保留可解释习惯的相邻赛季秩稳定性：全量 40,683 个开发 replay，24 个相关均为正，ρ 0.45–0.84，BH q≤1/2001（2,000 次置换下限）。换队友后的保留率仍不可估，不作身份可识别性或因果持久性结论。",
+    "en": "The paper retains adjacent-season rank stability of interpretable habits: 40,683 development replays, 24 positive correlations, ρ 0.45–0.84, and BH q≤1/2001 at the floor of 2,000 permutations. Retention after teammate changes remains unestimable; no identity-retrieval or causal-persistence claim is made."
+  },
+  "未纳入当前论文的独立发现；研究已收敛到防守站位、开球站位与可解释习惯稳定性。该方向没有可据以宣称通过的最终结果，剪枝不等于已证明零效应。": {
+    "zh": "未纳入当前论文的独立发现；研究已收敛到防守站位、开球站位与可解释习惯稳定性。该方向没有可据以宣称通过的最终结果，剪枝不等于已证明零效应。",
+    "en": "Not retained as a separate finding in the current manuscript, which focuses on defensive positioning, kickoff positioning, and interpretable habit stability. No final result supports a pass for this direction; pruning does not establish a zero effect."
+  },
+  "开发流程已完成；后续分析沿用已审计的测量定义与开发/验证范围。全量开发分析剔除 5 个未通过解码检查的 replay，实际纳入范围以各分析来源为准。": {
+    "zh": "开发流程已完成；后续分析沿用已审计的测量定义与开发/验证范围。全量开发分析剔除 5 个未通过解码检查的 replay，实际纳入范围以各分析来源为准。",
+    "en": "The development workflow is complete; subsequent analyses use audited measurement definitions and development/validation scope. Full development analyses exclude 5 replays that failed decoding checks; actual inclusion is documented by each analysis."
+  },
+  "原阵容指纹确认检验支持不足；后续全量 P6.3 的阵容斜率稳定性也仅有 4 个合格阵容，ρ=-0.800、区间 [-1,1]。不能将选手习惯秩稳定性当作阵容稳定性证据。": {
+    "zh": "原阵容指纹确认检验支持不足；后续全量 P6.3 的阵容斜率稳定性也仅有 4 个合格阵容，ρ=-0.800、区间 [-1,1]。不能将选手习惯秩稳定性当作阵容稳定性证据。",
+    "en": "The original roster-fingerprint confirmatory test lacks support. Subsequent full P6.3 roster-slope stability also has only 4 eligible rosters, ρ=-0.800, and interval [-1,1]. Player habit rank stability is not evidence of roster stability."
+  },
+  "保留为词表开发选择记录；RQ1 学习轮转语法方向已从当前论文主线剪枝，原验证选择分数不是最终发现检验。": {
+    "zh": "保留为词表开发选择记录；RQ1 学习轮转语法方向已从当前论文主线剪枝，原验证选择分数不是最终发现检验。",
+    "en": "Retained as a vocabulary-development selection record. The RQ1 learned-rotation-grammar direction is pruned from the current manuscript focus; the original validation selection score is not a final finding test."
+  },
+  "快筛 v2(41104885, 6,000 场, 358 系列): 横向补偿增益为 -89.01 每 1000 uu/秒创新对应的反向速度（uu/秒），q=0.0015；证据较弱。 最终未进入论文主线，保留为探索性筛查记录，不作为确认发现。": {
+    "zh": "快筛 v2(41104885, 6,000 场, 358 系列): 横向补偿增益为 -89.01 每 1000 uu/秒创新对应的反向速度（uu/秒），q=0.0015；证据较弱。 最终未进入论文主线，保留为探索性筛查记录，不作为确认发现。",
+    "en": "Quick screen v2 (41104885, 6,000 games, 358 series): Lateral compensation gain is -89.01 opposite velocity (uu/s) per 1000 uu/s innovation, q=0.0015; weak evidence. Not retained in the final manuscript focus; preserved as exploratory screening, not a confirmatory finding."
+  },
+  "快筛 v2(41104885, 6,000 场, 358 系列): 前进历史相对后退历史的阵型宽度差为 8.44 uu，q=0.898；未见清晰证据。 最终未进入论文主线，保留为探索性筛查记录，不作为确认发现。": {
+    "zh": "快筛 v2(41104885, 6,000 场, 358 系列): 前进历史相对后退历史的阵型宽度差为 8.44 uu，q=0.898；未见清晰证据。 最终未进入论文主线，保留为探索性筛查记录，不作为确认发现。",
+    "en": "Quick screen v2 (41104885, 6,000 games, 358 series): Formation-width difference for forward versus backward history is 8.44 uu, q=0.898; no clear evidence. Not retained in the final manuscript focus; preserved as exploratory screening, not a confirmatory finding."
+  },
+  "快筛 v2(41104885, 6,000 场, 358 系列): 高脆弱性相对低脆弱性的失球概率差为 0.3765 个百分点，q=0.00514；证据较弱。 最终未进入论文主线，保留为探索性筛查记录，不作为确认发现。": {
+    "zh": "快筛 v2(41104885, 6,000 场, 358 系列): 高脆弱性相对低脆弱性的失球概率差为 0.3765 个百分点，q=0.00514；证据较弱。 最终未进入论文主线，保留为探索性筛查记录，不作为确认发现。",
+    "en": "Quick screen v2 (41104885, 6,000 games, 358 series): Concession-probability difference for high versus low brittleness is 0.3765 percentage points, q=0.00514; weak evidence. Not retained in the final manuscript focus; preserved as exploratory screening, not a confirmatory finding."
+  },
+  "快筛 v2(41104885, 6,000 场, 358 系列): 对手历史相对队友历史的预测损失差为 0.0001194 比特/动作，q=0.376；未见清晰证据。 最终未进入论文主线，保留为探索性筛查记录，不作为确认发现。": {
+    "zh": "快筛 v2(41104885, 6,000 场, 358 系列): 对手历史相对队友历史的预测损失差为 0.0001194 比特/动作，q=0.376；未见清晰证据。 最终未进入论文主线，保留为探索性筛查记录，不作为确认发现。",
+    "en": "Quick screen v2 (41104885, 6,000 games, 358 series): Prediction-loss difference for opponent versus teammate history is 0.0001194 bits/action, q=0.376; no clear evidence. Not retained in the final manuscript focus; preserved as exploratory screening, not a confirmatory finding."
+  },
+  "快筛 v2(41104885, 6,000 场, 358 系列): 恰好一人上前的超额概率为 2.372 个百分点，q=0.109；证据较弱。 最终未进入论文主线，保留为探索性筛查记录，不作为确认发现。": {
+    "zh": "快筛 v2(41104885, 6,000 场, 358 系列): 恰好一人上前的超额概率为 2.372 个百分点，q=0.109；证据较弱。 最终未进入论文主线，保留为探索性筛查记录，不作为确认发现。",
+    "en": "Quick screen v2 (41104885, 6,000 games, 358 series): Excess probability of exactly one player approaching is 2.372 percentage points, q=0.109; weak evidence. Not retained in the final manuscript focus; preserved as exploratory screening, not a confirmatory finding."
+  },
+  "快筛 v2(41104885, 6,000 场, 358 系列): 阵容旋转方向的分半相关为 0.2158 相关系数，q=0.0882；证据较弱。 最终未进入论文主线，保留为探索性筛查记录，不作为确认发现。": {
+    "zh": "快筛 v2(41104885, 6,000 场, 358 系列): 阵容旋转方向的分半相关为 0.2158 相关系数，q=0.0882；证据较弱。 最终未进入论文主线，保留为探索性筛查记录，不作为确认发现。",
+    "en": "Quick screen v2 (41104885, 6,000 games, 358 series): Split-half correlation of roster circulation direction is 0.2158, q=0.0882; weak evidence. Not retained in the final manuscript focus; preserved as exploratory screening, not a confirmatory finding."
+  },
+  "快筛 v2(41104885, 6,000 场, 358 系列): 宽间距下进攻者模糊性的额外减速概率为 34.97 个百分点，q=0.244；未见清晰证据。 最终未进入论文主线，保留为探索性筛查记录，不作为确认发现。": {
+    "zh": "快筛 v2(41104885, 6,000 场, 358 系列): 宽间距下进攻者模糊性的额外减速概率为 34.97 个百分点，q=0.244；未见清晰证据。 最终未进入论文主线，保留为探索性筛查记录，不作为确认发现。",
+    "en": "Quick screen v2 (41104885, 6,000 games, 358 series): Additional slowing probability from attacker ambiguity at wide spacing is 34.97 percentage points, q=0.244; no clear evidence. Not retained in the final manuscript focus; preserved as exploratory screening, not a confirmatory finding."
+  },
+  "快筛 v2(41104885, 6,000 场, 358 系列): 低响应多样性相对高多样性的额外回撤距离为 -28.78 uu，q=0.0015；证据较弱。 最终未进入论文主线，保留为探索性筛查记录，不作为确认发现。": {
+    "zh": "快筛 v2(41104885, 6,000 场, 358 系列): 低响应多样性相对高多样性的额外回撤距离为 -28.78 uu，q=0.0015；证据较弱。 最终未进入论文主线，保留为探索性筛查记录，不作为确认发现。",
+    "en": "Quick screen v2 (41104885, 6,000 games, 358 series): Additional backward excursion for low versus high response diversity is -28.78 uu, q=0.0015; weak evidence. Not retained in the final manuscript focus; preserved as exploratory screening, not a confirmatory finding."
+  },
+  "快筛 v2(41104885, 6,000 场, 358 系列): 追随防守带来的通道净宽变化为 141.6 uu，q=0.0015；证据较弱。 最终未进入论文主线，保留为探索性筛查记录，不作为确认发现。": {
+    "zh": "快筛 v2(41104885, 6,000 场, 358 系列): 追随防守带来的通道净宽变化为 141.6 uu，q=0.0015；证据较弱。 最终未进入论文主线，保留为探索性筛查记录，不作为确认发现。",
+    "en": "Quick screen v2 (41104885, 6,000 games, 358 series): Lane-clearance change associated with following defenders is 141.6 uu, q=0.0015; weak evidence. Not retained in the final manuscript focus; preserved as exploratory screening, not a confirmatory finding."
+  },
+  "快筛 v2(41104885, 6,000 场, 358 系列): 停顿后的对手加速响应概率差为 0.1841 个百分点，q=0.565；未见清晰证据。 最终未进入论文主线，保留为探索性筛查记录，不作为确认发现。": {
+    "zh": "快筛 v2(41104885, 6,000 场, 358 系列): 停顿后的对手加速响应概率差为 0.1841 个百分点，q=0.565；未见清晰证据。 最终未进入论文主线，保留为探索性筛查记录，不作为确认发现。",
+    "en": "Quick screen v2 (41104885, 6,000 games, 358 series): Difference in opponent acceleration-response probability after a pause is 0.1841 percentage points, q=0.565; no clear evidence. Not retained in the final manuscript focus; preserved as exploratory screening, not a confirmatory finding."
+  },
+  "快筛 v2(41104885, 6,000 场, 358 系列): 贯通通道相对封闭通道的失球概率差为 0.8971 个百分点，q=0.109；证据较弱。 最终未进入论文主线，保留为探索性筛查记录，不作为确认发现。": {
+    "zh": "快筛 v2(41104885, 6,000 场, 358 系列): 贯通通道相对封闭通道的失球概率差为 0.8971 个百分点，q=0.109；证据较弱。 最终未进入论文主线，保留为探索性筛查记录，不作为确认发现。",
+    "en": "Quick screen v2 (41104885, 6,000 games, 358 series): Concession-probability difference for connected versus closed corridors is 0.8971 percentage points, q=0.109; weak evidence. Not retained in the final manuscript focus; preserved as exploratory screening, not a confirmatory finding."
+  },
+  "快筛 v2(41104885, 6,000 场, 358 系列): 失球前阵型面积残差的额外持续性为 -0.001378 相关系数差，q=0.764；未见清晰证据。 最终未进入论文主线，保留为探索性筛查记录，不作为确认发现。": {
+    "zh": "快筛 v2(41104885, 6,000 场, 358 系列): 失球前阵型面积残差的额外持续性为 -0.001378 相关系数差，q=0.764；未见清晰证据。 最终未进入论文主线，保留为探索性筛查记录，不作为确认发现。",
+    "en": "Quick screen v2 (41104885, 6,000 games, 358 series): Excess persistence of formation-area residuals before conceding is -0.001378 in correlation difference, q=0.764; no clear evidence. Not retained in the final manuscript focus; preserved as exploratory screening, not a confirmatory finding."
+  },
+  "快筛 v2(41104885, 6,000 场, 358 系列): 后排横向响应的额外放大增益为 -0.3057 倍增益，q=0.0015；证据较弱。 最终未进入论文主线，保留为探索性筛查记录，不作为确认发现。": {
+    "zh": "快筛 v2(41104885, 6,000 场, 358 系列): 后排横向响应的额外放大增益为 -0.3057 倍增益，q=0.0015；证据较弱。 最终未进入论文主线，保留为探索性筛查记录，不作为确认发现。",
+    "en": "Quick screen v2 (41104885, 6,000 games, 358 series): Excess amplification gain of rear lateral response is -0.3057, q=0.0015; weak evidence. Not retained in the final manuscript focus; preserved as exploratory screening, not a confirmatory finding."
+  },
+  "快筛 v2(41104885, 6,000 场, 358 系列): 超出零模型的节拍调制概率为 0.4035 个百分点/0.1秒，q=0.0882；证据较弱。 最终未进入论文主线，保留为探索性筛查记录，不作为确认发现。": {
+    "zh": "快筛 v2(41104885, 6,000 场, 358 系列): 超出零模型的节拍调制概率为 0.4035 个百分点/0.1秒，q=0.0882；证据较弱。 最终未进入论文主线，保留为探索性筛查记录，不作为确认发现。",
+    "en": "Quick screen v2 (41104885, 6,000 games, 358 series): Rhythmic probability modulation beyond the null is 0.4035 percentage points/0.1 seconds, q=0.0882; weak evidence. Not retained in the final manuscript focus; preserved as exploratory screening, not a confirmatory finding."
+  },
+  "快筛 v2(41104885, 6,000 场, 358 系列): 打破重复路线后的额外响应延迟为 -0.08444 秒，q=0.0015；证据较弱。 最终未进入论文主线，保留为探索性筛查记录，不作为确认发现。": {
+    "zh": "快筛 v2(41104885, 6,000 场, 358 系列): 打破重复路线后的额外响应延迟为 -0.08444 秒，q=0.0015；证据较弱。 最终未进入论文主线，保留为探索性筛查记录，不作为确认发现。",
+    "en": "Quick screen v2 (41104885, 6,000 games, 358 series): Additional response latency after breaking a repeated route is -0.08444 seconds, q=0.0015; weak evidence. Not retained in the final manuscript focus; preserved as exploratory screening, not a confirmatory finding."
+  },
+  "快筛 v2(41104885, 6,000 场, 358 系列): 队形稀有度每翻倍的推进距离变化为 57.92 uu/稀有度翻倍，q=0.063；证据较弱。 最终未进入论文主线，保留为探索性筛查记录，不作为确认发现。": {
+    "zh": "快筛 v2(41104885, 6,000 场, 358 系列): 队形稀有度每翻倍的推进距离变化为 57.92 uu/稀有度翻倍，q=0.063；证据较弱。 最终未进入论文主线，保留为探索性筛查记录，不作为确认发现。",
+    "en": "Quick screen v2 (41104885, 6,000 games, 358 series): Change in forward progress per doubling of formation rarity is 57.92 uu/doubling rarity, q=0.063; weak evidence. Not retained in the final manuscript focus; preserved as exploratory screening, not a confirmatory finding."
+  },
+  "快筛 v2(41104885, 6,000 场, 358 系列): 超出独立球员习惯基线的空间互补概率为 0.891 个百分点，q=0.36；未见清晰证据。 最终未进入论文主线，保留为探索性筛查记录，不作为确认发现。": {
+    "zh": "快筛 v2(41104885, 6,000 场, 358 系列): 超出独立球员习惯基线的空间互补概率为 0.891 个百分点，q=0.36；未见清晰证据。 最终未进入论文主线，保留为探索性筛查记录，不作为确认发现。",
+    "en": "Quick screen v2 (41104885, 6,000 games, 358 series): Spatial-complementarity probability beyond the independent-player-habit baseline is 0.891 percentage points, q=0.36; no clear evidence. Not retained in the final manuscript focus; preserved as exploratory screening, not a confirmatory finding."
+  },
+  "42/42 个规格单元通过低于独立基线比较，但所有种子的循环平移负对照区间排除 1，overall=FAIL；只保留为补充材料中的失败负对照，不再扩大或作为协作发现。": {
+    "zh": "42/42 个规格单元通过低于独立基线比较，但所有种子的循环平移负对照区间排除 1，overall=FAIL；只保留为补充材料中的失败负对照，不再扩大或作为协作发现。",
+    "en": "All 42/42 specification cells pass the below-independence comparison, but circular-shift negative-control intervals exclude 1 for every seed and overall=FAIL. Retained only as a failed negative control in the supplement, with no further scaling or coordination finding."
+  },
+  "B08 双人低 boost：负对照失败": {
+    "zh": "B08 双人低 boost：负对照失败",
+    "en": "B08 joint low boost: failed negative control"
+  },
+  "两种设计均未通过因果识别门控；原 medium 末段落后净进球关联 +0.066/10s [0.026,0.111] 不特异于落后状态。全量 P4 两次 OOM，论文保留 medium 描述性结果，不支持风险大于收益或因果收益。": {
+    "zh": "两种设计均未通过因果识别门控；原 medium 末段落后净进球关联 +0.066/10s [0.026,0.111] 不特异于落后状态。全量 P4 两次 OOM，论文保留 medium 描述性结果，不支持风险大于收益或因果收益。",
+    "en": "Both designs fail causal-identification gates. The original medium late-trailing net-goal association of +0.066/10s [0.026,0.111] is not specific to trailing states. Full P4 ended OOM twice; the paper retains descriptive medium results and does not establish risk exceeding benefit or a causal benefit."
+  },
+  "medium 控球条件化净进球差 +0.086 [0.020,0.177]；因果门控仍失败，且不具有落后紧迫性特异性。全量作业 41105136/41105156 两次 OOM，未重提，论文补充材料使用 medium。": {
+    "zh": "medium 控球条件化净进球差 +0.086 [0.020,0.177]；因果门控仍失败，且不具有落后紧迫性特异性。全量作业 41105136/41105156 两次 OOM，未重提，论文补充材料使用 medium。",
+    "en": "Medium possession-conditioned net goal difference is +0.086 [0.020,0.177]; causal gates still fail and the association is not specific to trailing urgency. Full jobs 41105136/41105156 ended OOM twice and were not resubmitted; the supplement uses medium results."
+  },
+  "P4 控球条件化敏感性": {
+    "zh": "P4 控球条件化敏感性",
+    "en": "P4 possession-conditioned sensitivity"
+  },
+  "全量轮转延迟 measurement_gate.passed=false、finding_eligible=false；1,500 uu 半径的 RMST 差 +1.462 s [1.294,1.633]，仅作补充审计，不能越过测量门控作为发现。": {
+    "zh": "全量轮转延迟 measurement_gate.passed=false、finding_eligible=false；1,500 uu 半径的 RMST 差 +1.462 s [1.294,1.633]，仅作补充审计，不能越过测量门控作为发现。",
+    "en": "Full-sample rotation latency has measurement_gate.passed=false and finding_eligible=false. The RMST contrast at radius 1,500 uu is +1.462 s [1.294,1.633], retained only for supplementary audit; it cannot bypass the measurement gate to become a finding."
+  },
+  "P5 轮转延迟：测量门控失败": {
+    "zh": "P5 轮转延迟：测量门控失败",
+    "en": "P5 rotation latency: failed measurement gate"
+  },
+  "评审分析已收敛：全量站位、开球 K1 与习惯稳定性进入正文；P6.3 支持不足，仅入补充；P6.4 全量两次 OOM，使用 medium 描述性分解。": {
+    "zh": "评审分析已收敛：全量站位、开球 K1 与习惯稳定性进入正文；P6.3 支持不足，仅入补充；P6.4 全量两次 OOM，使用 medium 描述性分解。",
+    "en": "Reviewer analyses are consolidated: full-sample positioning, kickoff K1, and habit stability appear in the main text. P6.3 lacks support and is supplementary; full P6.4 ended OOM twice and uses a descriptive medium decomposition."
+  },
+  "P6 评审分析：已完成并界定证据范围": {
+    "zh": "P6 评审分析：已完成并界定证据范围",
+    "en": "P6 reviewer analyses: completed with evidence limits"
+  },
+  "全量：领先方末段−早段 -192.1 uu [-226.5,-157.3]，落后方 +261.3 [226.2,297.4]；交互 +453.4 [420.3,485.2]，1,499 个系列赛。作为正文中的站位关联，不作因果解释。": {
+    "zh": "全量：领先方末段−早段 -192.1 uu [-226.5,-157.3]，落后方 +261.3 [226.2,297.4]；交互 +453.4 [420.3,485.2]，1,499 个系列赛。作为正文中的站位关联，不作因果解释。",
+    "en": "Full sample: leading late−earlier contrast -192.1 uu [-226.5,-157.3], trailing +261.3 [226.2,297.4]; interaction +453.4 [420.3,485.2] across 1,499 series. Reported in the main text as a positioning association without causal interpretation."
+  },
+  "P6.1 领先后撤与落后前压": {
+    "zh": "P6.1 领先后撤与落后前压",
+    "en": "P6.1 leading retreat and trailing advance"
+  },
+  "全量 K1 pooled：落后方非开球者前压 +447.1 uu [351.8,537.7]，21,000 个观测、1,504 个系列赛。K1 进入正文；K2 仍为 bootstrap 不完整的描述性关联，不能据此推出激进开球有因果收益。": {
+    "zh": "全量 K1 pooled：落后方非开球者前压 +447.1 uu [351.8,537.7]，21,000 个观测、1,504 个系列赛。K1 进入正文；K2 仍为 bootstrap 不完整的描述性关联，不能据此推出激进开球有因果收益。",
+    "en": "Full K1 pooled: trailing non-kickers are +447.1 uu farther forward [351.8,537.7], using 21,000 observations and 1,504 series. K1 appears in the main text; K2 remains descriptive with incomplete bootstrap and does not establish a causal benefit of aggressive kickoffs."
+  },
+  "P6.2 开球重置后的站位关联（K1）": {
+    "zh": "P6.2 开球重置后的站位关联（K1）",
+    "en": "P6.2 positioning after kickoff resets (K1)"
+  },
+  "全量加时相对常规末段平局的深度差为 -174.8 uu [-193.5,-155.8]，1,182 个系列赛；无预注册等价界，不宣称等价或时钟因果效应。": {
+    "zh": "全量加时相对常规末段平局的深度差为 -174.8 uu [-193.5,-155.8]，1,182 个系列赛；无预注册等价界，不宣称等价或时钟因果效应。",
+    "en": "Full overtime-minus-late-tied depth contrast is -174.8 uu [-193.5,-155.8] across 1,182 series. No equivalence margin was preregistered; no equivalence or causal clock effect is claimed."
+  },
+  "P6.6 加时站位对比": {
+    "zh": "P6.6 加时站位对比",
+    "en": "P6.6 overtime positioning contrast"
+  },
+  "全量队伍质心交互 +426.0 uu [395.8,457.4]，1,499 个系列赛，方向与末位指标一致；平均三人深度为质心加常数，不算另一项独立证据。": {
+    "zh": "全量队伍质心交互 +426.0 uu [395.8,457.4]，1,499 个系列赛，方向与末位指标一致；平均三人深度为质心加常数，不算另一项独立证据。",
+    "en": "Full team-centroid interaction is +426.0 uu [395.8,457.4] across 1,499 series, matching the last-man direction. Mean three-player depth is the centroid plus a constant and is not an additional independent piece of evidence."
+  },
+  "P6.7 站位定义稳健性": {
+    "zh": "P6.7 站位定义稳健性",
+    "en": "P6.7 robustness to positioning definition"
+  },
+  "全量抽取作业 41105069 已完成；后续 RQ4 习惯作业 41105127 已完成，实际使用 40,683 个开发 replay。抽取规模不充当各模型分析样本量，留出赛季不用于论文分析。": {
+    "zh": "全量抽取作业 41105069 已完成；后续 RQ4 习惯作业 41105127 已完成，实际使用 40,683 个开发 replay。抽取规模不充当各模型分析样本量，留出赛季不用于论文分析。",
+    "en": "Full extraction job 41105069 is complete, followed by completed RQ4 habit job 41105127 using 40,683 development replays. Extraction size is not substituted for model-specific sample sizes; the held-out season is not used in the paper analyses."
+  },
+  "RQ4 全量抽取与习惯分析：已完成": {
+    "zh": "RQ4 全量抽取与习惯分析：已完成",
+    "en": "RQ4 full extraction and habit analysis: complete"
+  },
+  "RQ4 全量可解释习惯秩稳定性": {
+    "zh": "RQ4 全量可解释习惯秩稳定性",
+    "en": "RQ4 full-sample interpretable habit rank stability"
+  },
+  "仅 medium 事后 ±3 比分截断：20 秒失球差 -0.037 [-0.049,-0.025]，2,000/2,000 次重采样。保留为描述性敏感性；不能把该完成状态移植到 bootstrap 不完整的全量 K2。": {
+    "zh": "仅 medium 事后 ±3 比分截断：20 秒失球差 -0.037 [-0.049,-0.025]，2,000/2,000 次重采样。保留为描述性敏感性；不能把该完成状态移植到 bootstrap 不完整的全量 K2。",
+    "en": "Medium post hoc score clipping at ±3 only: 20-second concession difference -0.037 [-0.049,-0.025], with 2,000/2,000 resamples. Retained as descriptive sensitivity; this completion status must not be transferred to full K2, whose bootstrap is incomplete."
+  },
+  "medium 仅原生验证 replay 的事后敏感性：L1 +1.37 s [1.02,1.69]；不能修复全量测量门控失败，只作补充审计。": {
+    "zh": "medium 仅原生验证 replay 的事后敏感性：L1 +1.37 s [1.02,1.69]；不能修复全量测量门控失败，只作补充审计。",
+    "en": "Medium post hoc sensitivity restricted to natively validated replays: L1 +1.37 s [1.02,1.69]. It does not repair the full-sample measurement-gate failure and remains supplementary audit only."
+  },
+  "全量作业 41105126 已完成。18 个稳定性/逆转比较均 finding=false；跨赛季阵容稳定性仅 4 个合格单元，ρ=-0.800、CI [-1,1]，其余支持或区间不足。仅入补充，不作为异质性发现。": {
+    "zh": "全量作业 41105126 已完成。18 个稳定性/逆转比较均 finding=false；跨赛季阵容稳定性仅 4 个合格单元，ρ=-0.800、CI [-1,1]，其余支持或区间不足。仅入补充，不作为异质性发现。",
+    "en": "Full job 41105126 is complete. All 18 stability/comeback comparisons have finding=false; cross-season roster stability has only 4 eligible units, ρ=-0.800 and CI [-1,1], while other comparisons lack support or intervals. Supplementary only, with no heterogeneity finding."
+  },
+  "P6.3 全量前压斜率异质性：证据不足": {
+    "zh": "P6.3 全量前压斜率异质性：证据不足",
+    "en": "P6.3 full-sample push-up slope heterogeneity: inconclusive"
+  },
+  "全量作业 41105139/41105157 两次 OOM，未重提；论文使用 medium 描述性 boost 系数分解。正的系数乘积不能解释负的总失球关联，代数比率不是因果中介比例。": {
+    "zh": "全量作业 41105139/41105157 两次 OOM，未重提；论文使用 medium 描述性 boost 系数分解。正的系数乘积不能解释负的总失球关联，代数比率不是因果中介比例。",
+    "en": "Full jobs 41105139/41105157 ended OOM twice and were not resubmitted. The paper uses the medium descriptive boost coefficient decomposition. A positive coefficient product does not explain the negative total concession association, and the algebraic ratio is not a causal mediation proportion."
+  },
+  "P6.4 boost 描述性分解：使用 medium": {
+    "zh": "P6.4 boost 描述性分解：使用 medium",
+    "en": "P6.4 descriptive boost decomposition: medium results"
+  },
+  "PROGRESS.md: 2026-10-31 19:40 CET": {
+    "zh": "PROGRESS.md: 2026-10-31 19:40 CET",
+    "en": "PROGRESS.md: 2026-10-31 19:40 CET"
+  },
+  "paper2/paper/sections/supplement_body.tex": {
+    "zh": "paper2/paper/sections/supplement_body.tex",
+    "en": "paper2/paper/sections/supplement_body.tex"
+  },
+  "PROGRESS.md: 2026-10-31 19:40 CET; paper2/paper/sections/results_push.tex": {
+    "zh": "PROGRESS.md: 2026-10-31 19:40 CET; paper2/paper/sections/results_push.tex",
+    "en": "PROGRESS.md: 2026-10-31 19:40 CET; paper2/paper/sections/results_push.tex"
+  },
+  "paper2/paper/sections/results_who.tex; paper2/paper/sections/supplement_body.tex": {
+    "zh": "paper2/paper/sections/results_who.tex; paper2/paper/sections/supplement_body.tex",
+    "en": "paper2/paper/sections/results_who.tex; paper2/paper/sections/supplement_body.tex"
+  },
+  "paper2/paper/main.tex; paper2/paper/sections/supplement_body.tex": {
+    "zh": "paper2/paper/main.tex; paper2/paper/sections/supplement_body.tex",
+    "en": "paper2/paper/main.tex; paper2/paper/sections/supplement_body.tex"
+  },
+  "PROGRESS.md: 2026-11-01 01:15 CET; paper2/paper/sections/data.tex": {
+    "zh": "PROGRESS.md: 2026-11-01 01:15 CET; paper2/paper/sections/data.tex",
+    "en": "PROGRESS.md: 2026-11-01 01:15 CET; paper2/paper/sections/data.tex"
+  },
+  "PROGRESS.md: 2026-10-31 19:40 CET; paper2/paper/sections/supplement_body.tex": {
+    "zh": "PROGRESS.md: 2026-10-31 19:40 CET; paper2/paper/sections/supplement_body.tex",
+    "en": "PROGRESS.md: 2026-10-31 19:40 CET; paper2/paper/sections/supplement_body.tex"
+  },
+  "PROGRESS.md: 2026-10-31 19:40 CET; paper2/paper/main.tex": {
+    "zh": "PROGRESS.md: 2026-10-31 19:40 CET; paper2/paper/main.tex",
+    "en": "PROGRESS.md: 2026-10-31 19:40 CET; paper2/paper/main.tex"
+  },
+  "results/screen_v2.json; paper2/paper/main.tex": {
+    "zh": "results/screen_v2.json; paper2/paper/main.tex",
+    "en": "results/screen_v2.json; paper2/paper/main.tex"
+  },
+  "results/b08_robust.json; paper2/paper/sections/supplement_body.tex": {
+    "zh": "results/b08_robust.json; paper2/paper/sections/supplement_body.tex",
+    "en": "results/b08_robust.json; paper2/paper/sections/supplement_body.tex"
+  },
+  "PROGRESS.md: 2026-10-31 21:15 CET; 2026-11-01 03:15 CET": {
+    "zh": "PROGRESS.md: 2026-10-31 21:15 CET; 2026-11-01 03:15 CET",
+    "en": "PROGRESS.md: 2026-10-31 21:15 CET; 2026-11-01 03:15 CET"
+  },
+  "PROGRESS.md: 2026-10-31 22:55 CET; 2026-11-01 03:15 CET": {
+    "zh": "PROGRESS.md: 2026-10-31 22:55 CET; 2026-11-01 03:15 CET",
+    "en": "PROGRESS.md: 2026-10-31 22:55 CET; 2026-11-01 03:15 CET"
+  },
+  "paper2/paper/sections/supplement_body.tex; PROGRESS.md: 2026-11-01 03:15 CET": {
+    "zh": "paper2/paper/sections/supplement_body.tex; PROGRESS.md: 2026-11-01 03:15 CET",
+    "en": "paper2/paper/sections/supplement_body.tex; PROGRESS.md: 2026-11-01 03:15 CET"
+  },
+  "paper2/paper/sections/results_push.tex": {
+    "zh": "paper2/paper/sections/results_push.tex",
+    "en": "paper2/paper/sections/results_push.tex"
+  },
+  "paper2/paper/sections/results_push.tex; paper2/docs/full_results.md: P6.2": {
+    "zh": "paper2/paper/sections/results_push.tex; paper2/docs/full_results.md: P6.2",
+    "en": "paper2/paper/sections/results_push.tex; paper2/docs/full_results.md: P6.2"
+  },
+  "paper2/paper/sections/results_push.tex; paper2/docs/full_results.md: P6.1/P6.6/P6.7": {
+    "zh": "paper2/paper/sections/results_push.tex; paper2/docs/full_results.md: P6.1/P6.6/P6.7",
+    "en": "paper2/paper/sections/results_push.tex; paper2/docs/full_results.md: P6.1/P6.6/P6.7"
+  },
+  "PROGRESS.md: 2026-11-01 01:15 CET, 03:15 CET; paper2/paper/sections/results_who.tex": {
+    "zh": "PROGRESS.md: 2026-11-01 01:15 CET, 03:15 CET; paper2/paper/sections/results_who.tex",
+    "en": "PROGRESS.md: 2026-11-01 01:15 CET, 03:15 CET; paper2/paper/sections/results_who.tex"
+  },
+  "PROGRESS.md: 2026-11-01 00:15 CET; paper2/docs/full_results.md: P6.2": {
+    "zh": "PROGRESS.md: 2026-11-01 00:15 CET; paper2/docs/full_results.md: P6.2",
+    "en": "PROGRESS.md: 2026-11-01 00:15 CET; paper2/docs/full_results.md: P6.2"
+  },
+  "paper2/paper/sections/supplement_body.tex; results/pushup_heterogeneity.json": {
+    "zh": "paper2/paper/sections/supplement_body.tex; results/pushup_heterogeneity.json",
+    "en": "paper2/paper/sections/supplement_body.tex; results/pushup_heterogeneity.json"
+  },
+  "PROGRESS.md: 2026-11-01 03:15 CET; paper2/paper/sections/supplement_body.tex": {
+    "zh": "PROGRESS.md: 2026-11-01 03:15 CET; paper2/paper/sections/supplement_body.tex",
+    "en": "PROGRESS.md: 2026-11-01 03:15 CET; paper2/paper/sections/supplement_body.tex"
+  },
+  "《基于回放的 Rocket League 战术站位与选手习惯分析框架》": {
+    "zh": "《基于回放的 Rocket League 战术站位与选手习惯分析框架》",
+    "en": "A Replay-Based Framework for Tactical Positioning and Player Habits in Rocket League"
+  },
+  "作者信息仍待填写；论文在修订中。页数与提交来自快照记录；本地仅有 PDF 时，源码统计未知属于正常。": {
+    "zh": "作者信息仍待填写；论文在修订中。页数与提交来自快照记录；本地仅有 PDF 时，源码统计未知属于正常。",
+    "en": "Author information is still pending; the manuscript remains under revision. Page counts and commits come from snapshot records; unknown source statistics are expected when only PDFs are available locally."
+  },
+  "引言": {
+    "zh": "引言",
+    "en": "Introduction"
+  },
+  "相关工作": {
+    "zh": "相关工作",
+    "en": "Related work"
+  },
+  "数据": {
+    "zh": "数据",
+    "en": "Data"
+  },
+  "方法": {
+    "zh": "方法",
+    "en": "Methods"
+  },
+  "比分紧迫性下的防守站位": {
+    "zh": "比分紧迫性下的防守站位",
+    "en": "Defensive positioning under scoreboard urgency"
+  },
+  "跨赛季选手习惯稳定性": {
+    "zh": "跨赛季选手习惯稳定性",
+    "en": "Player habits persist across seasons"
+  },
+  "空间案例": {
+    "zh": "空间案例",
+    "en": "Spatial cases"
+  },
+  "讨论": {
+    "zh": "讨论",
+    "en": "Discussion"
+  },
+  "补充材料": {
+    "zh": "补充材料",
+    "en": "Supplementary material"
+  },
+  "PROGRESS.md: 2026-11-01 06:45 CET, 07:51 CET; paper2/paper/main.tex; user-supplied cluster commit 2d041a4": {
+    "zh": "PROGRESS.md: 2026-11-01 06:45 CET, 07:51 CET; paper2/paper/main.tex; user-supplied cluster commit 2d041a4",
+    "en": "PROGRESS.md: 2026-11-01 06:45 CET, 07:51 CET; paper2/paper/main.tex; user-supplied cluster commit 2d041a4"
+  },
+  "中样本实验之后，全量抽取 41105069 已完成；全量 RQ4 习惯 41105127 与 P6.3 异质性 41105126 均已完成。RQ4 实际使用 40,683 个开发 replay，开发集剔除 5 个解码不合格 replay。论文采用全量开发/2025 验证结果；P4 与 P6.4 全量各两次 OOM，保留 medium 结果。": {
+    "zh": "中样本实验之后，全量抽取 41105069 已完成；全量 RQ4 习惯 41105127 与 P6.3 异质性 41105126 均已完成。RQ4 实际使用 40,683 个开发 replay，开发集剔除 5 个解码不合格 replay。论文采用全量开发/2025 验证结果；P4 与 P6.4 全量各两次 OOM，保留 medium 结果。",
+    "en": "Following medium-sample experiments, full extraction 41105069 is complete, as are full RQ4 habits 41105127 and P6.3 heterogeneity 41105126. RQ4 uses 40,683 development replays after excluding 5 development replays with failed decoding checks. The paper uses full development/2025 validation results; full P4 and P6.4 each ended OOM twice and retain medium results."
+  },
+  "paper2/paper/LIT_CHECK.md": {
+    "zh": "paper2/paper/LIT_CHECK.md",
+    "en": "paper2/paper/LIT_CHECK.md"
+  },
+  "面向 IEEE Transactions on Games；正文 7 页、补充 9 页，图文已逐页检查，论文仍在修订中。最新集群提交 2d041a4，本地论文源 HEAD 7c3e20c。q 值诚实性修正：24 个 RQ4 BH q 均处于 2,000 次置换下限，正文与图注写 q≤1/2001≈0.0005，摘要写 BH q<0.001。P4/P6.4 全量各两次 OOM 后使用 medium，补充材料注明限制；不作因果结论。 正文实际引用 27 条均已核对：26 条状态为 verified，TS2Vec 为 fixed（元数据已修正）。": {
+    "zh": "面向 IEEE Transactions on Games；正文 7 页、补充 9 页，图文已逐页检查，论文仍在修订中。最新集群提交 2d041a4，本地论文源 HEAD 7c3e20c。q 值诚实性修正：24 个 RQ4 BH q 均处于 2,000 次置换下限，正文与图注写 q≤1/2001≈0.0005，摘要写 BH q<0.001。P4/P6.4 全量各两次 OOM 后使用 medium，补充材料注明限制；不作因果结论。 正文实际引用 27 条均已核对：26 条状态为 verified，TS2Vec 为 fixed（元数据已修正）。",
+    "en": "Prepared for IEEE Transactions on Games; 7 main-text pages and 9 supplementary pages have been reviewed page by page, and manuscript revision is in progress. Latest cluster commit: 2d041a4; local manuscript-source HEAD: 7c3e20c. The q-value honesty correction states that all 24 RQ4 BH q values are at the floor of 2,000 permutations: q≤1/2001≈0.0005 in the text and caption, and BH q<0.001 in the abstract. After two OOM failures each, full P4/P6.4 use medium results with limitations recorded in the supplement; no causal claims are made. All 27 main-text citations have been checked: 26 have verified status, while TS2Vec has fixed status after a metadata correction."
+  },
+  "Bilingual purpose of each Slurm job name / 各作业名的中英文用途说明": {
+    "zh": "各 Slurm 作业名的中英文用途说明；依据本地 PROGRESS 与实施文档。",
+    "en": "Bilingual purposes for Slurm job names, based on local PROGRESS and implementation documents."
+  },
+  "PROGRESS.md#2026-11-01 03:15 CET; docs/P6_heterogeneity_implementation.md": {
+    "zh": "PROGRESS.md#2026-11-01 03:15 CET; docs/P6_heterogeneity_implementation.md",
+    "en": "PROGRESS.md#2026-11-01 03:15 CET; docs/P6_heterogeneity_implementation.md"
+  },
+  "PROGRESS.md#2026-11-01 03:15 CET; docs/RQ4_habits_implementation.md": {
+    "zh": "PROGRESS.md#2026-11-01 03:15 CET; docs/RQ4_habits_implementation.md",
+    "en": "PROGRESS.md#2026-11-01 03:15 CET; docs/RQ4_habits_implementation.md"
+  },
+  "PROGRESS.md#2026-11-01 03:15 CET; slurm/p4_possession.sh": {
+    "zh": "PROGRESS.md#2026-11-01 03:15 CET; slurm/p4_possession.sh",
+    "en": "PROGRESS.md#2026-11-01 03:15 CET; slurm/p4_possession.sh"
+  },
+  "PROGRESS.md#2026-11-01 03:15 CET; slurm/p6_mediation.sh": {
+    "zh": "PROGRESS.md#2026-11-01 03:15 CET; slurm/p6_mediation.sh",
+    "en": "PROGRESS.md#2026-11-01 03:15 CET; slurm/p6_mediation.sh"
+  },
+  "PROGRESS.md#2026-11-01 04:35 CET; PROGRESS.md#2026-11-01 05:05 CET": {
+    "zh": "PROGRESS.md#2026-11-01 04:35 CET; PROGRESS.md#2026-11-01 05:05 CET",
+    "en": "PROGRESS.md#2026-11-01 04:35 CET; PROGRESS.md#2026-11-01 05:05 CET"
+  },
+  "PROGRESS.md#2026-11-01 03:15 CET; /api/jobs#41105191": {
+    "zh": "PROGRESS.md#2026-11-01 03:15 CET; /api/jobs#41105191",
+    "en": "PROGRESS.md#2026-11-01 03:15 CET; /api/jobs#41105191"
+  },
+  "训练使用 2021-22、22-23、2024，验证使用 2025；2026 测试集保持封存。本次大屏更新只读取已有汇总，不打开测试数据。": {
+    "zh": "训练使用 2021-22、22-23、2024，验证使用 2025；2026 测试集保持封存。本次大屏更新只读取已有汇总，不打开测试数据。",
+    "en": "Training uses 2021-22, 22-23 and 2024; validation uses 2025. The 2026 test set remains sealed. This dashboard update reads existing summaries only and does not open test data."
+  },
+  "RQ4 可解释习惯的相邻赛季秩稳定性": {
+    "zh": "RQ4 可解释习惯的相邻赛季秩稳定性",
+    "en": "RQ4 Adjacent-season rank stability of interpretable habits"
+  },
+  "最终采用可解释习惯的相邻赛季 Spearman 秩相关、选手自助法区间与置换检验；原计划中的身份检索、阵容与俱乐部归因不作为主结论。": {
+    "zh": "最终采用可解释习惯的相邻赛季 Spearman 秩相关、选手自助法区间与置换检验；原计划中的身份检索、阵容与俱乐部归因不作为主结论。",
+    "en": "The final analysis uses adjacent-season Spearman rank correlations of interpretable habits, player-bootstrap intervals and permutation tests. Planned identity retrieval and attribution to rosters or clubs are excluded from the main conclusions."
+  },
+  "论文定稿与投稿": {
+    "zh": "论文定稿与投稿",
+    "en": "Manuscript finalization and submission"
+  },
+  "待作者信息补齐与投稿前终审": {
+    "zh": "待作者信息补齐与投稿前终审",
+    "en": "Pending author information and final pre-submission review"
+  },
+  "面向 IEEE Transactions on Games；正文 7 页、补充 9 页，图文已逐页检查，论文仍在修订中。最新集群提交 1ef1d69，本地论文源 HEAD 648cbee。q 值诚实性修正：24 个 RQ4 BH q 均处于 2,000 次置换下限，正文与图注写 q≤1/2001≈0.0005，摘要写 BH q<0.001。P4/P6.4 全量各两次 OOM 后使用 medium，补充材料注明限制；不作因果结论。": {
+    "zh": "面向 IEEE Transactions on Games；正文 7 页、补充 9 页，图文已逐页检查，论文仍在修订中。最新集群提交 1ef1d69，本地论文源 HEAD 648cbee。q 值诚实性修正：24 个 RQ4 BH q 均处于 2,000 次置换下限，正文与图注写 q≤1/2001≈0.0005，摘要写 BH q<0.001。P4/P6.4 全量各两次 OOM 后使用 medium，补充材料注明限制；不作因果结论。",
+    "en": "Prepared for IEEE Transactions on Games; 7 main-text pages and 9 supplementary pages have been reviewed page by page, and manuscript revision is in progress. Latest cluster commit: 1ef1d69; local manuscript-source HEAD: 648cbee. The q-value honesty correction states that all 24 RQ4 BH q values are at the floor of 2,000 permutations: q≤1/2001≈0.0005 in the text and caption, and BH q<0.001 in the abstract. After two OOM failures each, full P4/P6.4 use medium results with limitations recorded in the supplement; no causal claims are made."
+  },
+  "PROGRESS.md: 2026-10-31 21:00 CET; 2026-11-01 06:45 CET, 07:51 CET; paper2/paper/main.tex; user-supplied cluster commit 1ef1d69": {
+    "zh": "PROGRESS.md: 2026-10-31 21:00 CET; 2026-11-01 06:45 CET, 07:51 CET; paper2/paper/main.tex; user-supplied cluster commit 1ef1d69",
+    "en": "PROGRESS.md: 2026-10-31 21:00 CET; 2026-11-01 06:45 CET, 07:51 CET; paper2/paper/main.tex; user-supplied cluster commit 1ef1d69"
   }
 };
   const warnedTranslations = new Set();
@@ -3336,9 +4288,10 @@
   function barChart(items,label,unit) {
     const valid=items.filter(x=>num(x.value));if(!valid.length)return empty();
     let low=Math.min(0,...valid.map(x=>x.value)),high=Math.max(0,...valid.map(x=>x.value));if(low===high)high=low+1;
+    const ticks=niceTicks(low,high);low=ticks.min;high=ticks.max;
     const w=1000,h=valid.length*48+100,left=260,right=150,x=v=>left+(v-low)/(high-low)*(w-left-right);
     let svg=`<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(label+' ('+unit+')')}">`;
-    for(let i=0;i<=4;i++){const v=low+(high-low)*i/4;svg+=`<path class="grid-line" d="M${x(v)} 20V${h-65}"/><text x="${x(v)}" y="${h-40}" text-anchor="middle">${fmt(v)}</text>`;}
+    ticks.values.forEach((v,i)=>{svg+=`<path class="grid-line" d="M${x(v)} 20V${h-65}"/><text x="${x(v)}" y="${h-40}" text-anchor="middle">${ticks.labels[i]}</text>`;});
     valid.forEach((r,i)=>{const y=28+i*48;svg+=`<text x="${left-12}" y="${y+20}" text-anchor="end">${esc(r.name.length>30?r.name.slice(0,29)+'…':r.name)}<title>${esc(r.name)}</title></text><rect x="${Math.min(x(0),x(r.value))}" y="${y}" width="${Math.max(1,Math.abs(x(r.value)-x(0)))}" height="30" fill="${r.color||palette[i%palette.length]}"/><text x="${x(r.value)+8}" y="${y+20}">${fmt(r.value)}</text>`;});
     return `<div class="chart-scroll">${svg}<text class="axis-title" x="${(left+w-right)/2}" y="${h-8}" text-anchor="middle">${esc(label+' ('+unit+')')}</text></svg></div>`;
   }
@@ -3410,13 +4363,25 @@
   }
   function validEffect(r) { return [r.estimate,r.lo,r.hi].every(num) && r.lo<=r.hi; }
   function legend() { return `<div class="legend">${['pass','fail','uncertain'].map(k=>`<span>${badge(k,true)}</span>`).join('')}</div>`; }
+  function niceTicks(low,high) {
+    if (low===high) { low-=.5;high+=.5; }
+    const raw=(high-low)/4,exponent=Math.floor(Math.log10(raw)),power=10**exponent;
+    const multiple=[1,2,2.5,5,10].find(v=>raw/power<=v),step=multiple*power;
+    const first=Math.floor(low/step),last=Math.ceil(high/step);
+    // Integer multiples anchor the ticks at zero; rounding removes binary noise.
+    const values=Array.from({length:last-first+1},(_,i)=>Number(((first+i)*step).toPrecision(15)));
+    const decimals=Math.max(0,-exponent+(multiple===2.5?1:0));
+    const labels=values.map(v=>v===0?'0':decimals>100?v.toString():v.toFixed(decimals).replace(/(\.\d*?[1-9])0+$|\.0+$/,'$1'));
+    return {min:values[0],max:values[values.length-1],step,values,labels};
+  }
   function forest(rows,unit) {
     if (!rows.length) return empty('没有可绘制的效应量与 95% 置信区间','No plottable effect estimates with 95% CIs',t('缺失、非数值或无效区间保留在表格中。','Missing, non-numeric or invalid intervals remain in the table.'));
     let lo=Math.min(0,...rows.flatMap(r=>[r.lo,r.estimate])), hi=Math.max(0,...rows.flatMap(r=>[r.hi,r.estimate]));
     const pad=(hi-lo||1)*.12;lo-=pad;hi+=pad;
+    const ticks=niceTicks(lo,hi);lo=ticks.min;hi=ticks.max;
     const w=1000,h=100+rows.length*60,left=300,right=50,bottom=h-65,x=v=>left+(v-lo)/(hi-lo)*(w-left-right);
     let svg=`<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(t('效应量及 95% 置信区间森林图','Forest plot of effect estimates and 95% confidence intervals'))}">`;
-    for(let i=0;i<=4;i++){const v=lo+(hi-lo)*i/4;svg+=`<path class="grid-line" d="M${x(v)} 15 V${bottom}"/><text x="${x(v)}" y="${bottom+25}" text-anchor="middle">${fmt(v)}</text>`;}
+    ticks.values.forEach((v,i)=>{svg+=`<path class="grid-line" d="M${x(v)} 15 V${bottom}"/><text x="${x(v)}" y="${bottom+25}" text-anchor="middle">${ticks.labels[i]}</text>`;});
     svg+=`<path class="zero-line" d="M${x(0)} 15 V${bottom}"/><text x="${x(0)}" y="14" text-anchor="middle">0</text>`;
     rows.forEach((r,i)=>{const y=42+i*60,c={pass:'#80e6b1',fail:'#ffacb5',uncertain:'#ffdc85'}[finding(r.status)],tip=`${r.label}\n${t('效应量','Effect')}: ${fmt(r.estimate)} ${unitLabel(unit)}\n${t('95% 置信区间','95% CI')}: [${fmt(r.lo)}, ${fmt(r.hi)}]\n${t('状态','Status')}: ${statusName(r.status)}\n${r.source}`;
       svg+=`<text x="${left-20}" y="${y+5}" text-anchor="end">${esc(r.label.length>28?'…'+r.label.slice(-27):r.label)}<title>${esc(r.label)}</title></text><g tabindex="0" data-tip="${esc(tip)}" aria-label="${esc(tip)}"><path d="M${x(r.lo)} ${y}H${x(r.hi)} M${x(r.lo)} ${y-7}v14 M${x(r.hi)} ${y-7}v14" stroke="${c}" stroke-width="3"/><circle cx="${x(r.estimate)}" cy="${y}" r="6" fill="${c}"/><rect x="${x(r.lo)-8}" y="${y-14}" width="${Math.max(16,x(r.hi)-x(r.lo)+16)}" height="28" fill="transparent"/><title>${esc(tip)}</title></g>`;
@@ -3441,7 +4406,7 @@
   function resultsView() {
     const groups=resultGroups();
     if (!groups.size) return card(t('实验对比','Experiments'),empty('尚无效应量与区间数据','No effect estimates or intervals yet',t('读取 results/*.json 中的结构化效应量与 95% 置信区间。现有描述文字不会转换为数值。','Reads structured effects and 95% CIs from results/*.json. Narrative descriptions are not converted into numbers.'))+legacyResults());
-    if (!groups.has(state.resultGroup))state.resultGroup=groups.keys().next().value;
+    if (!groups.has(state.resultGroup))state.resultGroup=[...groups].find(([,rows])=>rows.some(r=>r.source.startsWith('results/dash_full_summary.json/rq4/')))?.[0]||groups.keys().next().value;
     const selected=groups.get(state.resultGroup);
     return `<div class="controls"><label>${t('对比组','Comparison group')}<select id="result-group">${[...groups].map(([k,rs])=>`<option value="${esc(k)}" ${k===state.resultGroup?'selected':''}>${esc([str(rs[0].task),str(rs[0].split),unitLabel(rs[0].units),rs[0].units?'':rs[0].source].filter(Boolean).join(' · '))}</option>`).join('')}</select></label></div>`+resultPanel(selected)+legacyResults();
   }
@@ -3459,7 +4424,7 @@
       });
     });
     if(!groups.size)return '';
-    if(!groups.has(state.legacyGroup))state.legacyGroup=groups.keys().next().value;
+    if(!groups.has(state.legacyGroup))state.legacyGroup=[...groups].find(([,rs])=>rs[0].file==='baseline_comparison'&&rs[0].metric==='top1')?.[0]||groups.keys().next().value;
     const rows=groups.get(state.legacyGroup),first=rows[0],metric=first.metric,unit=unitLabel(first.unit);
     const lower=r=>Array.isArray(r.lower_is_better)?r.lower_is_better.includes(metric):typeof r.lower_is_better==='boolean'?r.lower_is_better:null;
     const directions=rows.map(x=>lower(x.r)),comparable=first.unit&&directions.every(d=>d!==null&&d===directions[0]);
@@ -3469,7 +4434,7 @@
     const delta=v=>baseline!==null?(v-baseline)*(directions[0]?-1:1):null;
     const label=x=>[localized(x.r,'task')||x.file,localized(x.r,'split')||unknown(),metricLabel({},x.metric),unitLabel(x.unit)].join(' · ');
     const toolbar=`<div class="controls"><label>${t('指标对比组','Metric comparison group')}<select id="legacy-group">${[...groups].map(([key,rs])=>`<option value="${esc(key)}" ${key===state.legacyGroup?'selected':''}>${esc(label(rs[0]))}</option>`).join('')}</select></label></div>`;
-    return card(t('基线与方法指标','Baseline and method metrics'),toolbar+`<div class="kpis">${kpi(t('最佳基线','Best baseline'),baseline)}${kpi(t('本方法最优','Best method'),ours)}${kpi(t('方向归一化差值','Direction-normalized difference'),ours!==null?delta(ours):null)}</div>`+barChart(rows.map(x=>({name:localized(x.r,'method')||x.file,value:x.value,color:x.r.is_baseline===true?palette[0]:palette[3]})),metricLabel({},metric),unit)+table([t('方法','Method'),t('类型','Type'),t('指标','Metric'),t('数值','Value'),'Δ'],rows.map(x=>[esc(localized(x.r,'method')||x.file),x.r.is_baseline===true?t('基线','Baseline'):x.r.is_baseline===false?t('本方法','Method'):unknown(),esc(metricLabel({},metric)),fmt(x.value),fmt(delta(x.value))]))+`<p class="muted">${t('只在任务、划分、指标、已声明单位和方向一致时计算最佳基线及差值；正值表示改善。缺失或冲突时显示未知。原始指标柱状图不表示统计显著性。','Best baselines and differences require matching task, split, metric, declared units and direction; positive differences indicate improvement. Missing or conflicting metadata is unknown. Raw metric bars do not imply statistical significance.')}</p>`);
+    return card(t('基线与方法指标','Baseline and method metrics'),toolbar+`<div class="kpis">${kpi(t('最佳基线','Best baseline'),baseline)}${kpi(t('本方法最优','Best method'),ours)}${kpi(t('方向归一化差值','Direction-normalized difference'),ours!==null?delta(ours):null)}</div>`+barChart(rows.map(x=>({name:localized(x.r,'method')||x.file,value:x.value,color:x.r.is_baseline===true?palette[0]:palette[3]})),metricLabel({},metric),unit)+table([t('方法','Method'),t('类型','Type'),t('指标','Metric'),t('数值','Value'),t('95% 置信区间','95% CI'),'Δ'],rows.map(x=>{const ci=obj(x.r.ci95)[metric];return [esc(localized(x.r,'method')||x.file),x.r.is_baseline===true?t('基线','Baseline'):x.r.is_baseline===false?t('本方法','Method'):unknown(),esc(metricLabel({},metric)),fmt(x.value),Array.isArray(ci)&&ci.length===2?`[${fmt(ci[0])}, ${fmt(ci[1])}]`:t('未保存','not saved'),fmt(delta(x.value))]}))+`<p class="muted">${t('只在任务、划分、指标、已声明单位和方向一致时计算最佳基线及差值；正值表示改善。缺失或冲突时显示未知。原始指标柱状图不表示统计显著性。','Best baselines and differences require matching task, split, metric, declared units and direction; positive differences indicate improvement. Missing or conflicting metadata is unknown. Raw metric bars do not imply statistical significance.')}</p>`);
   }
   function splitName(s) { return ({train:t('训练集','Train'),val:t('验证集','Validation'),test:t('测试集','Test'),unspecified:t('未标注划分','Unspecified split')})[s]||term(s); }
   function axisLabel() { return ({step:t('训练步数（步）','Training step (steps)'),epoch:t('训练轮次（轮）','Epoch (epochs)'),time:t('时间（CET · UTC+1）','Time (CET · UTC+1)')})[state.axis]; }
@@ -3528,8 +4493,9 @@
   function paperView() {
     const p=obj(state.data.paper),sections=records(p.sections),figures=records(p.figures),cit=obj(p.citations),pdf=obj(p.pdf);
     const partial=p.counts_partial?t('已读文件的小计','Subtotal of readable files'):'';
+    const snapshot=p.snapshot_updated?card(t('论文状态快照','Manuscript status snapshot'),`<p>${badge(p.status)} · ${esc(time(p.snapshot_updated))}</p><p>${esc(localized(p,'note'))}</p><div class="kpis">${kpi(t('正文页数','Main pages'),p.main_pages)}${kpi(t('补充材料页数','Supplement pages'),p.supplement_pages)}${kpi(t('集群论文提交','Cluster paper commit'),p.cluster_commit)}${kpi(t('本地论文源码提交','Local manuscript source commit'),p.manuscript_commit)}</div><p class="meta">${t('来源','Source')}: ${esc(localized(p,'snapshot_source'))}</p>`):'';
     const pdfPanel=card(t('论文 PDF','Paper PDF'),`<div class="kpis">${kpi(t('编译时间（PDF 创建元数据）','Compile time (PDF creation metadata)'),time(pdf.compiled))}${kpi(t('页数','Pages'),pdf.pages)}${kpi(t('PDF 文件提交','PDF file commit'),pdf.commit?pdf.commit.slice(0,12):null)}</div><p class="meta">${t('PDF 文件修改时间','PDF file modified')}: ${esc(time(pdf.modified))}</p>`+(pdf.available?`<p><a href="/paper.pdf" target="_blank" rel="noopener">${t('打开 PDF','Open PDF')}</a></p><iframe class="paper-pdf" src="/paper.pdf" title="${t('论文 PDF 预览','Paper PDF preview')}"></iframe>`:empty('尚无论文 PDF','No paper PDF available',t('等待 paper/main.pdf；不运行编译命令。','Waiting for paper/main.pdf; no compilation command is run.')))+`<p class="muted">${t('创建元数据缺失时编译时间未知；文件修改时间不等同于编译时间。PDF 文件提交不等同于编译所用源码提交。','Missing creation metadata leaves compile time unknown; file modification time is not compilation time. The PDF file commit does not establish the source commit used to compile it.')}</p>`);
-    return (p.reference?note(t('本地审阅模式：论文源码来自参考目录。','Local review mode: manuscript sources come from the reference directory.')):'')+`<div class="kpis">${kpi(t('总进度','Overall progress'),num(p.progress)?fmt(p.progress)+'%':null,t('明确完成章节 / 全部章节','Explicitly completed / all sections'))}${kpi(t('章节完成','Sections complete'),p.completed_sections,partial)}${kpi(t('字数（近似）','Word count (approximate)'),p.words,partial)}${kpi(t('图数','Figures'),p.figure_count,partial)}${kpi(t('论文最新提交','Latest paper commit'),p.commit?p.commit.slice(0,12):null)}</div>`+pdfPanel+
+    return snapshot+(p.reference?note(t('本地审阅模式：论文源码来自参考目录。','Local review mode: manuscript sources come from the reference directory.')):'')+`<div class="kpis">${kpi(t('总进度','Overall progress'),num(p.progress)?fmt(p.progress)+'%':null,t('明确完成章节 / 全部章节','Explicitly completed / all sections'))}${kpi(t('章节完成','Sections complete'),p.completed_sections,partial)}${kpi(t('字数（近似）','Word count (approximate)'),p.words,partial)}${kpi(t('图数','Figures'),p.figure_count,partial)}${kpi(t('论文最新提交','Latest paper commit'),p.commit?p.commit.slice(0,12):null)}</div>`+pdfPanel+
       card(t('章节进度','Section progress'),`<p class="muted">${t('自动扫描 paper/main.tex 及其 input/include。字数按英文词和汉字计数，图数按 figure 环境计数。含正文为草稿；TODO 保持草稿；仅章节内明确的 % dashboard-status: done 标记计为完成。缺失文件使总进度未知。','Automatically scans paper/main.tex and its input/include files. Counts English tokens and CJK characters; figures count figure environments. Text is a draft; TODOs remain drafts. Only explicit per-section % dashboard-status: done markers count as completed. Missing files make overall progress unknown.')}</p>`+(sections.length?table([t('章节','Section'),t('状态','Status'),t('字数','Words'),t('图数','Figures'),t('最新提交','Latest commit'),t('源文件','Source file')],sections.map(x=>[esc(localized(x,'name')),badge(x.status),fmt(x.words),fmt(x.figure_count),esc(x.commit?x.commit.slice(0,12):unknown()),raw(x.path,'path')])):empty('暂无论文源码','No manuscript sources',t('等待 paper/main.tex。','Waiting for paper/main.tex.'))))+
       card(t('投稿目标与引用','Target venue and citations'),`<p>${esc(localized(p,'target')||unknown())}</p><p>${esc(localized(p,'notes'))}</p><div class="kpis">${kpi(t('引用已核验','Verified citations'),cit.verified)}${kpi(t('引用总数','Total citations'),cit.total)}</div>`)+
       card(t('图表清单','Figures'),figures.length?table([t('编号','ID'),t('标题','Title'),t('状态','Status'),t('路径 / 备注','Path / notes')],figures.map(f=>[esc(str(f.id)),esc(localized(f,'title')||localized(f,'name')),badge(f.status),raw(f.path,'path')])):empty());
