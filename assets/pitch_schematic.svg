@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 470" font-family="Helvetica, Arial, sans-serif">
+  <rect width="820" height="470" fill="#ffffff"/>
+  <text x="410" y="30" text-anchor="middle" font-size="19" font-weight="bold" fill="#222">What one replay frame looks like (schematic, top-down)</text>
+  <!-- pitch -->
+  <rect x="70" y="60" width="680" height="360" rx="60" fill="#5aa469" stroke="#2f6b3a" stroke-width="4"/>
+  <g fill="#62b073">
+    <rect x="70" y="60" width="85" height="360" rx="0"/><rect x="240" y="60" width="85" height="360"/><rect x="410" y="60" width="85" height="360"/><rect x="580" y="60" width="85" height="360"/>
+  </g>
+  <rect x="70" y="60" width="680" height="360" rx="60" fill="none" stroke="#2f6b3a" stroke-width="4"/>
+  <line x1="410" y1="60" x2="410" y2="420" stroke="#ffffff" stroke-width="3" opacity="0.85"/>
+  <circle cx="410" cy="240" r="55" fill="none" stroke="#ffffff" stroke-width="3" opacity="0.85"/>
+  <rect x="44" y="190" width="26" height="100" fill="#0072B2" opacity="0.9"/>
+  <rect x="750" y="190" width="26" height="100" fill="#D55E00" opacity="0.9"/>
+  <text x="30" y="182" font-size="13" fill="#0072B2" font-weight="bold">Blue goal</text>
+  <text x="725" y="182" font-size="13" fill="#D55E00" font-weight="bold">Orange goal</text>
+  <!-- trajectories -->
+  <g fill="none" stroke-width="3" stroke-dasharray="6 5" opacity="0.9">
+    <path d="M200 330 C 260 300, 300 270, 360 255" stroke="#56B4E9"/>
+    <path d="M150 170 C 190 190, 220 210, 255 215" stroke="#56B4E9"/>
+    <path d="M610 140 C 560 170, 520 200, 470 225" stroke="#E69F00"/>
+  </g>
+  <!-- cars -->
+  <g stroke="#fff" stroke-width="2">
+    <rect x="352" y="246" width="26" height="16" rx="4" fill="#0072B2"/>
+    <rect x="248" y="207" width="26" height="16" rx="4" fill="#0072B2"/>
+    <rect x="118" y="232" width="26" height="16" rx="4" fill="#0072B2"/>
+    <rect x="462" y="218" width="26" height="16" rx="4" fill="#D55E00"/>
+    <rect x="575" y="300" width="26" height="16" rx="4" fill="#D55E00"/>
+    <rect x="680" y="236" width="26" height="16" rx="4" fill="#D55E00"/>
+  </g>
+  <circle cx="420" cy="242" r="11" fill="#f2f2f2" stroke="#333" stroke-width="2"/>
+  <!-- labels -->
+  <g font-size="12" fill="#111">
+    <text x="300" y="285">1st man (challenges)</text>
+    <text x="200" y="198">2nd man (support)</text>
+    <text x="84" y="270">3rd man / last back</text>
+    <text x="428" y="230">ball</text>
+  </g>
+  <!-- legend -->
+  <g font-size="13" fill="#222">
+    <rect x="90" y="436" width="14" height="14" fill="#0072B2"/><text x="110" y="448">blue team car (x, y, z, velocity, boost)</text>
+    <rect x="370" y="436" width="14" height="14" fill="#D55E00"/><text x="390" y="448">orange team car</text>
+    <line x1="530" y1="443" x2="560" y2="443" stroke="#56B4E9" stroke-width="3" stroke-dasharray="6 5"/><text x="568" y="448">last 2 s of movement</text>
+  </g>
+</svg>
