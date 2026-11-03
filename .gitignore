@@ -44,3 +44,5 @@ tactics/PROGRESS.md
 tactics/dashboard/CHANGES_dash.md
 tactics/dashboard/
 tactics/slurm/
+tactics/tools/i18n_*
+tactics/tools/test_i18n.py
